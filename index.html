@@ -450,7 +450,32 @@ EL PODER DEL COMERCIO
 <div class="admin-grid">
 
 <label>Número EPC:</label>
-<input type="text" id="epc" placeholder="Ej: 789">
+
+<div style="display:flex; gap:10px; align-items:center;">
+
+<input
+type="text"
+id="epc"
+placeholder="Ej: 789"
+style="width:300px;"
+>
+
+<button
+class="buscar"
+onclick="buscarAdmin()"
+style="
+width:120px;
+height:36px;
+border:none;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
+"
+>
+BUSCAR
+</button>
+
+</div>
 
 <div class="foto-box" id="previewFoto">FOTO</div>
 
@@ -493,7 +518,7 @@ EL PODER DEL COMERCIO
 
 <div class="botones">
 <button class="guardar" onclick="agregar()">GUARDAR</button>
-<button class="buscar" onclick="buscarAdmin()">BUSCAR</button>
+ 
 <button class="actualizar" onclick="actualizar()">ACTUALIZAR</button>
 <button class="eliminar" onclick="eliminar()">ELIMINAR</button>
 <button class="limpiar" onclick="limpiar()">LIMPIAR</button>
