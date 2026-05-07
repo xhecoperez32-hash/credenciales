@@ -1,1160 +1,991 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>FECOPSE - Credenciales</title>
+<meta charset="UTF-8">
+<title>FECOPSE - Credenciales</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
-    <style>
+<style>
+*{box-sizing:border-box}
 
-        *{
-            box-sizing:border-box;
-        }
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#e5e7eb;
+}
 
-        body{
-            margin:0;
-            font-family:Arial,sans-serif;
-            background:#e5e7eb;
-        }
+.login{
+    width:420px;
+    margin:120px auto;
+    background:#f2f2f2;
+    padding:35px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.25);
+    text-align:center;
+}
 
-        .app{
-            width:1200px;
-            margin:20px auto;
-            background:#f2f2f2;
-            border-radius:12px;
-            padding:15px;
-            box-shadow:0 5px 20px rgba(0,0,0,.25);
-        }
+.login h1{
+    color:#1A5372;
+}
 
-        .tabs{
-            display:flex;
-            justify-content:center;
-            gap:10px;
-            margin-bottom:15px;
-        }
+.login input{
+    width:100%;
+    height:40px;
+    margin:10px 0;
+    font-size:18px;
+    padding:8px;
+}
 
-        .tabs button{
-            padding:8px 18px;
-            border-radius:6px;
-            border:1px solid #aaa;
-            cursor:pointer;
-            font-weight:bold;
-        }
+.login button{
+    width:100%;
+    height:42px;
+    background:#1A5372;
+    color:white;
+    font-weight:bold;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
 
-        .tabs button.active{
-            background:#1A5372;
-            color:white;
-        }
+.app{
+    display:none;
+    width:1200px;
+    margin:20px auto;
+    background:#f2f2f2;
+    border-radius:12px;
+    padding:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.25);
+}
 
-        .pantalla{
-            display:none;
-        }
+.tabs{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:15px;
+}
 
-        .pantalla.active{
-            display:block;
-        }
+.tabs button{
+    padding:8px 18px;
+    border-radius:6px;
+    border:1px solid #aaa;
+    cursor:pointer;
+    font-weight:bold;
+}
 
-        .admin{
-            background:#f2f2f2;
-            border:1px solid #ddd;
-            padding:40px 60px;
-            min-height:620px;
-        }
+.tabs button.active{
+    background:#1A5372;
+    color:white;
+}
 
-        .admin h1{
-            color:#1A5372;
-            font-size:34px;
-            margin-bottom:30px;
-        }
+.pantalla{display:none}
+.pantalla.active{display:block}
 
-        .admin-grid{
-            display:grid;
-            grid-template-columns:180px 450px 1fr;
-            gap:14px 20px;
-            align-items:center;
-        }
+.admin{
+    background:#f2f2f2;
+    border:1px solid #ddd;
+    padding:35px 60px;
+    min-height:640px;
+}
 
-        label{
-            color:#1A5372;
-            font-size:20px;
-            font-weight:bold;
-        }
+.admin h1{
+    color:#1A5372;
+    font-size:34px;
+    margin-bottom:25px;
+}
 
-        input{
-            height:36px;
-            border:1px solid #aaa;
-            padding:5px 10px;
-            font-size:18px;
-        }
+.admin-grid{
+    display:grid;
+    grid-template-columns:180px 450px 1fr;
+    gap:12px 20px;
+    align-items:center;
+}
 
-        .foto-box{
-            grid-column:3;
-            grid-row:1 / span 9;
-            width:280px;
-            height:360px;
-            border:3px solid #777;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            overflow:hidden;
-            background:white;
-            margin-left:60px;
-            font-weight:bold;
-        }
+label{
+    color:#1A5372;
+    font-size:20px;
+    font-weight:bold;
+}
 
-        .foto-box img{
-            width:100%;
-            height:100%;
-            object-fit:cover;
-        }
+input{
+    height:36px;
+    border:1px solid #aaa;
+    padding:5px 10px;
+    font-size:18px;
+}
 
-        .botones{
-            margin-top:35px;
-            display:flex;
-            gap:15px;
-            flex-wrap:wrap;
-        }
+.check-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-weight:bold;
+    font-size:18px;
+}
 
-        .botones button{
-            width:140px;
-            height:40px;
-            border:none;
-            border-radius:6px;
-            cursor:pointer;
-            font-weight:bold;
-        }
+.check-row input{
+    width:22px;
+    height:22px;
+}
 
-        .guardar{background:#16a34a;color:white;}
-        .buscar{background:#2563eb;color:white;}
-        .actualizar{background:#eab308;}
-        .eliminar{background:#dc2626;color:white;}
-        .limpiar{background:#6b7280;color:white;}
-        .subir{background:white;border:1px solid #999 !important;}
+.foto-box{
+    grid-column:3;
+    grid-row:1 / span 10;
+    width:280px;
+    height:360px;
+    border:3px solid #777;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    background:white;
+    margin-left:60px;
+    font-weight:bold;
+}
 
-        .tabla{
-            margin-top:25px;
-            background:white;
-            max-height:180px;
-            overflow:auto;
-        }
+.foto-box img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
 
-        table{
-            width:100%;
-            border-collapse:collapse;
-            font-size:13px;
-        }
+.botones{
+    margin-top:30px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
 
-        th,td{
-            border:1px solid #ccc;
-            padding:6px;
-            text-align:center;
-        }
+.botones button{
+    width:145px;
+    height:40px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:bold;
+}
 
-        th{
-            background:#1A5372;
-            color:white;
-            position:sticky;
-            top:0;
-        }
+.guardar{background:#16a34a;color:white}
+.buscar{background:#2563eb;color:white}
+.actualizar{background:#eab308}
+.eliminar{background:#dc2626;color:white}
+.limpiar{background:#6b7280;color:white}
+.subir{background:white;border:1px solid #999!important}
+.falta{background:#f97316;color:white}
+.quitar{background:#0ea5e9;color:white}
 
-        tr:hover{
-            background:#e5e7eb;
-            cursor:pointer;
-        }
+.tabla{
+    margin-top:20px;
+    background:white;
+    max-height:170px;
+    overflow:auto;
+}
 
-        .barra-credencial{
-            height:80px;
-            background:#1A5372;
-            display:flex;
-            align-items:center;
-            gap:15px;
-            padding:0 25px;
-        }
+table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+}
 
-        .logo{
-            width:60px;
-            height:60px;
-            object-fit:contain;
-        }
+th,td{
+    border:1px solid #ccc;
+    padding:6px;
+    text-align:center;
+}
 
-        .barra-credencial h1{
-            color:white;
-            font-size:40px;
-            margin:0;
-        }
+th{
+    background:#1A5372;
+    color:white;
+    position:sticky;
+    top:0;
+}
 
-        .epc-text{
-            color:white;
-            font-size:30px;
-            font-weight:bold;
-        }
+tr:hover{
+    background:#e5e7eb;
+    cursor:pointer;
+}
 
-        #buscarEpc{
-            width:90px;
-            text-align:center;
-            font-weight:bold;
-            font-size:24px;
-        }
+.barra-credencial{
+    height:80px;
+    background:#1A5372;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:0 25px;
+}
 
-        .barra-credencial button{
-            margin-left:auto;
-            width:150px;
-            height:36px;
-            border:none;
-            border-radius:6px;
-            font-weight:bold;
-            cursor:pointer;
-        }
+.logo{
+    width:60px;
+    height:60px;
+    object-fit:contain;
+}
 
-        .subtabs{
-            text-align:center;
-            margin:15px 0;
-        }
+.barra-credencial h1{
+    color:white;
+    font-size:40px;
+    margin:0;
+}
 
-        .subtabs button{
-            padding:6px 18px;
-            border-radius:6px;
-            border:1px solid #aaa;
-            cursor:pointer;
-            font-weight:bold;
-        }
+.epc-text{
+    color:white;
+    font-size:30px;
+    font-weight:bold;
+}
 
-        .subtabs button.active{
-            background:#1A5372;
-            color:white;
-        }
+#buscarEpc{
+    width:90px;
+    text-align:center;
+    font-weight:bold;
+    font-size:24px;
+}
 
-        .credencial{
-            width:1120px;
-            height:520px;
-            margin:auto;
-            position:relative;
-            overflow:hidden;
-            background:#f2f2f2;
-            border:1px solid #ddd;
-        }
+.barra-credencial button{
+    margin-left:auto;
+    width:150px;
+    height:36px;
+    border:none;
+    border-radius:6px;
+    font-weight:bold;
+    cursor:pointer;
+}
 
-        .credencial::before{
-            content:"";
-            position:absolute;
-            inset:0;
-            background:
-                    repeating-radial-gradient(
-                            ellipse at 35% 50%,
-                            rgba(120,120,120,.18) 0px,
-                            rgba(120,120,120,.18) 1px,
-                            transparent 3px,
-                            transparent 14px
-                    );
-            opacity:.7;
-        }
+.subtabs{
+    text-align:center;
+    margin:15px 0;
+}
 
-        .credencial::after{
-            content:"";
-            position:absolute;
-            bottom:0;
-            left:0;
-            width:100%;
-            height:55px;
-            background:#1A5372;
-        }
+.subtabs button{
+    padding:6px 18px;
+    border-radius:6px;
+    border:1px solid #aaa;
+    cursor:pointer;
+    font-weight:bold;
+}
 
-        .frente,.atras{
-            position:relative;
-            z-index:2;
-        }
+.subtabs button.active{
+    background:#1A5372;
+    color:white;
+}
 
-        .titulo{
-            position:absolute;
-            color:#1A5372;
-            font-size:31px;
-            font-weight:bold;
-        }
+.credencial{
+    width:1120px;
+    height:520px;
+    margin:auto;
+    position:relative;
+    overflow:hidden;
+    background:#f2f2f2;
+    border:1px solid #ddd;
+}
 
-        .dato{
-            position:absolute;
-            color:black;
-            font-size:23px;
-            font-weight:bold;
-        }
+.credencial::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:repeating-radial-gradient(
+        ellipse at 35% 50%,
+        rgba(120,120,120,.18) 0px,
+        rgba(120,120,120,.18) 1px,
+        transparent 3px,
+        transparent 14px
+    );
+    opacity:.7;
+}
 
-        .foto-frente{
-            position:absolute;
-            right:80px;
-            top:70px;
-            width:280px;
-            height:350px;
-            border:3px solid #777;
-            overflow:hidden;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            background:white;
-            font-weight:bold;
-        }
+.credencial::after{
+    content:"";
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:55px;
+    background:#1A5372;
+}
 
-        .foto-frente img{
-            width:100%;
-            height:100%;
-            object-fit:cover;
-        }
+.frente,.atras{
+    position:relative;
+    z-index:2;
+}
 
-        .atras-titulo{
-            position:absolute;
-            width:100%;
-            top:30px;
-            text-align:center;
-            font-size:30px;
-            font-weight:bold;
-            color:#1A5372;
-        }
+.titulo{
+    position:absolute;
+    color:#1A5372;
+    font-size:31px;
+    font-weight:bold;
+}
 
-        .atras-operacion{
-            position:absolute;
-            width:100%;
-            top:78px;
-            text-align:center;
-            font-size:20px;
-            font-weight:bold;
-        }
+.dato{
+    position:absolute;
+    color:black;
+    font-size:23px;
+    font-weight:bold;
+}
 
-        .atras-texto{
-            position:absolute;
-            width:850px;
-            left:135px;
-            top:115px;
-            text-align:center;
-            font-size:17px;
-            font-weight:bold;
-        }
+.foto-frente{
+    position:absolute;
+    right:80px;
+    top:70px;
+    width:280px;
+    height:350px;
+    border:3px solid #777;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:white;
+    font-weight:bold;
+}
 
-        .azul{
-            color:#1A5372;
-        }
+.foto-frente img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
 
-        .cuadro{
-            position:absolute;
-            top:190px;
-            width:280px;
-            height:230px;
-            border:3px solid #777;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            overflow:hidden;
-            background:white;
-        }
+.atras-titulo{
+    position:absolute;
+    width:100%;
+    top:30px;
+    text-align:center;
+    font-size:30px;
+    font-weight:bold;
+    color:#1A5372;
+}
 
-        .cuadro img{
-            width:95%;
-            height:95%;
-            object-fit:contain;
-        }
+.atras-operacion{
+    position:absolute;
+    width:100%;
+    top:78px;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+}
 
-        #qrVisual{
-            background:white;
-        }
+.atras-texto{
+    position:absolute;
+    width:850px;
+    left:135px;
+    top:115px;
+    text-align:center;
+    font-size:17px;
+    font-weight:bold;
+}
 
-        .escanee{
-            position:absolute;
-            width:100%;
-            text-align:center;
-            top:455px;
-            font-size:22px;
-            font-weight:bold;
-        }
+.azul{color:#1A5372}
 
-        .oculto{
-            display:none;
-        }
+.cuadro{
+    position:absolute;
+    top:190px;
+    width:280px;
+    height:230px;
+    border:3px solid #777;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    background:white;
+}
 
-        @media print{
+.cuadro img{
+    width:95%;
+    height:95%;
+    object-fit:contain;
+}
 
-            body{
-                background:white;
-            }
+#qrVisual{background:white}
 
-            .tabs,
-            .barra-credencial,
-            .subtabs{
-                display:none;
-            }
+.escanee{
+    position:absolute;
+    width:100%;
+    text-align:center;
+    top:455px;
+    font-size:22px;
+    font-weight:bold;
+}
 
-            .pantalla{
-                display:none !important;
-            }
+.oculto{display:none}
 
-            #pantallaCredencial{
-                display:block !important;
-            }
-
-            #panelFrente,
-            #panelAtras{
-                display:block !important;
-                margin-top:20px;
-            }
-
-        }
-
-    </style>
+@media print{
+    body{background:white}
+    .tabs,.barra-credencial,.subtabs{display:none}
+    .pantalla{display:none!important}
+    #pantallaCredencial{display:block!important}
+    #panelFrente,#panelAtras{
+        display:block!important;
+        margin-top:20px;
+    }
+}
+</style>
 </head>
 
 <body onload="listar()">
 
-<div class="app">
+<div id="login" class="login">
+    <h1>FECOPSE</h1>
+    <input type="text" id="loginUser" placeholder="Usuario">
+    <input type="password" id="loginPass" placeholder="Contraseña">
+    <button onclick="entrar()">ENTRAR</button>
+</div>
+
+<div id="app" class="app">
+
+<div class="tabs">
+<button id="tabAdmin" class="active" onclick="mostrarPantalla('admin')">Administrar credenciales</button>
+<button id="tabCredencial" onclick="mostrarPantalla('credencial')">Ver / imprimir credencial</button>
+</div>
+
+<div id="pantallaAdmin" class="pantalla active">
+<div class="admin">
 
-    <div class="tabs">
-        <button id="tabAdmin" class="active" onclick="mostrarPantalla('admin')">
-            Administrar credenciales
-        </button>
+<h1>ADMINISTRAR CREDENCIALES</h1>
+
+<input type="hidden" id="id">
 
-        <button id="tabCredencial" onclick="mostrarPantalla('credencial')">
-            Ver / imprimir credencial
-        </button>
-    </div>
+<div class="admin-grid">
 
-    <div id="pantallaAdmin" class="pantalla active">
+<label>Número EPC:</label>
+<input type="text" id="epc" placeholder="Ej: 789">
 
-        <div class="admin">
+<div class="foto-box" id="previewFoto">FOTO</div>
 
-            <h1>ADMINISTRAR CREDENCIALES</h1>
+<label>Nombre:</label>
+<input type="text" id="nombre">
 
-            <input type="hidden" id="id">
+<label>Apellido:</label>
+<input type="text" id="apellido">
 
-            <div class="admin-grid">
+<label>Organización:</label>
+<input type="text" id="organizacion" value="EL PODER DEL COMERCIO" readonly style="background:#d1d5db;font-weight:bold;">
 
-                <label>Número EPC:</label>
-                <input type="text" id="epc" placeholder="Ej: 789">
+<label>Giro:</label>
+<input type="text" id="giro">
 
-                <div class="foto-box" id="previewFoto">
-                    FOTO
-                </div>
+<label>Estatus:</label>
+<div class="check-row">
+    <input type="checkbox" id="estatusCheck" checked>
+    <span id="estatusTexto">ACTIVO</span>
+</div>
 
-                <label>Nombre:</label>
-                <input type="text" id="nombre">
+<label>Faltas:</label>
+<input type="number" id="faltas" value="0" readonly style="background:#d1d5db;font-weight:bold;">
 
-                <label>Apellido:</label>
-                <input type="text" id="apellido">
+<label>Dirección:</label>
+<input type="text" id="direccion">
 
-                <label>Organización:</label>
+<label>Días operación:</label>
+<input type="text" id="operacion_dias">
 
-                <input
-                        type="text"
-                        id="organizacion"
-                        value="EL PODER DEL COMERCIO"
-                        readonly
-                        style="background:#d1d5db;font-weight:bold;"
-                >
+<label>Horario:</label>
+<input type="text" id="operacion_horario">
 
-                <label>Giro:</label>
-                <input type="text" id="giro">
+<label>Vigencia:</label>
+<input type="text" id="vigencia" placeholder="31/12/2026">
 
-                <label>Estatus:</label>
-                <input type="text" id="estatus" placeholder="ACTIVO / INACTIVO">
+</div>
 
-                <label>Dirección:</label>
-                <input type="text" id="direccion">
+<input type="file" id="fotoInput" accept="image/*" class="oculto" onchange="cargarFoto(event)">
 
-                <label>Días operación:</label>
-                <input type="text" id="operacion_dias">
+<div class="botones">
+<button class="guardar" onclick="agregar()">GUARDAR</button>
+<button class="buscar" onclick="buscarAdmin()">BUSCAR</button>
+<button class="actualizar" onclick="actualizar()">ACTUALIZAR</button>
+<button class="eliminar" onclick="eliminar()">ELIMINAR</button>
+<button class="limpiar" onclick="limpiar()">LIMPIAR</button>
+<button class="subir" onclick="document.getElementById('fotoInput').click()">SUBIR FOTO</button>
+<button class="falta" onclick="registrarFalta()">REGISTRAR FALTA</button>
+<button class="quitar" onclick="quitarFalta()">QUITAR FALTA</button>
+</div>
 
-                <label>Horario:</label>
-                <input type="text" id="operacion_horario">
+<div class="tabla">
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>EPC</th>
+<th>Nombre</th>
+<th>Apellido</th>
+<th>Estatus</th>
+<th>Faltas</th>
+</tr>
+</thead>
+<tbody id="tabla"></tbody>
+</table>
+</div>
 
-                <label>Vigencia:</label>
-                <input type="text" id="vigencia" placeholder="31/12/2026">
+</div>
+</div>
 
-            </div>
+<div id="pantallaCredencial" class="pantalla">
 
-            <input
-                    type="file"
-                    id="fotoInput"
-                    accept="image/*"
-                    class="oculto"
-                    onchange="cargarFoto(event)"
-            >
+<div class="barra-credencial">
+<img src="fecopse.png" class="logo" onerror="this.style.display='none'">
+<h1>FECOPSE-</h1>
+<span class="epc-text">EPC</span>
+<input type="text" id="buscarEpc" onkeydown="enterBuscar(event)">
+<button onclick="window.print()">IMPRIMIR</button>
+</div>
 
-            <div class="botones">
+<div class="subtabs">
+<button id="btnFrente" class="active" onclick="mostrarCredencial('frente')">Frente</button>
+<button id="btnAtras" onclick="mostrarCredencial('atras')">Atrás</button>
+</div>
 
-                <button class="guardar" onclick="agregar()">
-                    GUARDAR
-                </button>
+<div id="panelFrente" class="credencial">
+<div class="frente">
 
-                <button class="buscar" onclick="buscarAdmin()">
-                    BUSCAR
-                </button>
+<div class="titulo" style="left:70px;top:45px;">Nombre:</div>
+<div class="dato" id="vNombre" style="left:70px;top:85px;"></div>
 
-                <button class="actualizar" onclick="actualizar()">
-                    ACTUALIZAR
-                </button>
+<div class="titulo" style="left:70px;top:140px;">Organización:</div>
+<div class="dato" id="vOrganizacion" style="left:70px;top:180px;"></div>
 
-                <button class="eliminar" onclick="eliminar()">
-                    ELIMINAR
-                </button>
+<div class="titulo" style="left:70px;top:235px;">Giro:</div>
+<div class="dato" id="vGiro" style="left:70px;top:275px;"></div>
 
-                <button class="limpiar" onclick="limpiar()">
-                    LIMPIAR
-                </button>
+<div class="titulo" style="left:70px;top:330px;">Estatus:</div>
+<div class="dato" id="vEstatus" style="left:70px;top:370px;"></div>
 
-                <button class="subir" onclick="document.getElementById('fotoInput').click()">
-                    SUBIR FOTO
-                </button>
+<div class="titulo" style="left:70px;top:425px;">Dirección:</div>
+<div class="dato" id="vDireccion" style="left:70px;top:465px;"></div>
 
-            </div>
+<div class="foto-frente" id="vFoto">FOTO</div>
 
-            <div class="tabla">
+</div>
+</div>
 
-                <table>
+<div id="panelAtras" class="credencial oculto">
+<div class="atras">
 
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>EPC</th>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Estatus</th>
-                    </tr>
-                    </thead>
+<div class="atras-titulo" id="vVigencia">VIGENCIA</div>
+<div class="atras-operacion" id="vOperacion">OPERACIÓN</div>
 
-                    <tbody id="tabla"></tbody>
+<div class="atras-texto">
+ESTA CREDENCIAL IDENTIFICA COMO EL SIGUIENTE REGISTRADO ANTE
+<span class="azul">FECOPSE</span>
+</div>
 
-                </table>
-
-            </div>
-
-        </div>
-    </div>
-
-    <div id="pantallaCredencial" class="pantalla">
-
-        <div class="barra-credencial">
-
-            <img
-                    src="fecopse.png"
-                    class="logo"
-                    onerror="this.style.display='none'"
-            >
-
-            <h1>FECOPSE-</h1>
-
-            <span class="epc-text">EPC</span>
-
-            <input
-                    type="text"
-                    id="buscarEpc"
-                    onkeydown="enterBuscar(event)"
-            >
-
-            <button onclick="window.print()">
-                IMPRIMIR
-            </button>
-
-        </div>
-
-        <div class="subtabs">
-
-            <button
-                    id="btnFrente"
-                    class="active"
-                    onclick="mostrarCredencial('frente')"
-            >
-                Frente
-            </button>
-
-            <button
-                    id="btnAtras"
-                    onclick="mostrarCredencial('atras')"
-            >
-                Atrás
-            </button>
-
-        </div>
-
-        <div id="panelFrente" class="credencial">
-
-            <div class="frente">
-
-                <div class="titulo" style="left:70px;top:45px;">
-                    Nombre:
-                </div>
-
-                <div class="dato" id="vNombre" style="left:70px;top:85px;">
-                </div>
-
-                <div class="titulo" style="left:70px;top:140px;">
-                    Organización:
-                </div>
-
-                <div class="dato" id="vOrganizacion" style="left:70px;top:180px;">
-                </div>
-
-                <div class="titulo" style="left:70px;top:235px;">
-                    Giro:
-                </div>
-
-                <div class="dato" id="vGiro" style="left:70px;top:275px;">
-                </div>
-
-                <div class="titulo" style="left:70px;top:330px;">
-                    Estatus:
-                </div>
-
-                <div class="dato" id="vEstatus" style="left:70px;top:370px;">
-                </div>
-
-                <div class="titulo" style="left:70px;top:425px;">
-                    Dirección:
-                </div>
-
-                <div class="dato" id="vDireccion" style="left:70px;top:465px;">
-                </div>
-
-                <div class="foto-frente" id="vFoto">
-                    FOTO
-                </div>
-
-            </div>
-        </div>
-
-        <div id="panelAtras" class="credencial oculto">
-
-            <div class="atras">
-
-                <div class="atras-titulo" id="vVigencia">
-                    VIGENCIA
-                </div>
-
-                <div class="atras-operacion" id="vOperacion">
-                    OPERACIÓN
-                </div>
-
-                <div class="atras-texto">
-                    ESTA CREDENCIAL IDENTIFICA COMO EL SIGUIENTE REGISTRADO ANTE
-                    <span class="azul">FECOPSE</span>
-                </div>
-
-                <div
-                        id="vEstadoAtras"
-                        style="
+<div id="vEstadoAtras" style="
 position:absolute;
 left:80px;
 top:150px;
 width:280px;
 text-align:center;
 font-size:28px;
-font-weight:bold;
-"
-                >
-                    ACTIVO
-                </div>
+font-weight:bold;">
+ACTIVO
+</div>
 
-                <div class="cuadro" style="left:80px;">
-                    <img src="poder_comercio.png">
-                </div>
+<div class="cuadro" style="left:80px;">
+<img src="poder_comercio.png">
+</div>
 
-                <div class="cuadro" id="qrVisual" style="left:420px;">
-                </div>
+<div class="cuadro" id="qrVisual" style="left:420px;"></div>
 
-                <div class="cuadro" style="left:760px;">
-                    <img src="lobo.png">
-                </div>
+<div class="cuadro" style="left:760px;">
+<img src="lobo.png">
+</div>
 
-                <div class="escanee">
-                    ESCANEE PARA VALIDAR INSCRIPCIÓN
-                </div>
+<div class="escanee">ESCANEE PARA VALIDAR INSCRIPCIÓN</div>
 
-            </div>
-        </div>
+</div>
+</div>
 
-    </div>
-
+</div>
 </div>
 
 <script>
+const SUPABASE_URL = "https://htthhjxlvvlcblbmelvf.supabase.co";
+const SUPABASE_KEY = "sb_publishable_CjyA8MK4VMLbYd4_QizxxA_-sJE3v1V";
+const db = supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-    const SUPABASE_URL =
-        "https://htthhjxlvvlcblbmelvf.supabase.co";
+let fotoBase64 = "";
 
-    const SUPABASE_KEY =
-        "sb_publishable_CjyA8MK4VMLbYd4_QizxxA_-sJE3v1V";
+function entrar(){
+    const usuario = document.getElementById("loginUser").value.trim();
+    const pass = document.getElementById("loginPass").value.trim();
 
-    const db =
-        supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+    if(usuario === "admin" && pass === "fecopse123"){
+        document.getElementById("login").style.display = "none";
+        document.getElementById("app").style.display = "block";
+    }else{
+        alert("Usuario o contraseña incorrectos");
+    }
+}
 
-    let fotoBase64 = "";
+document.getElementById("estatusCheck").addEventListener("change", function(){
+    document.getElementById("estatusTexto").textContent = this.checked ? "ACTIVO" : "INACTIVO";
+});
 
-    function epcCompleto(valor){
+function epcCompleto(valor){
+    valor=(valor||"").trim().toUpperCase();
+    if(!valor)return "";
+    if(valor.startsWith("EPC-")) return valor;
+    return "EPC-" + valor;
+}
 
-        valor=(valor||"").trim().toUpperCase();
+function soloNumero(valor){
+    return (valor||"").replace("EPC-","");
+}
 
-        if(!valor)return "";
+function mostrarPantalla(tipo){
+    document.getElementById("pantallaAdmin").classList.remove("active");
+    document.getElementById("pantallaCredencial").classList.remove("active");
+    document.getElementById("tabAdmin").classList.remove("active");
+    document.getElementById("tabCredencial").classList.remove("active");
 
-        if(valor.startsWith("EPC-")) return valor;
+    if(tipo==="admin"){
+        document.getElementById("pantallaAdmin").classList.add("active");
+        document.getElementById("tabAdmin").classList.add("active");
+    }else{
+        document.getElementById("pantallaCredencial").classList.add("active");
+        document.getElementById("tabCredencial").classList.add("active");
+    }
+}
 
-        return "EPC-" + valor;
+function mostrarCredencial(tipo){
+    document.getElementById("panelFrente").classList.add("oculto");
+    document.getElementById("panelAtras").classList.add("oculto");
+    document.getElementById("btnFrente").classList.remove("active");
+    document.getElementById("btnAtras").classList.remove("active");
+
+    if(tipo==="frente"){
+        document.getElementById("panelFrente").classList.remove("oculto");
+        document.getElementById("btnFrente").classList.add("active");
+    }else{
+        document.getElementById("panelAtras").classList.remove("oculto");
+        document.getElementById("btnAtras").classList.add("active");
+    }
+}
+
+async function listar(){
+    const {data,error}=await db
+    .from("credenciales")
+    .select("*")
+    .order("id",{ascending:true});
+
+    if(error){
+        alert(error.message);
+        return;
     }
 
-    function soloNumero(valor){
-        return (valor||"").replace("EPC-","");
-    }
+    const tabla=document.getElementById("tabla");
+    tabla.innerHTML="";
 
-    function mostrarPantalla(tipo){
-
-        document
-            .getElementById("pantallaAdmin")
-            .classList.remove("active");
-
-        document
-            .getElementById("pantallaCredencial")
-            .classList.remove("active");
-
-        document
-            .getElementById("tabAdmin")
-            .classList.remove("active");
-
-        document
-            .getElementById("tabCredencial")
-            .classList.remove("active");
-
-        if(tipo==="admin"){
-
-            document
-                .getElementById("pantallaAdmin")
-                .classList.add("active");
-
-            document
-                .getElementById("tabAdmin")
-                .classList.add("active");
-
-        }else{
-
-            document
-                .getElementById("pantallaCredencial")
-                .classList.add("active");
-
-            document
-                .getElementById("tabCredencial")
-                .classList.add("active");
-        }
-    }
-
-    function mostrarCredencial(tipo){
-
-        document
-            .getElementById("panelFrente")
-            .classList.add("oculto");
-
-        document
-            .getElementById("panelAtras")
-            .classList.add("oculto");
-
-        document
-            .getElementById("btnFrente")
-            .classList.remove("active");
-
-        document
-            .getElementById("btnAtras")
-            .classList.remove("active");
-
-        if(tipo==="frente"){
-
-            document
-                .getElementById("panelFrente")
-                .classList.remove("oculto");
-
-            document
-                .getElementById("btnFrente")
-                .classList.add("active");
-
-        }else{
-
-            document
-                .getElementById("panelAtras")
-                .classList.remove("oculto");
-
-            document
-                .getElementById("btnAtras")
-                .classList.add("active");
-        }
-    }
-
-    async function listar(){
-
-        const {data,error}=await db
-            .from("credenciales")
-            .select("*")
-            .order("id",{ascending:true});
-
-        if(error){
-            alert(error.message);
-            return;
-        }
-
-        const tabla=document.getElementById("tabla");
-
-        tabla.innerHTML="";
-
-        data.forEach(item=>{
-
-            tabla.innerHTML += `
+    data.forEach(item=>{
+        tabla.innerHTML += `
         <tr onclick='seleccionar(${JSON.stringify(item)})'>
             <td>${item.id||""}</td>
             <td>${item.epc||""}</td>
             <td>${item.nombre||""}</td>
             <td>${item.apellido||""}</td>
             <td>${item.estatus||""}</td>
-        </tr>
-        `;
-        });
-    }
+            <td>${item.faltas||0}</td>
+        </tr>`;
+    });
+}
 
-    function seleccionar(item){
+function seleccionar(item){
+    document.getElementById("id").value=item.id||"";
+    document.getElementById("epc").value=soloNumero(item.epc);
+    document.getElementById("nombre").value=item.nombre||"";
+    document.getElementById("apellido").value=item.apellido||"";
+    document.getElementById("giro").value=item.giro||"";
+    document.getElementById("direccion").value=item.direccion||"";
+    document.getElementById("operacion_dias").value=item.operacion_dias||"";
+    document.getElementById("operacion_horario").value=item.operacion_horario||"";
+    document.getElementById("vigencia").value=item.vigencia||"";
+    document.getElementById("faltas").value=item.faltas||0;
 
-        document.getElementById("id").value=item.id||"";
-        document.getElementById("epc").value=soloNumero(item.epc);
-        document.getElementById("nombre").value=item.nombre||"";
-        document.getElementById("apellido").value=item.apellido||"";
-        document.getElementById("giro").value=item.giro||"";
-        document.getElementById("estatus").value=item.estatus||"";
-        document.getElementById("direccion").value=item.direccion||"";
-        document.getElementById("operacion_dias").value=item.operacion_dias||"";
-        document.getElementById("operacion_horario").value=item.operacion_horario||"";
-        document.getElementById("vigencia").value=item.vigencia||"";
+    const activo = (item.estatus||"ACTIVO").toUpperCase() === "ACTIVO";
+    document.getElementById("estatusCheck").checked = activo;
+    document.getElementById("estatusTexto").textContent = activo ? "ACTIVO" : "INACTIVO";
 
-        fotoBase64=item.foto_base64||"";
+    fotoBase64=item.foto_base64||"";
+    mostrarFotoAdmin(fotoBase64);
+}
 
+function cargarFoto(event){
+    const file=event.target.files[0];
+    if(!file)return;
+
+    const reader=new FileReader();
+    reader.onload=function(e){
+        fotoBase64=e.target.result;
         mostrarFotoAdmin(fotoBase64);
+    };
+    reader.readAsDataURL(file);
+}
+
+function mostrarFotoAdmin(base64){
+    const box=document.getElementById("previewFoto");
+    box.innerHTML = base64 ? `<img src="${base64}">` : "FOTO";
+}
+
+function datosFormulario(){
+    const faltas = parseInt(document.getElementById("faltas").value || "0");
+    let estatus = document.getElementById("estatusCheck").checked ? "ACTIVO" : "INACTIVO";
+
+    if(faltas >= 3){
+        estatus = "INACTIVO";
     }
 
-    function cargarFoto(event){
+    return{
+        epc:epcCompleto(document.getElementById("epc").value),
+        nombre:document.getElementById("nombre").value,
+        apellido:document.getElementById("apellido").value,
+        organizacion:"EL PODER DEL COMERCIO",
+        giro:document.getElementById("giro").value,
+        estatus:estatus,
+        faltas:faltas,
+        direccion:document.getElementById("direccion").value,
+        operacion_dias:document.getElementById("operacion_dias").value,
+        operacion_horario:document.getElementById("operacion_horario").value,
+        vigencia:document.getElementById("vigencia").value,
+        foto_base64:fotoBase64
+    };
+}
 
-        const file=event.target.files[0];
+async function agregar(){
+    const nuevo=datosFormulario();
 
-        if(!file)return;
-
-        const reader=new FileReader();
-
-        reader.onload=function(e){
-
-            fotoBase64=e.target.result;
-
-            mostrarFotoAdmin(fotoBase64);
-        };
-
-        reader.readAsDataURL(file);
+    if(!nuevo.epc || !nuevo.nombre){
+        alert("EPC y nombre son obligatorios");
+        return;
     }
 
-    function mostrarFotoAdmin(base64){
+    const {error}=await db
+    .from("credenciales")
+    .insert([nuevo]);
 
-        const box=document.getElementById("previewFoto");
-
-        if(base64){
-
-            box.innerHTML=`<img src="${base64}">`;
-
-        }else{
-
-            box.innerHTML="FOTO";
-        }
+    if(error){
+        alert(error.message);
+        return;
     }
 
-    function datosFormulario(){
+    alert("Registro agregado");
+    limpiar();
+    listar();
+}
 
-        return{
+async function buscarAdmin(){
+    const epc=epcCompleto(document.getElementById("epc").value);
 
-            epc:epcCompleto(
-                document.getElementById("epc").value
-            ),
+    const {data,error}=await db
+    .from("credenciales")
+    .select("*")
+    .eq("epc",epc)
+    .single();
 
-            nombre:document.getElementById("nombre").value,
-
-            apellido:document.getElementById("apellido").value,
-
-            organizacion:"EL PODER DEL COMERCIO",
-
-            giro:document.getElementById("giro").value,
-
-            estatus:document.getElementById("estatus").value,
-
-            direccion:document.getElementById("direccion").value,
-
-            operacion_dias:
-            document.getElementById("operacion_dias").value,
-
-            operacion_horario:
-            document.getElementById("operacion_horario").value,
-
-            vigencia:
-            document.getElementById("vigencia").value,
-
-            foto_base64:fotoBase64
-        };
+    if(error){
+        alert("No encontrado");
+        return;
     }
 
-    async function agregar(){
+    seleccionar(data);
+}
 
-        const nuevo=datosFormulario();
+async function actualizar(){
+    const id=document.getElementById("id").value;
 
-        const {error}=await db
-            .from("credenciales")
-            .insert([nuevo]);
-
-        if(error){
-
-            alert(error.message);
-            return;
-        }
-
-        alert("Registro agregado");
-
-        limpiar();
-
-        listar();
+    if(!id){
+        alert("Selecciona un registro");
+        return;
     }
 
-    async function buscarAdmin(){
+    const actualizado=datosFormulario();
 
-        const epc=
-            epcCompleto(
-                document.getElementById("epc").value
-            );
+    const {error}=await db
+    .from("credenciales")
+    .update(actualizado)
+    .eq("id",id);
 
-        const {data,error}=await db
-            .from("credenciales")
-            .select("*")
-            .eq("epc",epc)
-            .single();
-
-        if(error){
-
-            alert("No encontrado");
-            return;
-        }
-
-        seleccionar(data);
+    if(error){
+        alert(error.message);
+        return;
     }
 
-    async function actualizar(){
+    alert("Actualizado");
+    limpiar();
+    listar();
+}
 
-        const id=
-            document.getElementById("id").value;
+async function eliminar(){
+    const id=document.getElementById("id").value;
 
-        if(!id){
-
-            alert("Selecciona un registro");
-            return;
-        }
-
-        const actualizado=datosFormulario();
-
-        const {error}=await db
-            .from("credenciales")
-            .update(actualizado)
-            .eq("id",id);
-
-        if(error){
-
-            alert(error.message);
-            return;
-        }
-
-        alert("Actualizado");
-
-        limpiar();
-
-        listar();
+    if(!id){
+        alert("Selecciona uno");
+        return;
     }
 
-    async function eliminar(){
+    if(!confirm("¿Eliminar registro?")) return;
 
-        const id=
-            document.getElementById("id").value;
+    const {error}=await db
+    .from("credenciales")
+    .delete()
+    .eq("id",id);
 
-        if(!id){
-
-            alert("Selecciona uno");
-            return;
-        }
-
-        const confirmar=
-            confirm("Eliminar registro?");
-
-        if(!confirmar)return;
-
-        const {error}=await db
-            .from("credenciales")
-            .delete()
-            .eq("id",id);
-
-        if(error){
-
-            alert(error.message);
-            return;
-        }
-
-        alert("Eliminado");
-
-        limpiar();
-
-        listar();
+    if(error){
+        alert(error.message);
+        return;
     }
 
-    function limpiar(){
+    alert("Eliminado");
+    limpiar();
+    listar();
+}
 
-        document.getElementById("id").value="";
-        document.getElementById("epc").value="";
-        document.getElementById("nombre").value="";
-        document.getElementById("apellido").value="";
-        document.getElementById("giro").value="";
-        document.getElementById("estatus").value="";
-        document.getElementById("direccion").value="";
-        document.getElementById("operacion_dias").value="";
-        document.getElementById("operacion_horario").value="";
-        document.getElementById("vigencia").value="";
-        document.getElementById("fotoInput").value="";
+async function registrarFalta(){
+    const id=document.getElementById("id").value;
 
-        fotoBase64="";
-
-        mostrarFotoAdmin("");
+    if(!id){
+        alert("Busca o selecciona una credencial primero");
+        return;
     }
 
-    function enterBuscar(event){
+    let faltas = parseInt(document.getElementById("faltas").value || "0");
+    faltas++;
 
-        if(event.key==="Enter"){
+    let estatus = document.getElementById("estatusCheck").checked ? "ACTIVO" : "INACTIVO";
 
-            buscarCredencial();
-        }
-
-        const permitidos=[
-            "Backspace",
-            "Delete",
-            "ArrowLeft",
-            "ArrowRight",
-            "Tab",
-            "Enter"
-        ];
-
-        if(
-            !permitidos.includes(event.key)
-            &&
-            !/^[0-9]$/.test(event.key)
-        ){
-            event.preventDefault();
-        }
+    if(faltas === 2){
+        alert("ALERTA: Esta persona tiene 2 faltas. Con una más se inactiva.");
     }
 
-    async function buscarCredencial(){
-
-        const numero=
-            document.getElementById("buscarEpc")
-                .value.trim();
-
-        const epc=
-            epcCompleto(numero);
-
-        const {data,error}=await db
-            .from("credenciales")
-            .select("*")
-            .eq("epc",epc)
-            .single();
-
-        if(error){
-
-            alert("No encontrado");
-
-            limpiarCredencial();
-
-            return;
-        }
-
-        document.getElementById("vNombre")
-            .textContent=
-            `${data.nombre||""} ${data.apellido||""}`;
-
-        document.getElementById("vOrganizacion")
-            .textContent=
-            "EL PODER DEL COMERCIO";
-
-        document.getElementById("vGiro")
-            .textContent=data.giro||"";
-
-        document.getElementById("vEstatus")
-            .textContent=data.estatus||"";
-
-        document.getElementById("vDireccion")
-            .textContent=data.direccion||"";
-
-        document.getElementById("vVigencia")
-            .textContent=
-            "VIGENCIA " + (data.vigencia||"");
-
-        document.getElementById("vOperacion")
-            .textContent=
-            "OPERACIÓN DE "
-            + (data.operacion_horario||"")
-            + " DE "
-            + (data.operacion_dias||"");
-
-        const estado=
-            (data.estatus||"").toUpperCase();
-
-        const estadoAtras=
-            document.getElementById("vEstadoAtras");
-
-        estadoAtras.textContent=estado;
-
-        if(estado==="ACTIVO"){
-
-            estadoAtras.style.color="#16a34a";
-
-        }else{
-
-            estadoAtras.style.color="#dc2626";
-        }
-
-        const foto=
-            document.getElementById("vFoto");
-
-        if(data.foto_base64){
-
-            foto.innerHTML=
-                `<img src="${data.foto_base64}">`;
-
-        }else{
-
-            foto.innerHTML="SIN FOTO";
-        }
-
-        const qr=
-            document.getElementById("qrVisual");
-
-        qr.innerHTML="";
-
-        new QRCode(qr,{
-            text:soloNumero(data.epc),
-            width:190,
-            height:190
-        });
-
-        mostrarCredencial("frente");
+    if(faltas >= 3){
+        estatus = "INACTIVO";
+        document.getElementById("estatusCheck").checked = false;
+        document.getElementById("estatusTexto").textContent = "INACTIVO";
+        alert("La credencial se inactivó automáticamente por 3 faltas.");
     }
 
-    function limpiarCredencial(){
+    const {error}=await db
+    .from("credenciales")
+    .update({faltas:faltas, estatus:estatus})
+    .eq("id",id);
 
-        document.getElementById("vNombre").textContent="";
-        document.getElementById("vOrganizacion").textContent="";
-        document.getElementById("vGiro").textContent="";
-        document.getElementById("vEstatus").textContent="";
-        document.getElementById("vDireccion").textContent="";
-        document.getElementById("vVigencia").textContent="VIGENCIA";
-        document.getElementById("vOperacion").textContent="OPERACIÓN";
-        document.getElementById("vFoto").innerHTML="FOTO";
-        document.getElementById("qrVisual").innerHTML="";
+    if(error){
+        alert(error.message);
+        return;
     }
 
+    document.getElementById("faltas").value = faltas;
+    listar();
+}
+
+async function quitarFalta(){
+    const id=document.getElementById("id").value;
+
+    if(!id){
+        alert("Busca o selecciona una credencial primero");
+        return;
+    }
+
+    let faltas = parseInt(document.getElementById("faltas").value || "0");
+    if(faltas > 0) faltas--;
+
+    const estatus = faltas >= 3 ? "INACTIVO" : "ACTIVO";
+
+    const {error}=await db
+    .from("credenciales")
+    .update({faltas:faltas, estatus:estatus})
+    .eq("id",id);
+
+    if(error){
+        alert(error.message);
+        return;
+    }
+
+    document.getElementById("faltas").value = faltas;
+    document.getElementById("estatusCheck").checked = estatus === "ACTIVO";
+    document.getElementById("estatusTexto").textContent = estatus;
+    listar();
+}
+
+function limpiar(){
+    document.getElementById("id").value="";
+    document.getElementById("epc").value="";
+    document.getElementById("nombre").value="";
+    document.getElementById("apellido").value="";
+    document.getElementById("giro").value="";
+    document.getElementById("direccion").value="";
+    document.getElementById("operacion_dias").value="";
+    document.getElementById("operacion_horario").value="";
+    document.getElementById("vigencia").value="";
+    document.getElementById("faltas").value="0";
+    document.getElementById("estatusCheck").checked=true;
+    document.getElementById("estatusTexto").textContent="ACTIVO";
+    document.getElementById("fotoInput").value="";
+    fotoBase64="";
+    mostrarFotoAdmin("");
+}
+
+function enterBuscar(event){
+    if(event.key==="Enter"){
+        buscarCredencial();
+    }
+
+    const permitidos=["Backspace","Delete","ArrowLeft","ArrowRight","Tab","Enter"];
+
+    if(!permitidos.includes(event.key) && !/^[0-9]$/.test(event.key)){
+        event.preventDefault();
+    }
+}
+
+async function buscarCredencial(){
+    const numero=document.getElementById("buscarEpc").value.trim();
+    const epc=epcCompleto(numero);
+
+    const {data,error}=await db
+    .from("credenciales")
+    .select("*")
+    .eq("epc",epc)
+    .single();
+
+    if(error){
+        alert("No encontrado");
+        limpiarCredencial();
+        return;
+    }
+
+    document.getElementById("vNombre").textContent=`${data.nombre||""} ${data.apellido||""}`;
+    document.getElementById("vOrganizacion").textContent="EL PODER DEL COMERCIO";
+    document.getElementById("vGiro").textContent=data.giro||"";
+    document.getElementById("vEstatus").textContent=data.estatus||"";
+    document.getElementById("vDireccion").textContent=data.direccion||"";
+    document.getElementById("vVigencia").textContent="VIGENCIA " + (data.vigencia||"");
+    document.getElementById("vOperacion").textContent="OPERACIÓN DE " + (data.operacion_horario||"") + " DE " + (data.operacion_dias||"");
+
+    const estado=(data.estatus||"").toUpperCase();
+    const estadoAtras=document.getElementById("vEstadoAtras");
+    estadoAtras.textContent=estado;
+    estadoAtras.style.color = estado === "ACTIVO" ? "#16a34a" : "#dc2626";
+
+    const foto=document.getElementById("vFoto");
+    foto.innerHTML = data.foto_base64 ? `<img src="${data.foto_base64}">` : "SIN FOTO";
+
+    const qr=document.getElementById("qrVisual");
+    qr.innerHTML="";
+
+    new QRCode(qr,{
+        text:soloNumero(data.epc),
+        width:190,
+        height:190
+    });
+
+    mostrarCredencial("frente");
+}
+
+function limpiarCredencial(){
+    document.getElementById("vNombre").textContent="";
+    document.getElementById("vOrganizacion").textContent="";
+    document.getElementById("vGiro").textContent="";
+    document.getElementById("vEstatus").textContent="";
+    document.getElementById("vDireccion").textContent="";
+    document.getElementById("vVigencia").textContent="VIGENCIA";
+    document.getElementById("vOperacion").textContent="OPERACIÓN";
+    document.getElementById("vFoto").innerHTML="FOTO";
+    document.getElementById("qrVisual").innerHTML="";
+}
 </script>
 
 </body>
-</html> 
+</html>
