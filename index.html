@@ -429,7 +429,12 @@ letter-spacing:2px;
 EL PODER DEL COMERCIO
 </h1>
     <input type="text" id="loginUser" placeholder="Usuario">
-    <input type="password" id="loginPass" placeholder="Contraseña">
+    <input
+type="password"
+id="loginPass"
+placeholder="Contraseña"
+onkeydown="if(event.key==='Enter'){entrar()}"
+>
     <button onclick="entrar()">ENTRAR</button>
 </div>
 
