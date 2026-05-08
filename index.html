@@ -505,6 +505,9 @@ BUSCAR
 <label>Faltas:</label>
 <input type="number" id="faltas" value="0" readonly style="background:#d1d5db;font-weight:bold;">
 
+<label>Teléfono:</label>
+<input type="text" id="telefono">    
+    
 <label>Dirección:</label>
 <input type="text" id="direccion">
 
@@ -581,8 +584,19 @@ BUSCAR
 <div class="titulo" style="left:70px;top:330px;">Estatus:</div>
 <div class="dato" id="vEstatus" style="left:70px;top:370px;"></div>
 
-<div class="titulo" style="left:70px;top:425px;">Dirección:</div>
-<div class="dato" id="vDireccion" style="left:70px;top:465px;"></div>
+<div class="titulo" style="left:70px;top:405px;">
+Teléfono:
+</div>
+
+<div class="dato" id="vTelefono" style="left:70px;top:445px;">
+</div>
+
+<div class="titulo" style="left:70px;top:475px;">
+Dirección:
+</div>
+
+<div class="dato" id="vDireccion" style="left:70px;top:510px;font-size:18px;">
+</div>
 
 <div class="foto-frente" id="vFoto">FOTO</div>
 
@@ -726,6 +740,7 @@ function seleccionar(item){
     document.getElementById("nombre").value=item.nombre||"";
     document.getElementById("apellido").value=item.apellido||"";
     document.getElementById("giro").value=item.giro||"";
+    document.getElementById("telefono").value=item.telefono||"";
     document.getElementById("direccion").value=item.direccion||"";
     document.getElementById("operacion_dias").value=item.operacion_dias||"";
     document.getElementById("operacion_horario").value=item.operacion_horario||"";
@@ -773,6 +788,7 @@ function datosFormulario(){
         giro:document.getElementById("giro").value,
         estatus:estatus,
         faltas:faltas,
+        telefono:document.getElementById("telefono").value,
         direccion:document.getElementById("direccion").value,
         operacion_dias:document.getElementById("operacion_dias").value,
         operacion_horario:document.getElementById("operacion_horario").value,
@@ -943,6 +959,7 @@ function limpiar(){
     document.getElementById("nombre").value="";
     document.getElementById("apellido").value="";
     document.getElementById("giro").value="";
+    document.getElementById("telefono").value="";
     document.getElementById("direccion").value="";
     document.getElementById("operacion_dias").value="";
     document.getElementById("operacion_horario").value="";
@@ -987,6 +1004,7 @@ async function buscarCredencial(){
     document.getElementById("vOrganizacion").textContent="EL PODER DEL COMERCIO";
     document.getElementById("vGiro").textContent=data.giro||"";
     document.getElementById("vEstatus").textContent=data.estatus||"";
+    document.getElementById("vTelefono").textContent=data.telefono||"";
     document.getElementById("vDireccion").textContent=data.direccion||"";
     document.getElementById("vVigencia").textContent="VIGENCIA " + (data.vigencia||"");
     document.getElementById("vOperacion").textContent="OPERACIÓN DE " + (data.operacion_horario||"") + " DE " + (data.operacion_dias||"");
@@ -1016,6 +1034,7 @@ function limpiarCredencial(){
     document.getElementById("vOrganizacion").textContent="";
     document.getElementById("vGiro").textContent="";
     document.getElementById("vEstatus").textContent="";
+    document.getElementById("vTelefono").textContent=data.telefono||"";
     document.getElementById("vDireccion").textContent="";
     document.getElementById("vVigencia").textContent="VIGENCIA";
     document.getElementById("vOperacion").textContent="OPERACIÓN";
