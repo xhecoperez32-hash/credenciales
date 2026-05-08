@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -28,6 +28,9 @@ body{
 
 .login h1{
     color:#1A5372;
+    font-size:38px;
+    margin-bottom:25px;
+    letter-spacing:2px;
 }
 
 .login input{
@@ -316,13 +319,12 @@ tr:hover{
 .dato{
     position:absolute;
     color:black;
-    font-size:23px;
+    font-size:22px;
     font-weight:bold;
-    max-width:730px;
+    max-width:720px;
     white-space:normal;
     overflow-wrap:break-word;
     line-height:1.15;
-}
 }
 
 .foto-frente{
@@ -425,21 +427,9 @@ tr:hover{
 <body onload="listar()">
 
 <div id="login" class="login">
-    <h1 style="
-color:#1A5372;
-font-size:38px;
-margin-bottom:25px;
-letter-spacing:2px;
-">
-EL PODER DEL COMERCIO
-</h1>
+    <h1>EL PODER DEL COMERCIO</h1>
     <input type="text" id="loginUser" placeholder="Usuario">
-    <input
-type="password"
-id="loginPass"
-placeholder="Contraseña"
-onkeydown="if(event.key==='Enter'){entrar()}"
->
+    <input type="password" id="loginPass" placeholder="Contraseña" onkeydown="if(event.key==='Enter'){entrar()}">
     <button onclick="entrar()">ENTRAR</button>
 </div>
 
@@ -462,29 +452,10 @@ onkeydown="if(event.key==='Enter'){entrar()}"
 <label>Número EPC:</label>
 
 <div style="display:flex; gap:10px; align-items:center;">
-
-<input
-type="text"
-id="epc"
-placeholder="Ej: 789"
-style="width:300px;"
->
-
-<button
-class="buscar"
-onclick="buscarAdmin()"
-style="
-width:120px;
-height:36px;
-border:none;
-border-radius:6px;
-font-weight:bold;
-cursor:pointer;
-"
->
+<input type="text" id="epc" placeholder="Ej: 789" style="width:300px;">
+<button class="buscar" onclick="buscarAdmin()" style="width:120px;height:36px;border:none;border-radius:6px;font-weight:bold;cursor:pointer;">
 BUSCAR
 </button>
-
 </div>
 
 <div class="foto-box" id="previewFoto">FOTO</div>
@@ -511,8 +482,8 @@ BUSCAR
 <input type="number" id="faltas" value="0" readonly style="background:#d1d5db;font-weight:bold;">
 
 <label>Teléfono:</label>
-<input type="text" id="telefono">    
-    
+<input type="text" id="telefono">
+
 <label>Dirección:</label>
 <input type="text" id="direccion">
 
@@ -531,7 +502,6 @@ BUSCAR
 
 <div class="botones">
 <button class="guardar" onclick="agregar()">GUARDAR</button>
- 
 <button class="actualizar" onclick="actualizar()">ACTUALIZAR</button>
 <button class="eliminar" onclick="eliminar()">ELIMINAR</button>
 <button class="limpiar" onclick="limpiar()">LIMPIAR</button>
@@ -589,18 +559,8 @@ BUSCAR
 <div class="titulo" style="left:70px;top:285px;">Estatus:</div>
 <div class="dato" id="vEstatus" style="left:70px;top:322px;max-width:650px;"></div>
 
-    <div class="titulo" style="left:70px;top:405px;"> Dirección:
-
-</div>
-
-<div class="dato" id="vDireccion" style="left:70px;top:445px;font-size:20px;max-width:730px;">
-</div>
- 
-    
-</div>
-
-<div class="dato" id="vDireccion" style="left:70px;top:510px;font-size:18px;">
-</div>
+<div class="titulo" style="left:70px;top:365px;">Dirección:</div>
+<div class="dato" id="vDireccion" style="left:70px;top:402px;font-size:20px;max-width:730px;"></div>
 
 <div class="foto-frente" id="vFoto">FOTO</div>
 
@@ -618,14 +578,7 @@ ESTA CREDENCIAL IDENTIFICA COMO EL SIGUIENTE REGISTRADO ANTE
 <span class="azul">FECOPSE</span>
 </div>
 
-<div id="vEstadoAtras" style="
-position:absolute;
-left:80px;
-top:150px;
-width:280px;
-text-align:center;
-font-size:28px;
-font-weight:bold;">
+<div id="vEstadoAtras" style="position:absolute;left:80px;top:150px;width:280px;text-align:center;font-size:28px;font-weight:bold;">
 ACTIVO
 </div>
 
@@ -678,7 +631,7 @@ function epcCompleto(valor){
 }
 
 function soloNumero(valor){
-    return (valor||"").replace("EPC-","");
+    return (valor||"").toUpperCase().replace("EPC-","");
 }
 
 function mostrarPantalla(tipo){
@@ -1008,7 +961,7 @@ async function buscarCredencial(){
     document.getElementById("vOrganizacion").textContent="EL PODER DEL COMERCIO";
     document.getElementById("vGiro").textContent=data.giro||"";
     document.getElementById("vEstatus").textContent=data.estatus||"";
-     document.getElementById("vDireccion").textContent=data.direccion||"";
+    document.getElementById("vDireccion").textContent=data.direccion||"";
     document.getElementById("vVigencia").textContent="VIGENCIA " + (data.vigencia||"");
     document.getElementById("vOperacion").textContent="OPERACIÓN DE " + (data.operacion_horario||"") + " DE " + (data.operacion_dias||"");
 
@@ -1037,7 +990,6 @@ function limpiarCredencial(){
     document.getElementById("vOrganizacion").textContent="";
     document.getElementById("vGiro").textContent="";
     document.getElementById("vEstatus").textContent="";
-    document.getElementById("vTelefono").textContent=data.telefono||"";
     document.getElementById("vDireccion").textContent="";
     document.getElementById("vVigencia").textContent="VIGENCIA";
     document.getElementById("vOperacion").textContent="OPERACIÓN";
