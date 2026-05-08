@@ -1,3 +1,4 @@
+
  <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -8,7 +9,11 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
 <style>
-*{box-sizing:border-box}
+*{
+    box-sizing:border-box;
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+}
 
 body{
     margin:0;
@@ -276,22 +281,15 @@ tr:hover{
     margin:auto;
     position:relative;
     overflow:hidden;
-    background:#f2f2f2;
-    border:1px solid #ddd;
-}
-
-.credencial::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:repeating-radial-gradient(
+    background-color:#f2f2f2;
+    background-image:repeating-radial-gradient(
         ellipse at 35% 50%,
         rgba(120,120,120,.18) 0px,
         rgba(120,120,120,.18) 1px,
         transparent 3px,
         transparent 14px
     );
-    opacity:.7;
+    border:1px solid #ddd;
 }
 
 .credencial::after{
@@ -409,16 +407,60 @@ tr:hover{
     font-weight:bold;
 }
 
+.asistencia-box{
+    text-align:center;
+    padding:45px;
+}
+
+.asistencia-box input{
+    width:420px;
+    height:55px;
+    text-align:center;
+    font-size:30px;
+    font-weight:bold;
+}
+
+#resultadoAsistencia{
+    margin-top:35px;
+    font-size:34px;
+    font-weight:bold;
+}
+
+#datosAsistencia{
+    margin-top:20px;
+    font-size:24px;
+    font-weight:bold;
+}
+
 .oculto{display:none}
+
+@page{
+    size:auto;
+    margin:0;
+}
 
 @media print{
     body{background:white}
-    .tabs,.barra-credencial,.subtabs{display:none}
-    .pantalla{display:none!important}
-    #pantallaCredencial{display:block!important}
-    #panelFrente,#panelAtras{
+
+    .tabs,
+    .barra-credencial,
+    .subtabs{
+        display:none;
+    }
+
+    .pantalla{
+        display:none!important;
+    }
+
+    #pantallaCredencial{
+        display:block!important;
+    }
+
+    #panelFrente,
+    #panelAtras{
         display:block!important;
         margin-top:20px;
+        page-break-after:always;
     }
 }
 </style>
@@ -438,6 +480,7 @@ tr:hover{
 <div class="tabs">
 <button id="tabAdmin" class="active" onclick="mostrarPantalla('admin')">Administrar credenciales</button>
 <button id="tabCredencial" onclick="mostrarPantalla('credencial')">Ver / imprimir credencial</button>
+<button id="tabAsistencia" onclick="mostrarPantalla('asistencia')">Pase de lista</button>
 </div>
 
 <div id="pantallaAdmin" class="pantalla active">
@@ -453,7 +496,7 @@ tr:hover{
 
 <div style="display:flex; gap:10px; align-items:center;">
 <input type="text" id="epc" placeholder="Ej: 789" style="width:300px;">
-<button class="buscar" onclick="buscarAdmin()" style="width:120px;height:36px;border:none;border-radius:6px;font-weight:bold;cursor:pointer;">
+<button id="btnBuscarAdmin" class="buscar" onclick="buscarAdmin()" style="width:120px;height:36px;border:none;border-radius:6px;font-weight:bold;cursor:pointer;">
 BUSCAR
 </button>
 </div>
@@ -502,15 +545,15 @@ BUSCAR
 
 <div class="botones">
 <button class="guardar" onclick="agregar()">GUARDAR</button>
-<button class="actualizar" onclick="actualizar()">ACTUALIZAR</button>
-<button class="eliminar" onclick="eliminar()">ELIMINAR</button>
+<button id="btnActualizar" class="actualizar" onclick="actualizar()">ACTUALIZAR</button>
+<button id="btnEliminar" class="eliminar" onclick="eliminar()">ELIMINAR</button>
 <button class="limpiar" onclick="limpiar()">LIMPIAR</button>
 <button class="subir" onclick="document.getElementById('fotoInput').click()">SUBIR FOTO</button>
-<button class="falta" onclick="registrarFalta()">REGISTRAR FALTA</button>
-<button class="quitar" onclick="quitarFalta()">QUITAR FALTA</button>
+<button id="btnRegistrarFalta" class="falta" onclick="registrarFalta()">REGISTRAR FALTA</button>
+<button id="btnQuitarFalta" class="quitar" onclick="quitarFalta()">QUITAR FALTA</button>
 </div>
 
-<div class="tabla">
+<div class="tabla" id="tablaBox">
 <table>
 <thead>
 <tr>
@@ -598,6 +641,21 @@ ACTIVO
 </div>
 
 </div>
+
+<div id="pantallaAsistencia" class="pantalla">
+<div class="admin asistencia-box">
+<h1>PASE DE LISTA</h1>
+
+<p style="font-size:22px;font-weight:bold;">Escanea el código QR</p>
+
+<input type="text" id="scanQr" placeholder="Escanear QR aquí" onkeydown="if(event.key==='Enter'){validarAsistencia()}">
+
+<div id="resultadoAsistencia"></div>
+<div id="datosAsistencia"></div>
+
+</div>
+</div>
+
 </div>
 
 <script>
@@ -606,17 +664,70 @@ const SUPABASE_KEY = "sb_publishable_CjyA8MK4VMLbYd4_QizxxA_-sJE3v1V";
 const db = supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let fotoBase64 = "";
+let usuarioActual = null;
+
+const usuarios = [
+    {
+        usuario:"javier",
+        password:"admin123",
+        nombre:"Javier Segundo Morfín",
+        rol:"admin"
+    },
+    {
+        usuario:"capturista1",
+        password:"1234",
+        nombre:"Capturista 1",
+        rol:"capturista"
+    },
+    {
+        usuario:"capturista2",
+        password:"1234",
+        nombre:"Capturista 2",
+        rol:"capturista"
+    }
+];
 
 function entrar(){
     const usuario = document.getElementById("loginUser").value.trim();
     const pass = document.getElementById("loginPass").value.trim();
 
-    if(usuario === "admin" && pass === "fecopse123"){
-        document.getElementById("login").style.display = "none";
-        document.getElementById("app").style.display = "block";
-    }else{
+    const encontrado = usuarios.find(u => u.usuario === usuario && u.password === pass);
+
+    if(!encontrado){
         alert("Usuario o contraseña incorrectos");
+        return;
     }
+
+    usuarioActual = encontrado;
+
+    document.getElementById("login").style.display = "none";
+    document.getElementById("app").style.display = "block";
+
+    aplicarPermisos();
+    listar();
+}
+
+function aplicarPermisos(){
+    const esAdmin = usuarioActual && usuarioActual.rol === "admin";
+
+    if(!esAdmin){
+        document.getElementById("tabCredencial").style.display = "none";
+        document.getElementById("tabAsistencia").style.display = "none";
+        document.getElementById("btnBuscarAdmin").style.display = "none";
+        document.getElementById("btnActualizar").style.display = "none";
+        document.getElementById("btnEliminar").style.display = "none";
+        document.getElementById("btnRegistrarFalta").style.display = "none";
+        document.getElementById("btnQuitarFalta").style.display = "none";
+        document.getElementById("tablaBox").style.display = "none";
+    }
+}
+
+function soloAdmin(){
+    if(!usuarioActual || usuarioActual.rol !== "admin"){
+        alert("No tienes permiso para hacer esta acción");
+        return false;
+    }
+    return true;
 }
 
 document.getElementById("estatusCheck").addEventListener("change", function(){
@@ -637,15 +748,27 @@ function soloNumero(valor){
 function mostrarPantalla(tipo){
     document.getElementById("pantallaAdmin").classList.remove("active");
     document.getElementById("pantallaCredencial").classList.remove("active");
+    document.getElementById("pantallaAsistencia").classList.remove("active");
+
     document.getElementById("tabAdmin").classList.remove("active");
     document.getElementById("tabCredencial").classList.remove("active");
+    document.getElementById("tabAsistencia").classList.remove("active");
 
     if(tipo==="admin"){
         document.getElementById("pantallaAdmin").classList.add("active");
         document.getElementById("tabAdmin").classList.add("active");
-    }else{
+    }else if(tipo==="credencial"){
+        if(!soloAdmin()) return;
         document.getElementById("pantallaCredencial").classList.add("active");
         document.getElementById("tabCredencial").classList.add("active");
+    }else if(tipo==="asistencia"){
+        if(!soloAdmin()) return;
+        document.getElementById("pantallaAsistencia").classList.add("active");
+        document.getElementById("tabAsistencia").classList.add("active");
+
+        setTimeout(()=>{
+            document.getElementById("scanQr").focus();
+        },200);
     }
 }
 
@@ -667,11 +790,11 @@ function mostrarCredencial(tipo){
 async function listar(){
     const {data,error}=await db
     .from("credenciales")
-    .select("*")
+    .select("id, epc, nombre, apellido, estatus, faltas")
     .order("id",{ascending:true});
 
     if(error){
-        alert(error.message);
+        alert("Error al cargar tabla: " + error.message);
         return;
     }
 
@@ -680,7 +803,7 @@ async function listar(){
 
     data.forEach(item=>{
         tabla.innerHTML += `
-        <tr onclick='seleccionar(${JSON.stringify(item)})'>
+        <tr onclick='buscarAdminDesdeTabla("${item.epc}")'>
             <td>${item.id||""}</td>
             <td>${item.epc||""}</td>
             <td>${item.nombre||""}</td>
@@ -689,6 +812,23 @@ async function listar(){
             <td>${item.faltas||0}</td>
         </tr>`;
     });
+}
+
+async function buscarAdminDesdeTabla(epc){
+    if(!soloAdmin()) return;
+
+    const {data,error}=await db
+    .from("credenciales")
+    .select("*")
+    .eq("epc",epc)
+    .single();
+
+    if(error){
+        alert("Error al abrir registro: " + error.message);
+        return;
+    }
+
+    seleccionar(data);
 }
 
 function seleccionar(item){
@@ -762,12 +902,28 @@ async function agregar(){
         return;
     }
 
+    const {data: existe, error: errorExiste}=await db
+    .from("credenciales")
+    .select("id")
+    .eq("epc", nuevo.epc)
+    .maybeSingle();
+
+    if(errorExiste){
+        alert("Error al revisar duplicado: " + errorExiste.message);
+        return;
+    }
+
+    if(existe){
+        alert("Ese registro ya existe: " + nuevo.epc);
+        return;
+    }
+
     const {error}=await db
     .from("credenciales")
     .insert([nuevo]);
 
     if(error){
-        alert(error.message);
+        alert("Error al guardar: " + error.message);
         return;
     }
 
@@ -777,6 +933,8 @@ async function agregar(){
 }
 
 async function buscarAdmin(){
+    if(!soloAdmin()) return;
+
     const epc=epcCompleto(document.getElementById("epc").value);
 
     const {data,error}=await db
@@ -794,6 +952,8 @@ async function buscarAdmin(){
 }
 
 async function actualizar(){
+    if(!soloAdmin()) return;
+
     const id=document.getElementById("id").value;
 
     if(!id){
@@ -819,6 +979,8 @@ async function actualizar(){
 }
 
 async function eliminar(){
+    if(!soloAdmin()) return;
+
     const id=document.getElementById("id").value;
 
     if(!id){
@@ -844,6 +1006,8 @@ async function eliminar(){
 }
 
 async function registrarFalta(){
+    if(!soloAdmin()) return;
+
     const id=document.getElementById("id").value;
 
     if(!id){
@@ -882,6 +1046,8 @@ async function registrarFalta(){
 }
 
 async function quitarFalta(){
+    if(!soloAdmin()) return;
+
     const id=document.getElementById("id").value;
 
     if(!id){
@@ -942,6 +1108,8 @@ function enterBuscar(event){
 }
 
 async function buscarCredencial(){
+    if(!soloAdmin()) return;
+
     const numero=document.getElementById("buscarEpc").value.trim();
     const epc=epcCompleto(numero);
 
@@ -983,6 +1151,64 @@ async function buscarCredencial(){
     });
 
     mostrarCredencial("frente");
+}
+
+async function validarAsistencia(){
+    if(!soloAdmin()) return;
+
+    const numero = document.getElementById("scanQr").value.trim();
+
+    if(!numero){
+        return;
+    }
+
+    const epc = epcCompleto(numero);
+
+    const {data,error}=await db
+    .from("credenciales")
+    .select("*")
+    .eq("epc",epc)
+    .single();
+
+    const resultado = document.getElementById("resultadoAsistencia");
+    const datos = document.getElementById("datosAsistencia");
+
+    if(error){
+        resultado.style.color = "#dc2626";
+        resultado.textContent = "NO ENCONTRADO";
+        datos.textContent = epc;
+        document.getElementById("scanQr").value = "";
+        document.getElementById("scanQr").focus();
+        return;
+    }
+
+    const {error:updateError}=await db
+    .from("credenciales")
+    .update({
+        estatus:"ACTIVO"
+    })
+    .eq("id",data.id);
+
+    if(updateError){
+        resultado.style.color = "#dc2626";
+        resultado.textContent = "ERROR AL VALIDAR";
+        datos.textContent = updateError.message;
+        return;
+    }
+
+    resultado.style.color = "#16a34a";
+    resultado.textContent = "ASISTENCIA VALIDADA - ACTIVO";
+
+    datos.innerHTML = `
+        ${data.nombre || ""} ${data.apellido || ""}<br>
+        ${data.epc || ""}<br>
+        ${data.giro || ""}
+    `;
+
+    document.getElementById("scanQr").value = "";
+    document.getElementById("scanQr").focus();
+
+    listar();
 }
 
 function limpiarCredencial(){
