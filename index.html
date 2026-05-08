@@ -269,7 +269,7 @@ tr:hover{
 
 .credencial{
     width:1120px;
-    height:700px;
+    height:520px;
     margin:auto;
     position:relative;
     overflow:hidden;
@@ -318,6 +318,11 @@ tr:hover{
     color:black;
     font-size:23px;
     font-weight:bold;
+    max-width:730px;
+    white-space:normal;
+    overflow-wrap:break-word;
+    line-height:1.15;
+}
 }
 
 .foto-frente{
@@ -573,20 +578,25 @@ BUSCAR
 <div class="frente">
 
 <div class="titulo" style="left:70px;top:45px;">Nombre:</div>
-<div class="dato" id="vNombre" style="left:70px;top:85px;"></div>
+<div class="dato" id="vNombre" style="left:70px;top:82px;max-width:650px;"></div>
 
-<div class="titulo" style="left:70px;top:140px;">Organización:</div>
-<div class="dato" id="vOrganizacion" style="left:70px;top:180px;"></div>
+<div class="titulo" style="left:70px;top:125px;">Organización:</div>
+<div class="dato" id="vOrganizacion" style="left:70px;top:162px;max-width:650px;"></div>
 
-<div class="titulo" style="left:70px;top:235px;">Giro:</div>
-<div class="dato" id="vGiro" style="left:70px;top:275px;"></div>
+<div class="titulo" style="left:70px;top:205px;">Giro:</div>
+<div class="dato" id="vGiro" style="left:70px;top:242px;max-width:650px;"></div>
 
-<div class="titulo" style="left:70px;top:330px;">Estatus:</div>
-<div class="dato" id="vEstatus" style="left:70px;top:370px;"></div>
+<div class="titulo" style="left:70px;top:285px;">Estatus:</div>
+<div class="dato" id="vEstatus" style="left:70px;top:322px;max-width:650px;"></div>
 
+    <div class="titulo" style="left:70px;top:405px;"> Dirección:
+
+</div>
+
+<div class="dato" id="vDireccion" style="left:70px;top:445px;font-size:20px;max-width:730px;">
+</div>
  
-<div class="titulo" style="left:70px;top:475px;">
-Dirección:
+    
 </div>
 
 <div class="dato" id="vDireccion" style="left:70px;top:510px;font-size:18px;">
@@ -998,8 +1008,7 @@ async function buscarCredencial(){
     document.getElementById("vOrganizacion").textContent="EL PODER DEL COMERCIO";
     document.getElementById("vGiro").textContent=data.giro||"";
     document.getElementById("vEstatus").textContent=data.estatus||"";
-    document.getElementById("vTelefono").textContent=data.telefono||"";
-    document.getElementById("vDireccion").textContent=data.direccion||"";
+     document.getElementById("vDireccion").textContent=data.direccion||"";
     document.getElementById("vVigencia").textContent="VIGENCIA " + (data.vigencia||"");
     document.getElementById("vOperacion").textContent="OPERACIÓN DE " + (data.operacion_horario||"") + " DE " + (data.operacion_dias||"");
 
