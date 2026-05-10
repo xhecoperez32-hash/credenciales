@@ -402,32 +402,171 @@ tr:hover{
     font-weight:bold;
 }
 
-.asistencia-box{
-    text-align:center;
-    padding:45px;
+.oculto{display:none}
+
+/* ================= VERIFICACIÓN PÚBLICA QR ================= */
+
+.verificacion-publica{
+    display:none;
+    width:720px;
+    margin:30px auto;
+    background:white;
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:0 5px 20px rgba(0,0,0,.35);
+    font-family:Arial,sans-serif;
 }
 
-.asistencia-box input{
-    width:420px;
-    height:55px;
-    text-align:center;
-    font-size:30px;
-    font-weight:bold;
+.verificacion-header{
+    background:linear-gradient(90deg,#283f91,#526cc9);
+    color:white;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:32px 42px;
 }
 
-#resultadoAsistencia{
-    margin-top:35px;
+.verificacion-header-left{
+    text-align:center;
+    width:48%;
+}
+
+.verificacion-header-left h1{
+    margin:0;
     font-size:34px;
-    font-weight:bold;
+    line-height:1.1;
+    font-weight:900;
 }
 
-#datosAsistencia{
-    margin-top:20px;
+.verificacion-header-left p{
+    margin:8px 0 0;
+    font-size:20px;
+    line-height:1.15;
+}
+
+.verificacion-header-right{
+    text-align:center;
+    width:42%;
+}
+
+.verificacion-header-right h2{
+    margin:0;
+    font-size:44px;
+    letter-spacing:6px;
+    font-weight:900;
+}
+
+.verificacion-header-right p{
+    margin:14px 0 0;
     font-size:24px;
     font-weight:bold;
 }
 
-.oculto{display:none}
+.verificacion-body{
+    padding:55px 34px 35px;
+}
+
+.verificacion-intro{
+    font-size:24px;
+    font-weight:bold;
+    line-height:1.1;
+    margin:0 34px 42px;
+}
+
+.verificacion-fila{
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:12px;
+    margin-bottom:22px;
+    font-size:24px;
+}
+
+.verificacion-label{
+    font-weight:900;
+}
+
+.verificacion-valor{
+    font-weight:400;
+    text-transform:uppercase;
+}
+
+.verificacion-status{
+    font-size:62px;
+    font-weight:900;
+    color:#28ff28;
+    letter-spacing:8px;
+    line-height:1;
+}
+
+.verificacion-foto{
+    width:300px;
+    height:380px;
+    margin:60px auto 60px;
+    border:5px solid #999;
+    border-radius:14px;
+    overflow:hidden;
+    background:#eee;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.verificacion-foto img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.verificacion-logo{
+    width:300px;
+    height:390px;
+    margin:0 auto 60px;
+    border:5px solid #999;
+    border-radius:14px;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:white;
+}
+
+.verificacion-logo img{
+    width:95%;
+    height:95%;
+    object-fit:contain;
+}
+
+.verificacion-linea{
+    border-top:1px solid #ddd;
+    margin:0 0 25px;
+}
+
+.verificacion-ubicacion-title{
+    font-size:20px;
+    font-weight:900;
+    margin-bottom:18px;
+}
+
+.verificacion-maps-box{
+    background:#f8f8f8;
+    padding:22px;
+    border-radius:4px;
+    font-size:20px;
+}
+
+.verificacion-maps-box a{
+    color:#0000ee;
+    font-weight:normal;
+}
+
+.verificacion-error{
+    text-align:center;
+    padding:80px 30px;
+    font-size:28px;
+    font-weight:bold;
+    color:#dc2626;
+}
 
 @page{
     size:auto;
@@ -444,16 +583,13 @@ tr:hover{
 
     .tabs,
     .subtabs,
-    #pantallaAdmin,
-    #pantallaAsistencia{
+    #pantallaAdmin{
         display:none!important;
     }
 
     #pantallaCredencial{
         display:block!important;
     }
-
-    /* ========= BARRA SUPERIOR ========= */
 
     .barra-credencial{
         display:flex!important;
@@ -469,8 +605,6 @@ tr:hover{
         display:none!important;
     }
 
-    /* ========= FRENTE ========= */
-
     #panelFrente{
         display:block!important;
         margin-top:0!important;
@@ -478,8 +612,6 @@ tr:hover{
         page-break-after:always;
         position:relative;
     }
-
-    /* ========= ATRÁS ========= */
 
     #panelAtras{
         display:block!important;
@@ -489,7 +621,6 @@ tr:hover{
         page-break-after:always;
     }
 
-    /* Barra azul superior SOLO atrás */
     #panelAtras::before{
         content:"";
         position:absolute;
@@ -501,12 +632,9 @@ tr:hover{
         z-index:1;
     }
 
-    /* Quitar barra azul inferior atrás */
     #panelAtras::after{
         display:none!important;
     }
-
-    /* ========= VIGENCIA ========= */
 
     #vVigencia{
         position:absolute!important;
@@ -520,8 +648,6 @@ tr:hover{
         z-index:10!important;
     }
 
-    /* ========= EPC TRANSPARENTE ========= */
-
     #buscarEpc{
         background:transparent!important;
         border:none!important;
@@ -531,8 +657,6 @@ tr:hover{
         font-weight:bold!important;
     }
 
-    /* ========= FONDOS ========= */
-
     #panelFrente,
     #panelAtras{
         background-size:100% 100%!important;
@@ -540,26 +664,103 @@ tr:hover{
         background-position:center!important;
     }
 
-    /* ========= IMÁGENES ========= */
-
     img{
         print-color-adjust:exact!important;
         -webkit-print-color-adjust:exact!important;
     }
 
-    /* ========= QR ========= */
-
     #qrVisual canvas,
     #qrVisual img{
         display:block!important;
     }
-
 }
-
-     </style>
+</style>
 </head>
 
 <body onload="arranque()">
+
+<div id="verificacionPublica" class="verificacion-publica">
+
+    <div class="verificacion-header">
+        <div class="verificacion-header-left">
+            <h1>Verificación de<br>Inscripción</h1>
+            <p>(Este documento no sustituye la<br>Credencial)</p>
+        </div>
+
+        <div class="verificacion-header-right">
+            <h2>FECOPSE</h2>
+            <p>Folio: <span id="pubFolio"></span></p>
+        </div>
+    </div>
+
+    <div id="verificacionContenido" class="verificacion-body">
+
+        <p class="verificacion-intro">
+            Se hace constar que los datos que se mencionan a continuación,
+            se encuentran incluidos en el Padrón:
+        </p>
+
+        <div class="verificacion-fila">
+            <div class="verificacion-label">Nombre:</div>
+            <div class="verificacion-valor" id="pubNombre"></div>
+        </div>
+
+        <div class="verificacion-fila">
+            <div class="verificacion-label">Organización:</div>
+            <div class="verificacion-valor">EL PODER DEL COMERCIO</div>
+        </div>
+
+        <div class="verificacion-fila">
+            <div class="verificacion-label">Días de Operación:</div>
+            <div class="verificacion-valor" id="pubDias"></div>
+        </div>
+
+        <div class="verificacion-fila">
+            <div class="verificacion-label">Horario:</div>
+            <div class="verificacion-valor" id="pubHorario"></div>
+        </div>
+
+        <div class="verificacion-fila">
+            <div class="verificacion-label">Año de registro:</div>
+            <div class="verificacion-valor" id="pubAnio"></div>
+        </div>
+
+        <div class="verificacion-fila">
+            <div class="verificacion-label">Fecha de emisión:</div>
+            <div class="verificacion-valor" id="pubEmision"></div>
+        </div>
+
+        <div class="verificacion-fila">
+            <div class="verificacion-label">Vigencia hasta:</div>
+            <div class="verificacion-valor" id="pubVigencia"></div>
+        </div>
+
+        <div class="verificacion-fila">
+            <div class="verificacion-label">Giro:</div>
+            <div class="verificacion-valor" id="pubGiro"></div>
+        </div>
+
+        <div class="verificacion-fila">
+            <div class="verificacion-label">Status:</div>
+            <div class="verificacion-status" id="pubStatus"></div>
+        </div>
+
+        <div class="verificacion-foto" id="pubFoto">SIN FOTO</div>
+
+        <div class="verificacion-logo">
+            <img src="poder_comercio.png">
+        </div>
+
+        <div class="verificacion-linea"></div>
+
+        <div class="verificacion-ubicacion-title">Ubicación:</div>
+
+        <div class="verificacion-maps-box">
+            <a id="pubMaps" href="#" target="_blank">📍 Ver en Google Maps 📍</a>
+        </div>
+
+    </div>
+</div>
 
 <div id="login" class="login">
     <h1>EL PODER DEL COMERCIO</h1>
@@ -573,7 +774,6 @@ tr:hover{
 <div class="tabs">
 <button id="tabAdmin" class="active" onclick="mostrarPantalla('admin')">Administrar credenciales</button>
 <button id="tabCredencial" onclick="mostrarPantalla('credencial')">Ver / imprimir credencial</button>
-<button id="tabAsistencia" onclick="mostrarPantalla('asistencia')">Pase de lista</button>
 </div>
 
 <div id="pantallaAdmin" class="pantalla active">
@@ -742,20 +942,6 @@ ACTIVO
 
 </div>
 
-<div id="pantallaAsistencia" class="pantalla">
-<div class="admin asistencia-box">
-<h1>PASE DE LISTA</h1>
-
-<p style="font-size:22px;font-weight:bold;">Escanea el código QR</p>
-
-<input type="text" id="scanQr" placeholder="Escanear QR aquí" onkeydown="if(event.key==='Enter'){validarAsistencia()}">
-
-<div id="resultadoAsistencia"></div>
-<div id="datosAsistencia"></div>
-
-</div>
-</div>
-
 </div>
 
 <script>
@@ -777,18 +963,11 @@ async function arranque(){
     const epc = params.get("epc");
 
     if(epc){
-        usuarioActual = { usuario:"publico", nombre:"Consulta pública", rol:"publico" };
-
         document.getElementById("login").style.display = "none";
-        document.getElementById("app").style.display = "block";
+        document.getElementById("app").style.display = "none";
+        document.getElementById("verificacionPublica").style.display = "block";
 
-        document.getElementById("tabAdmin").style.display = "none";
-        document.getElementById("tabAsistencia").style.display = "none";
-
-        document.getElementById("buscarEpc").value = epc;
-        mostrarPantallaPublica();
-
-        await buscarCredencialPublica(epc);
+        await cargarVerificacionPublica(epc);
         return;
     }
 
@@ -820,7 +999,6 @@ function aplicarPermisos(){
 
     if(!esAdmin){
         document.getElementById("tabCredencial").style.display = "none";
-        document.getElementById("tabAsistencia").style.display = "none";
         document.getElementById("btnBuscarAdmin").style.display = "none";
         document.getElementById("btnActualizar").style.display = "none";
         document.getElementById("btnEliminar").style.display = "none";
@@ -868,21 +1046,12 @@ function linkCredencial(epc){
     return "https://poderdelcomercio.com/?epc=" + soloNumero(epc);
 }
 
-function mostrarPantallaPublica(){
-    document.getElementById("pantallaAdmin").classList.remove("active");
-    document.getElementById("pantallaAsistencia").classList.remove("active");
-    document.getElementById("pantallaCredencial").classList.add("active");
-    document.getElementById("tabCredencial").classList.add("active");
-}
-
 function mostrarPantalla(tipo){
     document.getElementById("pantallaAdmin").classList.remove("active");
     document.getElementById("pantallaCredencial").classList.remove("active");
-    document.getElementById("pantallaAsistencia").classList.remove("active");
 
     document.getElementById("tabAdmin").classList.remove("active");
     document.getElementById("tabCredencial").classList.remove("active");
-    document.getElementById("tabAsistencia").classList.remove("active");
 
     if(tipo==="admin"){
         document.getElementById("pantallaAdmin").classList.add("active");
@@ -891,14 +1060,6 @@ function mostrarPantalla(tipo){
         if(!soloAdmin()) return;
         document.getElementById("pantallaCredencial").classList.add("active");
         document.getElementById("tabCredencial").classList.add("active");
-    }else if(tipo==="asistencia"){
-        if(!soloAdmin()) return;
-        document.getElementById("pantallaAsistencia").classList.add("active");
-        document.getElementById("tabAsistencia").classList.add("active");
-
-        setTimeout(()=>{
-            document.getElementById("scanQr").focus();
-        },200);
     }
 }
 
@@ -1044,7 +1205,7 @@ async function agregar(){
     }
 
     if(existe){
-        alert("Ese registro ya existe: " + nuevo.epc);
+        alert("Este registro ya existe");
         return;
     }
 
@@ -1244,10 +1405,6 @@ async function buscarCredencial(){
     await cargarCredencial(numero, true);
 }
 
-async function buscarCredencialPublica(numero){
-    await cargarCredencial(numero, false);
-}
-
 async function cargarCredencial(numero, mostrarAlertas){
     const epc=epcCompleto(numero);
 
@@ -1293,15 +1450,55 @@ async function cargarCredencial(numero, mostrarAlertas){
     mostrarCredencial("frente");
 }
 
-async function validarAsistencia(){
-    if(!soloAdmin()) return;
-
-    const numero = document.getElementById("scanQr").value.trim();
-
-    if(!numero){
-        return;
+function fechaLargaMexico(fecha){
+    if(!fecha){
+        return "";
     }
 
+    const meses = [
+        "ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO",
+        "JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"
+    ];
+
+    if(fecha.includes("-")){
+        const partes = fecha.split("-");
+        if(partes.length === 3){
+            const anio = partes[0];
+            const mes = meses[parseInt(partes[1]) - 1];
+            const dia = parseInt(partes[2]);
+            return `${dia} DE ${mes} DE ${anio}`;
+        }
+    }
+
+    if(fecha.includes("/")){
+        const partes = fecha.split("/");
+        if(partes.length === 3){
+            const dia = parseInt(partes[0]);
+            const mes = meses[parseInt(partes[1]) - 1];
+            const anio = partes[2];
+            return `${dia} DE ${mes} DE ${anio}`;
+        }
+    }
+
+    return fecha.toUpperCase();
+}
+
+function obtenerAnioActual(){
+    return new Date().getFullYear();
+}
+
+function fechaEmisionActual(){
+    const hoy = new Date();
+
+    const meses = [
+        "ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO",
+        "JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"
+    ];
+
+    return `${hoy.getDate()} DE ${meses[hoy.getMonth()]} DE ${hoy.getFullYear()}`;
+}
+
+async function cargarVerificacionPublica(numero){
     const epc = epcCompleto(numero);
 
     const {data,error}=await db
@@ -1310,43 +1507,48 @@ async function validarAsistencia(){
     .eq("epc",epc)
     .single();
 
-    const resultado = document.getElementById("resultadoAsistencia");
-    const datos = document.getElementById("datosAsistencia");
+    if(error || !data){
+        document.getElementById("pubFolio").textContent = epc;
 
-    if(error){
-        resultado.style.color = "#dc2626";
-        resultado.textContent = "NO ENCONTRADO";
-        datos.textContent = epc;
-        document.getElementById("scanQr").value = "";
-        document.getElementById("scanQr").focus();
+        document.getElementById("verificacionContenido").innerHTML = `
+            <div class="verificacion-error">
+                REGISTRO NO ENCONTRADO
+            </div>
+        `;
         return;
     }
 
-    const {error:updateError}=await db
-    .from("credenciales")
-    .update({ estatus:"ACTIVO" })
-    .eq("id",data.id);
+    const estado = (data.estatus || "").toUpperCase();
 
-    if(updateError){
-        resultado.style.color = "#dc2626";
-        resultado.textContent = "ERROR AL VALIDAR";
-        datos.textContent = updateError.message;
-        return;
+    document.getElementById("pubFolio").textContent = data.epc || "";
+    document.getElementById("pubNombre").textContent = `${data.nombre || ""} ${data.apellido || ""}`;
+    document.getElementById("pubDias").textContent = data.operacion_dias || "";
+    document.getElementById("pubHorario").textContent = data.operacion_horario || "";
+    document.getElementById("pubAnio").textContent = obtenerAnioActual();
+    document.getElementById("pubEmision").textContent = fechaEmisionActual();
+    document.getElementById("pubVigencia").textContent = fechaLargaMexico(data.vigencia || "");
+    document.getElementById("pubGiro").textContent = data.giro || "";
+    document.getElementById("pubStatus").textContent = estado === "ACTIVO" ? "ACTIVA" : "INACTIVA";
+
+    document.getElementById("pubStatus").style.color = estado === "ACTIVO"
+        ? "#28ff28"
+        : "#dc2626";
+
+    const foto = document.getElementById("pubFoto");
+
+    if(data.foto_base64){
+        foto.innerHTML = `<img src="${data.foto_base64}">`;
+    }else{
+        foto.innerHTML = "SIN FOTO";
     }
 
-    resultado.style.color = "#16a34a";
-    resultado.textContent = "ASISTENCIA VALIDADA - ACTIVO";
+    const maps = document.getElementById("pubMaps");
 
-    datos.innerHTML = `
-        ${data.nombre || ""} ${data.apellido || ""}<br>
-        ${data.epc || ""}<br>
-        ${data.giro || ""}
-    `;
-
-    document.getElementById("scanQr").value = "";
-    document.getElementById("scanQr").focus();
-
-    listar();
+    if(data.direccion){
+        maps.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(data.direccion);
+    }else{
+        maps.href = "#";
+    }
 }
 
 function limpiarCredencial(){
