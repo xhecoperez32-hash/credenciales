@@ -391,14 +391,19 @@ tr:hover{
 
 #qrVisual{
     background:white;
-    padding:12px;
+    padding:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
 }
 
 #qrVisual canvas,
 #qrVisual img{
-    width:100%!important;
-    height:100%!important;
-    object-fit:contain!important;
+    width:190px!important;
+    height:190px!important;
+    max-width:190px!important;
+    max-height:190px!important;
     display:block!important;
 }
 
@@ -679,16 +684,20 @@ tr:hover{
     }
 
     #qrVisual{
-        padding:12px!important;
+        padding:0!important;
+        display:flex!important;
+        align-items:center!important;
+        justify-content:center!important;
         overflow:hidden!important;
     }
 
     #qrVisual canvas,
     #qrVisual img{
+        width:190px!important;
+        height:190px!important;
+        max-width:190px!important;
+        max-height:190px!important;
         display:block!important;
-        width:100%!important;
-        height:100%!important;
-        object-fit:contain!important;
     }
 }
 </style>
@@ -1460,8 +1469,8 @@ async function cargarCredencial(numero, mostrarAlertas){
 
     new QRCode(qr,{
         text:linkCredencial(data.epc),
-        width:160,
-        height:160,
+        width:190,
+        height:190,
         correctLevel:QRCode.CorrectLevel.M
     });
 
