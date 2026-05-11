@@ -452,59 +452,20 @@ tr:hover{
     display:flex;
     align-items:center;
     justify-content:center;
-    overflow:hidden;
-    transform:none!important;
 }
 
 /* Contenedor donde qrcodejs mete el canvas */
 #qrVisual{
-    width:230px;
-    height:230px;
-
-    padding:20px;
-
-    background:white;
-
     display:flex;
     align-items:center;
     justify-content:center;
-
-    box-sizing:border-box;
-
-    overflow:hidden;
 }
 
-/* Canvas del QR */
-#qrVisual canvas{
-    width:100%!important;
-    height:100%!important;
-    min-width:190px!important;
-    min-height:190px!important;
-    max-width:190px!important;
-    max-height:190px!important;
+/* Dejar que el JS defina el tamaño (190x190), solo aseguramos que se muestre en bloque */
+#qrVisual canvas,
+#qrVisual img{
     display:block!important;
-    image-rendering:pixelated;
-    transform:none!important;
-    rotate:none!important;
-    scale:none!important;
-    filter:none!important;
-}
-
-/* Por si la librería genera img en vez de canvas */
- 
-    #qrVisual img{
-    width:100%!important;
-    height:100%!important;
-    min-width:190px!important;
-    min-height:190px!important;
-    max-width:190px!important;
-    max-height:190px!important;
-    display:block!important;
-    image-rendering:pixelated;
-    transform:none!important;
-    rotate:none!important;
-    scale:none!important;
-    filter:none!important;
+    margin:0 auto;
 }
 
 .escanee{
@@ -798,49 +759,20 @@ tr:hover{
         display:flex!important;
         align-items:center!important;
         justify-content:center!important;
-        overflow:hidden!important;
-        transform:none!important;
     }
 
     #qrVisual{
-        width:190px!important;
-        height:190px!important;
         display:flex!important;
         align-items:center!important;
         justify-content:center!important;
-        overflow:hidden!important;
-        background:#ffffff!important;
-        transform:none!important;
     }
 
-    #qrVisual canvas{
-        width:190px!important;
-        height:190px!important;
-        min-width:190px!important;
-        min-height:190px!important;
-        max-width:190px!important;
-        max-height:190px!important;
-        display:block!important;
-        image-rendering:pixelated!important;
-        transform:none!important;
-        rotate:none!important;
-        scale:none!important;
-        filter:none!important;
-    }
-
+    #qrVisual canvas,
     #qrVisual img{
         width:190px!important;
         height:190px!important;
-        min-width:190px!important;
-        min-height:190px!important;
-        max-width:190px!important;
-        max-height:190px!important;
         display:block!important;
-        image-rendering:pixelated!important;
-        transform:none!important;
-        rotate:none!important;
-        scale:none!important;
-        filter:none!important;
+        margin:0 auto!important;
     }
 }
 </style>
