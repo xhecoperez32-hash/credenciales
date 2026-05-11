@@ -416,7 +416,7 @@ tr:hover{
     text-align:center;
     font-size:24px;
     font-weight:bold;
-    color:white;
+    color:black;
     z-index:5;
 }
 
@@ -458,20 +458,28 @@ tr:hover{
 
 /* Contenedor donde qrcodejs mete el canvas */
 #qrVisual{
-    width:190px;
-    height:190px;
+    width:100%;
+    height:100%;
+
     display:flex;
     align-items:center;
     justify-content:center;
-    overflow:hidden;
+
+    overflow:visible;
+
     background:#ffffff;
+
+    padding:18px;
+
+    box-sizing:border-box;
+
     transform:none!important;
 }
 
 /* Canvas del QR */
 #qrVisual canvas{
-    width:190px!important;
-    height:190px!important;
+    width:100%!important;
+    height:100%!important;
     min-width:190px!important;
     min-height:190px!important;
     max-width:190px!important;
@@ -485,9 +493,10 @@ tr:hover{
 }
 
 /* Por si la librería genera img en vez de canvas */
-#qrVisual img{
-    width:190px!important;
-    height:190px!important;
+ 
+    #qrVisual img{
+    width:100%!important;
+    height:100%!important;
     min-width:190px!important;
     min-height:190px!important;
     max-width:190px!important;
