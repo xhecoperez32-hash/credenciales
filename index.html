@@ -456,7 +456,6 @@ tr:hover{
     object-fit:contain;
 }
 
-/* ================= QR BIEN HECHO ================= */
 .qr-box{
     position:absolute;
     top:190px;
@@ -567,7 +566,6 @@ tr:hover{
     display: inline-block;
     width: 190px;
 }
-
 
 /* ================= VERIFICACIÓN PÚBLICA QR ================= */
 .verificacion-publica{
@@ -734,12 +732,11 @@ tr:hover{
 
 /* ================= IMPRESIÓN ================= */
 @page{
-    size:landscape; /* Fuerzo a Horizontal para que no quede vacía la mitad de la hoja */
-    margin:0; /* Sin márgenes que achiquen la credencial */
+    size:landscape; 
+    margin:0; 
 }
 
 @media print{
-
     body{
         background:white;
         margin:0;
@@ -811,12 +808,10 @@ tr:hover{
         display:none!important;
     }
 
-    /* Ocultar la palabra ACTIVO al imprimir la parte trasera */
     #vEstadoAtras {
         display: none !important;
     }
 
-    /* Vigencia siempre a la izquierda */
     #vVigencia{
         position:absolute!important;
         top:22px!important;
@@ -952,7 +947,7 @@ tr:hover{
 <div class="tabs">
     <button id="tabAdmin" class="active" onclick="mostrarPantalla('admin')">Administrar credenciales</button>
     <button id="tabCredencial" onclick="mostrarPantalla('credencial')">Ver / imprimir credencial</button>
-    <button id="tabAsistencia" onclick="mostrarPantalla('asistencia')">Pase de Lista</button>
+    <button id="tabAsistencia" onclick="mostrarPantalla('asistencia')">Escáner de Asistencia</button>
     <button id="tabUsuarios" onclick="mostrarPantalla('usuarios')">Gestión de Usuarios</button>
 </div>
 
@@ -1046,12 +1041,12 @@ BUSCAR
 </div>
 </div>
 
-<!-- =============== PANTALLA GESTIÓN DE USUARIOS (NUEVO) =============== -->
+<!-- =============== PANTALLA GESTIÓN DE USUARIOS =============== -->
 <div id="pantallaUsuarios" class="pantalla">
 <div class="admin">
 
 <h1>GESTIÓN DE USUARIOS DEL SISTEMA</h1>
-<p style="font-size:18px; color:#555; margin-bottom: 30px;">Agrega o elimina usuarios para el control de acceso. (Se guardan de forma local en este dispositivo).</p>
+<p style="font-size:18px; color:#555; margin-bottom: 30px;">Agrega o elimina usuarios para el control de acceso. (Guardados en Supabase).</p>
 
 <div class="user-grid">
     <label>Usuario (Login):</label>
@@ -1176,11 +1171,8 @@ ACTIVO
 <div id="pantallaAsistencia" class="pantalla">
     <div class="asistencia-container">
         <h1 style="color:#1A5372; font-size:40px; text-transform:uppercase;">Sistema de Asistencia y Accesos</h1>
-        
-        <!-- TEXTO MODIFICADO -->
         <p style="font-size:20px; color:#555; margin-bottom:30px;">Digita los 4 dígitos del EPC para confirmar asistencia.</p>
 
-        <!-- INPUT MODIFICADO -->
         <input type="text" id="inputAsistencia" placeholder="Digita los 4 dígitos del EPC para confirmar asistencia" onkeydown="procesarAsistencia(event)" autocomplete="off">
 
         <div id="asistenciaResultado">
@@ -1213,33 +1205,7 @@ let fotoBase64 = "";
 let usuarioActual = null;
 let timerAsistencia = null;
 
-// ================= GESTIÓN DE USUARIOS (LOCAL STORAGE) =================
-let listaUsuarios = [];
-
-function inicializarUsuarios() {
-    const usuariosGuardados = localStorage.getItem("fecopse_usuarios");
-    
-    if (usuariosGuardados) {
-        listaUsuarios = JSON.parse(usuariosGuardados);
-    } else {
-        // Usuarios por defecto si no hay nada guardado
-        listaUsuarios = [
-            { usuario:"javier", password:"admin123", nombre:"Javier Segundo Morfín", rol:"admin" },
-            { usuario:"capturista1", password:"1234", nombre:"Capturista 1", rol:"capturista" },
-            { usuario:"capturista2", password:"1234", nombre:"Capturista 2", rol:"capturista" },
-            { usuario:"asistencia1", password:"123", nombre:"Revisor Asistencia", rol:"asistencia" }
-        ];
-        guardarUsuariosEnLocal();
-    }
-}
-
-function guardarUsuariosEnLocal() {
-    localStorage.setItem("fecopse_usuarios", JSON.stringify(listaUsuarios));
-}
-
 async function arranque(){
-    inicializarUsuarios(); // Cargar usuarios primero
-
     const params = new URLSearchParams(window.location.search);
     const epc = params.get("epc");
 
@@ -1251,22 +1217,24 @@ async function arranque(){
         await cargarVerificacionPublica(epc);
         return;
     }
-
-    await listar();
 }
 
-function entrar(){
+async function entrar(){
     const usuario = document.getElementById("loginUser").value.trim();
     const pass = document.getElementById("loginPass").value.trim();
 
-    const encontrado = listaUsuarios.find(u => u.usuario === usuario && u.password === pass);
+    const { data, error } = await db.from("usuarios")
+                                    .select("*")
+                                    .eq("usuario", usuario)
+                                    .eq("password", pass)
+                                    .single();
 
-    if(!encontrado){
+    if(error || !data){
         alert("Usuario o contraseña incorrectos");
         return;
     }
 
-    usuarioActual = encontrado;
+    usuarioActual = data;
 
     document.getElementById("login").style.display = "none";
     document.getElementById("app").style.display = "block";
@@ -1279,7 +1247,6 @@ function entrar(){
 function aplicarPermisos(){
     const rol = usuarioActual ? usuarioActual.rol : "";
 
-    // Ocultar todo primero
     document.getElementById("tabAdmin").style.display = "none";
     document.getElementById("tabCredencial").style.display = "none";
     document.getElementById("tabAsistencia").style.display = "none";
@@ -1289,14 +1256,13 @@ function aplicarPermisos(){
         document.getElementById("tabAdmin").style.display = "inline-block";
         document.getElementById("tabCredencial").style.display = "inline-block";
         document.getElementById("tabAsistencia").style.display = "inline-block";
-        document.getElementById("tabUsuarios").style.display = "inline-block"; // Pestaña Usuarios habilitada
+        document.getElementById("tabUsuarios").style.display = "inline-block";
         mostrarPantalla('admin');
         renderTablaUsuarios();
     } 
     else if(rol === "capturista"){
         document.getElementById("tabAdmin").style.display = "inline-block";
         
-        // Bloquear botones administrativos en pantalla Admin
         document.getElementById("btnBuscarAdmin").style.display = "none";
         document.getElementById("btnActualizar").style.display = "none";
         document.getElementById("btnEliminar").style.display = "none";
@@ -1370,12 +1336,21 @@ document.getElementById("estatusCheck").addEventListener("change", function(){
     document.getElementById("estatusTexto").textContent = this.checked ? "ACTIVO" : "INACTIVO";
 });
 
-// ================= FUNCIONES GESTIÓN DE USUARIOS =================
-function renderTablaUsuarios() {
+// ================= FUNCIONES GESTIÓN DE USUARIOS (SUPABASE) =================
+async function renderTablaUsuarios() {
     const tbody = document.getElementById("tablaUsuariosBody");
+    tbody.innerHTML = "<tr><td colspan='4'>Cargando...</td></tr>";
+
+    const { data, error } = await db.from("usuarios").select("*").order("id", { ascending: true });
+    
+    if(error){
+        alert("Error cargando usuarios: " + error.message);
+        return;
+    }
+
     tbody.innerHTML = "";
 
-    listaUsuarios.forEach((u, index) => {
+    data.forEach((u) => {
         let rolEtiqueta = u.rol;
         if(u.rol === "admin") rolEtiqueta = "Administrador";
         if(u.rol === "capturista") rolEtiqueta = "Capturista";
@@ -1387,14 +1362,14 @@ function renderTablaUsuarios() {
             <td>${u.nombre}</td>
             <td>${rolEtiqueta}</td>
             <td>
-                <button onclick="eliminarUsuarioLocal(${index})" style="background:#dc2626; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">ELIMINAR</button>
+                <button onclick="eliminarUsuarioBD(${u.id}, '${u.usuario}')" style="background:#dc2626; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">ELIMINAR</button>
             </td>
         </tr>
         `;
     });
 }
 
-function guardarNuevoUsuario() {
+async function guardarNuevoUsuario() {
     const usuario = document.getElementById("uUser").value.trim();
     const pass = document.getElementById("uPass").value.trim();
     const nombre = document.getElementById("uNombre").value.trim();
@@ -1405,16 +1380,19 @@ function guardarNuevoUsuario() {
         return;
     }
 
-    const existe = listaUsuarios.find(u => u.usuario.toLowerCase() === usuario.toLowerCase());
+    const { data: existe } = await db.from("usuarios").select("id").eq("usuario", usuario).maybeSingle();
     if(existe) {
         alert("Ese nombre de usuario ya existe. Escribe uno diferente.");
         return;
     }
 
-    listaUsuarios.push({ usuario, password: pass, nombre, rol });
-    guardarUsuariosEnLocal();
+    const { error } = await db.from("usuarios").insert([{ usuario, password: pass, nombre, rol }]);
     
-    // Limpiar inputs
+    if(error) {
+        alert("Error al guardar usuario: " + error.message);
+        return;
+    }
+    
     document.getElementById("uUser").value = "";
     document.getElementById("uPass").value = "";
     document.getElementById("uNombre").value = "";
@@ -1423,17 +1401,18 @@ function guardarNuevoUsuario() {
     renderTablaUsuarios();
 }
 
-function eliminarUsuarioLocal(index) {
-    const userAEliminar = listaUsuarios[index];
-    
-    if(userAEliminar.usuario === usuarioActual.usuario) {
+async function eliminarUsuarioBD(id, nombreUsuario) {
+    if(nombreUsuario === usuarioActual.usuario) {
         alert("No puedes eliminar tu propio usuario mientras estás conectado.");
         return;
     }
 
-    if(confirm(`¿Estás seguro de eliminar al usuario "${userAEliminar.usuario}"?`)) {
-        listaUsuarios.splice(index, 1);
-        guardarUsuariosEnLocal();
+    if(confirm(`¿Estás seguro de eliminar al usuario "${nombreUsuario}"?`)) {
+        const { error } = await db.from("usuarios").delete().eq("id", id);
+        if(error){
+            alert("Error al eliminar: " + error.message);
+            return;
+        }
         renderTablaUsuarios();
     }
 }
