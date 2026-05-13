@@ -76,6 +76,7 @@ body{
     justify-content:center;
     gap:10px;
     margin-bottom:15px;
+    flex-wrap:wrap;
 }
 
 .tabs button{
@@ -125,7 +126,7 @@ body{
     grid-template-columns:180px 450px;
     gap:12px 20px;
     align-items:center;
-    margin-bottom: 25px;
+    margin-bottom:25px;
 }
 
 label{
@@ -134,11 +135,16 @@ label{
     font-weight:bold;
 }
 
-input, select {
+input, select{
     height:36px;
     border:1px solid #aaa;
     padding:5px 10px;
     font-size:18px;
+    text-transform:uppercase;
+}
+
+input[type="password"]{
+    text-transform:none;
 }
 
 .check-row{
@@ -156,7 +162,7 @@ input, select {
 
 .foto-box{
     grid-column:3;
-    grid-row:1 / span 10;
+    grid-row:1 / span 13;
     width:280px;
     height:360px;
     border:3px solid #777;
@@ -191,51 +197,19 @@ input, select {
     font-weight:bold;
 }
 
-.guardar{
-    background:#16a34a;
-    color:white;
-}
-
-.buscar{
-    background:#2563eb;
-    color:white;
-}
-
-.actualizar{
-    background:#eab308;
-    color:black;
-}
-
-.eliminar{
-    background:#dc2626;
-    color:white;
-}
-
-.limpiar{
-    background:#6b7280;
-    color:white;
-}
-
-.subir{
-    background:white;
-    border:1px solid #999!important;
-    color:black;
-}
-
-.falta{
-    background:#f97316;
-    color:white;
-}
-
-.quitar{
-    background:#0ea5e9;
-    color:white;
-}
+.guardar{background:#16a34a;color:white}
+.buscar{background:#2563eb;color:white}
+.actualizar{background:#eab308;color:black}
+.eliminar{background:#dc2626;color:white}
+.limpiar{background:#6b7280;color:white}
+.subir{background:white;border:1px solid #999!important;color:black}
+.falta{background:#f97316;color:white}
+.quitar{background:#0ea5e9;color:white}
 
 .tabla{
     margin-top:20px;
     background:white;
-    max-height:170px;
+    max-height:210px;
     overflow:auto;
 }
 
@@ -428,8 +402,8 @@ tr:hover{
     position:absolute;
     width:100%;
     top:455px;
-    text-align:left; 
-    padding-left:40px; 
+    text-align:left;
+    padding-left:40px;
     box-sizing:border-box;
     font-size:24px;
     font-weight:bold;
@@ -467,17 +441,25 @@ tr:hover{
     display:flex;
     align-items:center;
     justify-content:center;
+    padding:20px;
+    overflow:hidden;
 }
 
 #qrVisual{
+    width:190px;
+    height:190px;
     display:flex;
     align-items:center;
     justify-content:center;
+    background:white;
 }
 
 #qrVisual canvas,
 #qrVisual img{
-    margin:0 auto;
+    width:190px!important;
+    height:190px!important;
+    display:block!important;
+    image-rendering:pixelated;
 }
 
 .escanee{
@@ -495,76 +477,88 @@ tr:hover{
 }
 
 /* ================= PANTALLA DE ASISTENCIA ================= */
-.asistencia-container {
-    width: 100%;
-    max-width: 900px;
-    margin: 30px auto;
-    text-align: center;
+.asistencia-container{
+    width:100%;
+    max-width:900px;
+    margin:30px auto;
+    text-align:center;
 }
 
-#inputAsistencia {
-    width: 80%;
-    height: 60px;
-    font-size: 26px;
-    text-align: center;
-    border: 4px solid #1A5372;
-    border-radius: 10px;
-    outline: none;
-    background: #ffffff;
-    font-weight: bold;
-    color: #333;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+#inputAsistencia{
+    width:80%;
+    height:60px;
+    font-size:26px;
+    text-align:center;
+    border:4px solid #1A5372;
+    border-radius:10px;
+    outline:none;
+    background:#ffffff;
+    font-weight:bold;
+    color:#333;
+    box-shadow:inset 0 2px 5px rgba(0,0,0,0.1);
 }
 
-#asistenciaResultado {
-    display: none;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    overflow: hidden;
-    margin-top: 40px;
-    text-align: left;
+.asistencia-ayuda{
+    font-size:18px;
+    color:#555;
+    margin:15px 0 30px;
 }
 
-#asistenciaBanner {
-    padding: 25px;
-    text-align: center;
-    font-size: 44px;
-    font-weight: 900;
-    color: white;
-    letter-spacing: 2px;
+#asistenciaResultado{
+    display:none;
+    background:white;
+    border-radius:15px;
+    box-shadow:0 10px 40px rgba(0,0,0,0.3);
+    overflow:hidden;
+    margin-top:40px;
+    text-align:left;
 }
 
-.asistencia-grid {
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 40px;
-    padding: 40px;
+#asistenciaBanner{
+    padding:25px;
+    text-align:center;
+    font-size:44px;
+    font-weight:900;
+    color:white;
+    letter-spacing:2px;
 }
 
-.foto-asistencia {
-    width: 280px;
-    height: 360px;
-    border: 4px solid #999;
-    border-radius: 12px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 24px;
-    background: #eee;
+.asistencia-grid{
+    display:grid;
+    grid-template-columns:280px 1fr;
+    gap:40px;
+    padding:40px;
 }
 
-.asistencia-datos {
-    font-size: 26px;
-    line-height: 1.6;
+.foto-asistencia{
+    width:280px;
+    height:360px;
+    border:4px solid #999;
+    border-radius:12px;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    font-size:24px;
+    background:#eee;
 }
 
-.asistencia-datos strong {
-    color: #1A5372;
-    display: inline-block;
-    width: 190px;
+.foto-asistencia img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.asistencia-datos{
+    font-size:26px;
+    line-height:1.6;
+}
+
+.asistencia-datos strong{
+    color:#1A5372;
+    display:inline-block;
+    width:190px;
 }
 
 /* ================= VERIFICACIÓN PÚBLICA QR ================= */
@@ -732,8 +726,8 @@ tr:hover{
 
 /* ================= IMPRESIÓN ================= */
 @page{
-    size:landscape; 
-    margin:0; 
+    size:landscape;
+    margin:0;
 }
 
 @media print{
@@ -747,7 +741,7 @@ tr:hover{
     .subtabs,
     #pantallaAdmin,
     #pantallaAsistencia,
-    #pantallaUsuarios {
+    #pantallaUsuarios{
         display:none!important;
     }
 
@@ -808,8 +802,8 @@ tr:hover{
         display:none!important;
     }
 
-    #vEstadoAtras {
-        display: none !important;
+    #vEstadoAtras{
+        display:none!important;
     }
 
     #vVigencia{
@@ -817,10 +811,10 @@ tr:hover{
         top:22px!important;
         left:0!important;
         width:100%!important;
-        text-align:left!important; 
-        padding-left:40px!important; 
+        text-align:left!important;
+        padding-left:40px!important;
         box-sizing:border-box!important;
-        color:white!important;
+        color:black!important;
         font-size:30px!important;
         font-weight:bold!important;
         z-index:10!important;
@@ -851,19 +845,25 @@ tr:hover{
         display:flex!important;
         align-items:center!important;
         justify-content:center!important;
+        padding:20px!important;
+        overflow:hidden!important;
     }
 
     #qrVisual{
+        width:190px!important;
+        height:190px!important;
         display:flex!important;
         align-items:center!important;
         justify-content:center!important;
+        background:white!important;
     }
 
     #qrVisual canvas,
     #qrVisual img{
         width:190px!important;
         height:190px!important;
-        margin:0 auto!important;
+        display:block!important;
+        image-rendering:pixelated!important;
     }
 }
 </style>
@@ -962,21 +962,46 @@ tr:hover{
 <div class="admin-grid">
 
 <label>Número EPC:</label>
-
 <div style="display:flex; gap:10px; align-items:center;">
-<input type="text" id="epc" placeholder="Ej: 789" style="width:300px;">
-<button id="btnBuscarAdmin" class="buscar" onclick="buscarAdmin()" style="width:120px;height:36px;border:none;border-radius:6px;font-weight:bold;cursor:pointer;">
-BUSCAR
-</button>
+    <input type="text" id="epc" placeholder="AUTOMÁTICO" style="width:300px;background:#d1d5db;font-weight:bold;" readonly>
+    <button id="btnGenerarEpc" class="buscar" onclick="generarSiguienteEPC()" style="width:120px;height:36px;border:none;border-radius:6px;font-weight:bold;cursor:pointer;">
+    GENERAR
+    </button>
 </div>
 
 <div class="foto-box" id="previewFoto">FOTO</div>
+
+<label>Buscar nombre:</label>
+<div style="display:flex; gap:10px; align-items:center;">
+    <input type="text" id="buscarNombre" placeholder="NOMBRE O APELLIDO" style="width:300px;">
+    <button id="btnBuscarNombre" class="buscar" onclick="buscarPorNombre()" style="width:120px;height:36px;border:none;border-radius:6px;font-weight:bold;cursor:pointer;">
+    BUSCAR
+    </button>
+</div>
+
+<label>Buscar EPC:</label>
+<div style="display:flex; gap:10px; align-items:center;">
+    <input type="text" id="buscarAdminEpc" placeholder="Ej: 3000" style="width:300px;">
+    <button id="btnBuscarAdmin" class="buscar" onclick="buscarAdmin()" style="width:120px;height:36px;border:none;border-radius:6px;font-weight:bold;cursor:pointer;">
+    BUSCAR
+    </button>
+</div>
 
 <label>Nombre:</label>
 <input type="text" id="nombre">
 
 <label>Apellido:</label>
 <input type="text" id="apellido">
+
+<label>CURP:</label>
+<input type="text" id="curp" maxlength="18">
+
+<label>Sexo:</label>
+<select id="sexo">
+    <option value="">SELECCIONAR</option>
+    <option value="H">H</option>
+    <option value="M">M</option>
+</select>
 
 <label>Organización:</label>
 <input type="text" id="organizacion" value="EL PODER DEL COMERCIO" readonly style="background:#d1d5db;font-weight:bold;">
@@ -1003,10 +1028,10 @@ BUSCAR
 <input type="text" id="operacion_dias">
 
 <label>Horario:</label>
-<input type="text" id="operacion_horario">
+<input type="text" id="operacion_horario" placeholder="Ej: 5pm - 2am">
 
 <label>Vigencia:</label>
-<input type="text" id="vigencia" placeholder="31/12/2026">
+<input type="text" id="vigencia" value="31/12/2026" readonly style="background:#d1d5db;font-weight:bold;">
 
 </div>
 
@@ -1030,6 +1055,8 @@ BUSCAR
 <th>EPC</th>
 <th>Nombre</th>
 <th>Apellido</th>
+<th>CURP</th>
+<th>Sexo</th>
 <th>Estatus</th>
 <th>Faltas</th>
 </tr>
@@ -1046,23 +1073,25 @@ BUSCAR
 <div class="admin">
 
 <h1>GESTIÓN DE USUARIOS DEL SISTEMA</h1>
-<p style="font-size:18px; color:#555; margin-bottom: 30px;">Agrega o elimina usuarios para el control de acceso. (Guardados en Supabase).</p>
+<p style="font-size:18px; color:#555; margin-bottom:30px;">
+    Los usuarios se guardan en Supabase usando contraseña encriptada por la función crear_usuario.
+</p>
 
 <div class="user-grid">
-    <label>Usuario (Login):</label>
-    <input type="text" id="uUser" placeholder="Ej: capturista3">
+    <label>Usuario:</label>
+    <input type="text" id="uUser" placeholder="Ej: CAPTURISTA3">
 
     <label>Contraseña:</label>
-    <input type="text" id="uPass" placeholder="Contraseña">
+    <input type="password" id="uPass" placeholder="Contraseña">
 
-    <label>Nombre Completo:</label>
+    <label>Nombre completo:</label>
     <input type="text" id="uNombre" placeholder="Nombre de la persona">
 
     <label>Rol de acceso:</label>
     <select id="uRol">
-        <option value="capturista">Capturista (Solo editar credenciales)</option>
-        <option value="asistencia">Asistencia (Solo escanear QR)</option>
-        <option value="admin">Administrador (Acceso total)</option>
+        <option value="capturista">CAPTURISTA</option>
+        <option value="asistencia">ASISTENCIA</option>
+        <option value="admin">ADMINISTRADOR</option>
     </select>
 </div>
 
@@ -1077,10 +1106,11 @@ BUSCAR
 <th>Usuario</th>
 <th>Nombre</th>
 <th>Rol</th>
-<th>Acción</th>
 </tr>
 </thead>
-<tbody id="tablaUsuariosBody"></tbody>
+<tbody id="tablaUsuariosBody">
+<tr><td colspan="3">Por seguridad, la lista depende de políticas/RPC de Supabase.</td></tr>
+</tbody>
 </table>
 </div>
 
@@ -1171,13 +1201,15 @@ ACTIVO
 <div id="pantallaAsistencia" class="pantalla">
     <div class="asistencia-container">
         <h1 style="color:#1A5372; font-size:40px; text-transform:uppercase;">Sistema de Asistencia y Accesos</h1>
-        <p style="font-size:20px; color:#555; margin-bottom:30px;">Digita los 4 dígitos del EPC para confirmar asistencia.</p>
+        <p class="asistencia-ayuda">
+            Escanea el QR, digita los 4 dígitos del EPC o escribe el nombre para confirmar asistencia.
+        </p>
 
-        <input type="text" id="inputAsistencia" placeholder="Digita los 4 dígitos del EPC para confirmar asistencia" onkeydown="procesarAsistencia(event)" autocomplete="off">
+        <input type="text" id="inputAsistencia" placeholder="ESCANEA QR, EPC O NOMBRE" onkeydown="procesarAsistencia(event)" autocomplete="off">
 
         <div id="asistenciaResultado">
             <div id="asistenciaBanner">ESTADO</div>
-            
+
             <div class="asistencia-grid">
                 <div class="foto-asistencia" id="asistenciaFoto">FOTO</div>
                 <div class="asistencia-datos">
@@ -1203,21 +1235,25 @@ const db = supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let fotoBase64 = "";
 let usuarioActual = null;
-let passwordActual = "";
+let loginUsuarioActual = "";
+let loginPasswordActual = "";
 let timerAsistencia = null;
 
 async function arranque(){
     const params = new URLSearchParams(window.location.search);
     const epc = params.get("epc");
 
+    activarMayusculasAutomaticas();
+
     if(epc){
         document.getElementById("login").style.display = "none";
         document.getElementById("app").style.display = "none";
         document.getElementById("verificacionPublica").style.display = "block";
-
         await cargarVerificacionPublica(epc);
         return;
     }
+
+    document.getElementById("vigencia").value = "31/12/2026";
 }
 
 async function entrar(){
@@ -1229,41 +1265,31 @@ async function entrar(){
         return;
     }
 
-    let usuarioEncontrado = null;
-
-    const loginRpc = await db.rpc("login_usuario", {
+    const {data,error} = await db.rpc("login_usuario", {
         p_usuario: usuario,
         p_password: pass
     });
 
-    if(!loginRpc.error && loginRpc.data && loginRpc.data.length > 0){
-        usuarioEncontrado = loginRpc.data[0];
-    }else{
-        const loginPlano = await db
-        .from("usuarios")
-        .select("id, usuario, nombre, rol, activo, password")
-        .eq("usuario", usuario)
-        .eq("password", pass)
-        .maybeSingle();
-
-        if(!loginPlano.error && loginPlano.data && loginPlano.data.activo !== false){
-            usuarioEncontrado = loginPlano.data;
-        }
+    if(error){
+        alert("Error al iniciar sesión: " + error.message);
+        return;
     }
 
-    if(!usuarioEncontrado){
+    if(!data || data.length === 0){
         alert("Usuario o contraseña incorrectos");
         return;
     }
 
-    usuarioActual = usuarioEncontrado;
-    passwordActual = pass;
+    usuarioActual = data[0];
+    loginUsuarioActual = usuario;
+    loginPasswordActual = pass;
 
     document.getElementById("login").style.display = "none";
     document.getElementById("app").style.display = "block";
 
     aplicarPermisos();
     listar();
+    generarSiguienteEPC();
 }
 
 // ================= PERMISOS Y PESTAÑAS =================
@@ -1280,24 +1306,19 @@ function aplicarPermisos(){
         document.getElementById("tabCredencial").style.display = "inline-block";
         document.getElementById("tabAsistencia").style.display = "inline-block";
         document.getElementById("tabUsuarios").style.display = "inline-block";
-        mostrarPantalla('admin');
-        renderTablaUsuarios();
-    } 
-    else if(rol === "capturista"){
+        mostrarPantalla("admin");
+    }else if(rol === "capturista"){
         document.getElementById("tabAdmin").style.display = "inline-block";
-        
         document.getElementById("btnBuscarAdmin").style.display = "none";
-        document.getElementById("btnActualizar").style.display = "none";
+        document.getElementById("btnActualizar").style.display = "";
         document.getElementById("btnEliminar").style.display = "none";
         document.getElementById("btnRegistrarFalta").style.display = "none";
         document.getElementById("btnQuitarFalta").style.display = "none";
         document.getElementById("tablaBox").style.display = "none";
-
-        mostrarPantalla('admin');
-    }
-    else if(rol === "asistencia"){
+        mostrarPantalla("admin");
+    }else if(rol === "asistencia"){
         document.getElementById("tabAsistencia").style.display = "inline-block";
-        mostrarPantalla('asistencia');
+        mostrarPantalla("asistencia");
     }
 }
 
@@ -1307,6 +1328,10 @@ function soloAdmin(){
         return false;
     }
     return true;
+}
+
+function puedeActualizar(){
+    return usuarioActual && (usuarioActual.rol === "admin" || usuarioActual.rol === "capturista");
 }
 
 // ================= NAVEGACIÓN =================
@@ -1322,6 +1347,7 @@ function mostrarPantalla(tipo){
     document.getElementById("tabUsuarios").classList.remove("active");
 
     if(tipo === "admin"){
+        if(usuarioActual.rol === "asistencia") return;
         document.getElementById("pantallaAdmin").classList.add("active");
         document.getElementById("tabAdmin").classList.add("active");
     }else if(tipo === "credencial"){
@@ -1331,12 +1357,11 @@ function mostrarPantalla(tipo){
     }else if(tipo === "asistencia"){
         document.getElementById("pantallaAsistencia").classList.add("active");
         document.getElementById("tabAsistencia").classList.add("active");
-        document.getElementById("inputAsistencia").focus();
+        setTimeout(()=>document.getElementById("inputAsistencia").focus(),200);
     }else if(tipo === "usuarios"){
         if(!soloAdmin()) return;
         document.getElementById("pantallaUsuarios").classList.add("active");
         document.getElementById("tabUsuarios").classList.add("active");
-        renderTablaUsuarios();
     }
 }
 
@@ -1359,111 +1384,109 @@ document.getElementById("estatusCheck").addEventListener("change", function(){
     document.getElementById("estatusTexto").textContent = this.checked ? "ACTIVO" : "INACTIVO";
 });
 
-// ================= FUNCIONES GESTIÓN DE USUARIOS (SUPABASE) =================
-async function renderTablaUsuarios() {
-    const tbody = document.getElementById("tablaUsuariosBody");
-    tbody.innerHTML = "<tr><td colspan='4'>Cargando...</td></tr>";
-
-    const { data, error } = await db.from("usuarios").select("id, usuario, nombre, rol, activo").order("id", { ascending: true });
-    
-    if(error){
-        alert("Error cargando usuarios: " + error.message + "\n\nSi usas password_hash/RLS, necesitas crear una política SELECT para admin o una función RPC para listar usuarios.");
-        return;
-    }
-
-    tbody.innerHTML = "";
-
-    data.forEach((u) => {
-        let rolEtiqueta = u.rol;
-        if(u.rol === "admin") rolEtiqueta = "Administrador";
-        if(u.rol === "capturista") rolEtiqueta = "Capturista";
-        if(u.rol === "asistencia") rolEtiqueta = "Asistencia";
-
-        tbody.innerHTML += `
-        <tr>
-            <td style="font-weight:bold;">${u.usuario}</td>
-            <td>${u.nombre}</td>
-            <td>${rolEtiqueta}</td>
-            <td>
-                <button onclick="eliminarUsuarioBD(${u.id}, '${u.usuario}')" style="background:#dc2626; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">ELIMINAR</button>
-            </td>
-        </tr>
-        `;
-    });
-}
-
-async function guardarNuevoUsuario() {
+// ================= USUARIOS =================
+async function guardarNuevoUsuario(){
     if(!soloAdmin()) return;
 
-    const usuario = document.getElementById("uUser").value.trim();
+    const usuario = mayus(document.getElementById("uUser").value.trim());
     const pass = document.getElementById("uPass").value.trim();
-    const nombre = document.getElementById("uNombre").value.trim();
+    const nombre = mayus(document.getElementById("uNombre").value.trim());
     const rol = document.getElementById("uRol").value;
 
-    if(!usuario || !pass || !nombre) {
+    if(!usuario || !pass || !nombre){
         alert("Llena todos los campos para crear el usuario.");
         return;
     }
 
-    const crearRpc = await db.rpc("crear_usuario", {
-        p_admin_usuario: usuarioActual.usuario,
-        p_admin_password: passwordActual,
+    const {data,error} = await db.rpc("crear_usuario", {
+        p_admin_usuario: loginUsuarioActual,
+        p_admin_password: loginPasswordActual,
         p_usuario: usuario,
         p_password: pass,
         p_nombre: nombre,
         p_rol: rol
     });
 
-    if(!crearRpc.error){
-        alert(crearRpc.data || "Usuario agregado exitosamente.");
-        document.getElementById("uUser").value = "";
-        document.getElementById("uPass").value = "";
-        document.getElementById("uNombre").value = "";
-        renderTablaUsuarios();
+    if(error){
+        alert("Error al crear usuario: " + error.message);
         return;
     }
 
-    const { data: existe } = await db.from("usuarios").select("id").eq("usuario", usuario).maybeSingle();
-    if(existe) {
-        alert("Ese nombre de usuario ya existe. Escribe uno diferente.");
-        return;
-    }
+    alert(data || "USUARIO CREADO");
 
-    const { error } = await db.from("usuarios").insert([{ usuario, password: pass, nombre, rol }]);
-    
-    if(error) {
-        alert("Error al guardar usuario: " + error.message);
-        return;
-    }
-    
     document.getElementById("uUser").value = "";
     document.getElementById("uPass").value = "";
     document.getElementById("uNombre").value = "";
-    
-    alert("Usuario agregado exitosamente.");
-    renderTablaUsuarios();
 }
 
-async function eliminarUsuarioBD(id, nombreUsuario) {
-    if(nombreUsuario === usuarioActual.usuario) {
-        alert("No puedes eliminar tu propio usuario mientras estás conectado.");
-        return;
-    }
+// ================= UTILIDADES =================
+function mayus(valor){
+    return (valor || "").toString().trim().toUpperCase();
+}
 
-    if(confirm(`¿Estás seguro de eliminar al usuario "${nombreUsuario}"?`)) {
-        const { error } = await db.from("usuarios").delete().eq("id", id);
-        if(error){
-            alert("Error al eliminar: " + error.message);
-            return;
+function activarMayusculasAutomaticas(){
+    document.addEventListener("input", function(e){
+        const el = e.target;
+        if(!el || !el.tagName) return;
+        if((el.tagName === "INPUT" || el.tagName === "TEXTAREA") && el.type !== "password" && el.type !== "file"){
+            const inicio = el.selectionStart;
+            const fin = el.selectionEnd;
+            el.value = el.value.toUpperCase();
+            try{ el.setSelectionRange(inicio, fin); }catch(err){}
         }
-        renderTablaUsuarios();
-    }
+    });
 }
 
-// ================= CRUD Y ADMIN =================
+function convertirHorarioMilitar(valor){
+    let original = (valor || "").trim();
+    if(!original) return "";
+
+    let texto = original.toLowerCase()
+        .replaceAll(".", "")
+        .replaceAll("a m", "am")
+        .replaceAll("p m", "pm")
+        .replaceAll("a.m", "am")
+        .replaceAll("p.m", "pm")
+        .replaceAll("–", "-")
+        .replaceAll("—", "-");
+
+    const partes = texto.split("-").map(x => x.trim()).filter(Boolean);
+
+    function convertirParte(hora){
+        const match = hora.match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/i);
+        if(!match) return hora.toUpperCase();
+
+        let h = parseInt(match[1], 10);
+        let m = match[2] ? match[2] : "00";
+        let periodo = match[3];
+
+        if(periodo === "pm" && h < 12) h += 12;
+        if(periodo === "am" && h === 12) h = 0;
+
+        if(h > 23) h = 23;
+
+        return String(h).padStart(2,"0") + ":" + m.padStart(2,"0");
+    }
+
+    if(partes.length === 2){
+        const convertido = convertirParte(partes[0]) + " - " + convertirParte(partes[1]);
+        if(convertido !== original.toUpperCase()){
+            alert("El horario fue convertido a formato militar: " + convertido);
+        }
+        return convertido;
+    }
+
+    const uno = convertirParte(texto);
+    if(uno !== original.toUpperCase() && /\d/.test(uno)){
+        alert("El horario fue convertido a formato militar: " + uno);
+    }
+    return uno;
+}
+
 function epcCompleto(valor){
     valor = (valor || "").trim().toUpperCase();
     if(!valor) return "";
+
     try{
         if(valor.includes("HTTP")){
             const url = new URL(valor);
@@ -1471,6 +1494,7 @@ function epcCompleto(valor){
             if(epcParam) valor = epcParam;
         }
     }catch(e){}
+
     if(valor.startsWith("EPC-")) return valor;
     return "EPC-" + valor;
 }
@@ -1483,10 +1507,78 @@ function linkCredencial(epc){
     return "https://poderdelcomercio.com/?epc=" + soloNumero(epc);
 }
 
+// ================= EPC AUTOMÁTICO =================
+async function generarSiguienteEPC(){
+    const input = document.getElementById("epc");
+
+    try{
+        const {data,error} = await db.rpc("siguiente_epc");
+
+        if(!error && data){
+            input.value = soloNumero(data);
+            return;
+        }
+    }catch(e){}
+
+    const {data,error} = await db
+    .from("credenciales")
+    .select("epc");
+
+    if(error || !data){
+        input.value = "3000";
+        return;
+    }
+
+    let max = 2999;
+
+    data.forEach(item=>{
+        const n = parseInt(soloNumero(item.epc),10);
+        if(!isNaN(n) && n > max) max = n;
+    });
+
+    input.value = String(max + 1);
+}
+
+// ================= DUPLICADOS =================
+async function validarDuplicados(nuevo, idActual){
+    let orParts = [];
+
+    if(nuevo.epc) orParts.push(`epc.eq.${nuevo.epc}`);
+    if(nuevo.curp) orParts.push(`curp.eq.${nuevo.curp}`);
+
+    if(nuevo.nombre && nuevo.apellido){
+        orParts.push(`and(nombre.eq.${nuevo.nombre},apellido.eq.${nuevo.apellido})`);
+    }
+
+    if(orParts.length === 0) return null;
+
+    let query = db
+    .from("credenciales")
+    .select("id, epc, curp, nombre, apellido")
+    .or(orParts.join(","));
+
+    const {data,error} = await query;
+
+    if(error){
+        alert("Error revisando duplicados: " + error.message);
+        return "ERROR";
+    }
+
+    const duplicado = (data || []).find(x => String(x.id) !== String(idActual || ""));
+
+    if(duplicado){
+        alert("Datos repetidos detectados. Revisa EPC, CURP o nombre completo.");
+        return duplicado;
+    }
+
+    return null;
+}
+
+// ================= CRUD Y ADMIN =================
 async function listar(){
     const {data,error} = await db
     .from("credenciales")
-    .select("id, epc, nombre, apellido, estatus, faltas")
+    .select("id, epc, nombre, apellido, curp, sexo, estatus, faltas")
     .order("id",{ascending:true});
 
     if(error){
@@ -1504,6 +1596,8 @@ async function listar(){
             <td>${item.epc || ""}</td>
             <td>${item.nombre || ""}</td>
             <td>${item.apellido || ""}</td>
+            <td>${item.curp || ""}</td>
+            <td>${item.sexo || ""}</td>
             <td>${item.estatus || ""}</td>
             <td>${item.faltas || 0}</td>
         </tr>`;
@@ -1511,9 +1605,13 @@ async function listar(){
 }
 
 async function buscarAdminDesdeTabla(epc){
-    if(!soloAdmin()) return;
+    if(!puedeActualizar()) return;
 
-    const {data,error} = await db.from("credenciales").select("*").eq("epc",epc).single();
+    const {data,error} = await db
+    .from("credenciales")
+    .select("*")
+    .eq("epc",epc)
+    .single();
 
     if(error){
         alert("Error al abrir registro: " + error.message);
@@ -1523,17 +1621,70 @@ async function buscarAdminDesdeTabla(epc){
     seleccionar(data);
 }
 
+async function buscarPorNombre(){
+    if(!puedeActualizar()) return;
+
+    const nombre = mayus(document.getElementById("buscarNombre").value);
+
+    if(!nombre){
+        alert("Escribe un nombre para buscar.");
+        return;
+    }
+
+    const {data,error} = await db
+    .from("credenciales")
+    .select("*")
+    .or(`nombre.ilike.%${nombre}%,apellido.ilike.%${nombre}%`)
+    .limit(20);
+
+    if(error){
+        alert("Error buscando por nombre: " + error.message);
+        return;
+    }
+
+    if(!data || data.length === 0){
+        alert("No se encontraron registros con ese nombre.");
+        return;
+    }
+
+    if(data.length === 1){
+        seleccionar(data[0]);
+        return;
+    }
+
+    const tabla = document.getElementById("tabla");
+    tabla.innerHTML = "";
+
+    data.forEach(item=>{
+        tabla.innerHTML += `
+        <tr onclick='buscarAdminDesdeTabla("${item.epc}")'>
+            <td>${item.id || ""}</td>
+            <td>${item.epc || ""}</td>
+            <td>${item.nombre || ""}</td>
+            <td>${item.apellido || ""}</td>
+            <td>${item.curp || ""}</td>
+            <td>${item.sexo || ""}</td>
+            <td>${item.estatus || ""}</td>
+            <td>${item.faltas || 0}</td>
+        </tr>`;
+    });
+
+    alert("Se encontraron varios registros. Selecciona uno en la tabla.");
+}
+
 function seleccionar(item){
     document.getElementById("id").value = item.id || "";
     document.getElementById("epc").value = soloNumero(item.epc);
     document.getElementById("nombre").value = item.nombre || "";
     document.getElementById("apellido").value = item.apellido || "";
+    document.getElementById("curp").value = item.curp || "";
+    document.getElementById("sexo").value = item.sexo || "";
     document.getElementById("giro").value = item.giro || "";
     document.getElementById("telefono").value = item.telefono || "";
     document.getElementById("direccion").value = item.direccion || "";
     document.getElementById("operacion_dias").value = item.operacion_dias || "";
     document.getElementById("operacion_horario").value = item.operacion_horario || "";
-    document.getElementById("vigencia").value = item.vigencia || "";
+    document.getElementById("vigencia").value = "31/12/2026";
     document.getElementById("faltas").value = item.faltas || 0;
 
     const activo = (item.estatus || "ACTIVO").toUpperCase() === "ACTIVO";
@@ -1565,21 +1716,23 @@ function datosFormulario(){
     const faltas = parseInt(document.getElementById("faltas").value || "0");
     let estatus = document.getElementById("estatusCheck").checked ? "ACTIVO" : "INACTIVO";
 
-    if(faltas >= 3) estatus = "INACTIVO";
+    if(faltas >= 2) estatus = "INACTIVO";
 
     return{
         epc:epcCompleto(document.getElementById("epc").value),
-        nombre:document.getElementById("nombre").value,
-        apellido:document.getElementById("apellido").value,
+        nombre:mayus(document.getElementById("nombre").value),
+        apellido:mayus(document.getElementById("apellido").value),
+        curp:mayus(document.getElementById("curp").value),
+        sexo:mayus(document.getElementById("sexo").value),
         organizacion:"EL PODER DEL COMERCIO",
-        giro:document.getElementById("giro").value,
+        giro:mayus(document.getElementById("giro").value),
         estatus:estatus,
         faltas:faltas,
-        telefono:document.getElementById("telefono").value,
-        direccion:document.getElementById("direccion").value,
-        operacion_dias:document.getElementById("operacion_dias").value,
-        operacion_horario:document.getElementById("operacion_horario").value,
-        vigencia:document.getElementById("vigencia").value,
+        telefono:mayus(document.getElementById("telefono").value),
+        direccion:mayus(document.getElementById("direccion").value),
+        operacion_dias:mayus(document.getElementById("operacion_dias").value),
+        operacion_horario:convertirHorarioMilitar(document.getElementById("operacion_horario").value),
+        vigencia:"31/12/2026",
         foto_base64:fotoBase64
     };
 }
@@ -1587,50 +1740,54 @@ function datosFormulario(){
 async function agregar(){
     const nuevo = datosFormulario();
 
-    if(!nuevo.epc || !nuevo.nombre){
-        alert("EPC y nombre son obligatorios");
+    if(!nuevo.epc || !nuevo.nombre || !nuevo.curp || !nuevo.sexo){
+        alert("EPC, nombre, CURP y sexo son obligatorios");
         return;
     }
 
-    const {data: existe, error: errorExiste} = await db.from("credenciales").select("id").eq("epc", nuevo.epc).maybeSingle();
+    const duplicado = await validarDuplicados(nuevo, null);
+    if(duplicado) return;
 
-    if(errorExiste){
-        alert("Error al revisar duplicado: " + errorExiste.message);
-        return;
-    }
-
-    if(existe){
-        alert("Este registro ya existe");
-        return;
-    }
-
-    const {error} = await db.from("credenciales").insert([nuevo]);
+    const {error} = await db
+    .from("credenciales")
+    .insert([nuevo]);
 
     if(error){
         alert("Error al guardar: " + error.message);
         return;
     }
 
-    alert("Registro agregado");
+    alert("Credencial agregada correctamente.");
     limpiar();
     listar();
+    generarSiguienteEPC();
 }
 
 async function buscarAdmin(){
-    if(!soloAdmin()) return;
+    if(!puedeActualizar()) return;
 
-    const epc = epcCompleto(document.getElementById("epc").value);
-    const {data,error} = await db.from("credenciales").select("*").eq("epc",epc).single();
+    const epc = epcCompleto(document.getElementById("buscarAdminEpc").value || document.getElementById("epc").value);
+
+    const {data,error} = await db
+    .from("credenciales")
+    .select("*")
+    .eq("epc",epc)
+    .single();
 
     if(error){
         alert("No encontrado");
         return;
     }
+
     seleccionar(data);
 }
 
 async function actualizar(){
-    if(!soloAdmin()) return;
+    if(!puedeActualizar()){
+        alert("No tienes permiso para actualizar.");
+        return;
+    }
+
     const id = document.getElementById("id").value;
 
     if(!id){
@@ -1639,20 +1796,29 @@ async function actualizar(){
     }
 
     const actualizado = datosFormulario();
-    const {error} = await db.from("credenciales").update(actualizado).eq("id",id);
+
+    const duplicado = await validarDuplicados(actualizado, id);
+    if(duplicado) return;
+
+    const {error} = await db
+    .from("credenciales")
+    .update(actualizado)
+    .eq("id",id);
 
     if(error){
         alert(error.message);
         return;
     }
 
-    alert("Actualizado");
+    alert("Datos actualizados correctamente.");
     limpiar();
     listar();
+    generarSiguienteEPC();
 }
 
 async function eliminar(){
     if(!soloAdmin()) return;
+
     const id = document.getElementById("id").value;
 
     if(!id){
@@ -1662,7 +1828,10 @@ async function eliminar(){
 
     if(!confirm("¿Eliminar registro?")) return;
 
-    const {error} = await db.from("credenciales").delete().eq("id",id);
+    const {error} = await db
+    .from("credenciales")
+    .delete()
+    .eq("id",id);
 
     if(error){
         alert(error.message);
@@ -1672,10 +1841,12 @@ async function eliminar(){
     alert("Eliminado");
     limpiar();
     listar();
+    generarSiguienteEPC();
 }
 
 async function registrarFalta(){
     if(!soloAdmin()) return;
+
     const id = document.getElementById("id").value;
 
     if(!id){
@@ -1688,18 +1859,17 @@ async function registrarFalta(){
 
     let estatus = document.getElementById("estatusCheck").checked ? "ACTIVO" : "INACTIVO";
 
-    if(faltas === 2){
-        alert("ALERTA: Esta persona tiene 2 faltas. Con una más se inactiva.");
-    }
-
-    if(faltas >= 3){
+    if(faltas >= 2){
         estatus = "INACTIVO";
         document.getElementById("estatusCheck").checked = false;
         document.getElementById("estatusTexto").textContent = "INACTIVO";
-        alert("La credencial se inactivó automáticamente por 3 faltas.");
+        alert("El usuario llegó a 2 faltas. La credencial se desactivó automáticamente.");
     }
 
-    const {error} = await db.from("credenciales").update({faltas:faltas, estatus:estatus}).eq("id",id);
+    const {error} = await db
+    .from("credenciales")
+    .update({faltas:faltas, estatus:estatus})
+    .eq("id",id);
 
     if(error){
         alert(error.message);
@@ -1712,6 +1882,7 @@ async function registrarFalta(){
 
 async function quitarFalta(){
     if(!soloAdmin()) return;
+
     const id = document.getElementById("id").value;
 
     if(!id){
@@ -1722,9 +1893,12 @@ async function quitarFalta(){
     let faltas = parseInt(document.getElementById("faltas").value || "0");
     if(faltas > 0) faltas--;
 
-    const estatus = faltas >= 3 ? "INACTIVO" : "ACTIVO";
+    const estatus = faltas >= 2 ? "INACTIVO" : "ACTIVO";
 
-    const {error} = await db.from("credenciales").update({faltas:faltas, estatus:estatus}).eq("id",id);
+    const {error} = await db
+    .from("credenciales")
+    .update({faltas:faltas, estatus:estatus})
+    .eq("id",id);
 
     if(error){
         alert(error.message);
@@ -1739,21 +1913,23 @@ async function quitarFalta(){
 
 function limpiar(){
     document.getElementById("id").value = "";
-    document.getElementById("epc").value = "";
     document.getElementById("nombre").value = "";
     document.getElementById("apellido").value = "";
+    document.getElementById("curp").value = "";
+    document.getElementById("sexo").value = "";
     document.getElementById("giro").value = "";
     document.getElementById("telefono").value = "";
     document.getElementById("direccion").value = "";
     document.getElementById("operacion_dias").value = "";
     document.getElementById("operacion_horario").value = "";
-    document.getElementById("vigencia").value = "";
+    document.getElementById("vigencia").value = "31/12/2026";
     document.getElementById("faltas").value = "0";
     document.getElementById("estatusCheck").checked = true;
     document.getElementById("estatusTexto").textContent = "ACTIVO";
     document.getElementById("fotoInput").value = "";
     fotoBase64 = "";
     mostrarFotoAdmin("");
+    generarSiguienteEPC();
 }
 
 // ================= VISUALIZAR CREDENCIAL =================
@@ -1773,7 +1949,12 @@ async function buscarCredencial(){
 
 async function cargarCredencial(numero, mostrarAlertas){
     const epc = epcCompleto(numero);
-    const {data,error} = await db.from("credenciales").select("*").eq("epc",epc).single();
+
+    const {data,error} = await db
+    .from("credenciales")
+    .select("*")
+    .eq("epc",epc)
+    .single();
 
     if(error){
         if(mostrarAlertas) alert("No encontrado");
@@ -1787,7 +1968,7 @@ async function cargarCredencial(numero, mostrarAlertas){
     document.getElementById("vGiro").textContent = data.giro || "";
     document.getElementById("vEstatus").textContent = data.estatus || "";
     document.getElementById("vDireccion").textContent = data.direccion || "";
-    document.getElementById("vVigencia").textContent = "VIGENCIA " + (data.vigencia || "");
+    document.getElementById("vVigencia").textContent = "VIGENCIA " + (data.vigencia || "31/12/2026");
     document.getElementById("vOperacion").textContent = "OPERACIÓN DE " + (data.operacion_horario || "") + " DE " + (data.operacion_dias || "");
 
     const estado = (data.estatus || "").toUpperCase();
@@ -1805,9 +1986,14 @@ async function cargarCredencial(numero, mostrarAlertas){
 function generarQR(data){
     const qr = document.getElementById("qrVisual");
     qr.innerHTML = "";
+
     new QRCode(qr,{
-        text:linkCredencial(data.epc), width:190, height:190,
-        colorDark:"#000000", colorLight:"#ffffff", correctLevel:QRCode.CorrectLevel.H
+        text:linkCredencial(data.epc),
+        width:190,
+        height:190,
+        colorDark:"#000000",
+        colorLight:"#ffffff",
+        correctLevel:QRCode.CorrectLevel.H
     });
 }
 
@@ -1823,7 +2009,7 @@ function limpiarCredencial(){
     document.getElementById("qrVisual").innerHTML = "";
 }
 
-// ================= LOGICA ASISTENCIA (ESCÁNER) =================
+// ================= ASISTENCIA =================
 setInterval(() => {
     const pantalla = document.getElementById("pantallaAsistencia");
     if(pantalla && pantalla.classList.contains("active")){
@@ -1835,26 +2021,67 @@ setInterval(() => {
 }, 1000);
 
 async function procesarAsistencia(event){
-    if(event.key === "Enter"){
-        const valorRaw = document.getElementById("inputAsistencia").value.trim();
-        document.getElementById("inputAsistencia").value = ""; 
+    if(event.key !== "Enter") return;
 
-        if(!valorRaw) return;
+    const valorRaw = mayus(document.getElementById("inputAsistencia").value);
+    document.getElementById("inputAsistencia").value = "";
 
-        let epcToSearch = valorRaw;
-        try{
-            if(valorRaw.includes("HTTP") || valorRaw.includes("http")){
-                const url = new URL(valorRaw);
-                const epcParam = url.searchParams.get("epc");
-                if(epcParam) epcToSearch = epcParam;
-            }
-        }catch(e){}
+    if(!valorRaw) return;
 
-        epcToSearch = epcCompleto(epcToSearch);
+    let epcToSearch = valorRaw;
 
-        const {data, error} = await db.from("credenciales").select("*").eq("epc", epcToSearch).single();
-        mostrarDataAsistencia(data, error);
+    try{
+        if(valorRaw.includes("HTTP")){
+            const url = new URL(valorRaw);
+            const epcParam = url.searchParams.get("epc");
+            if(epcParam) epcToSearch = epcParam;
+        }
+    }catch(e){}
+
+    let query = db.from("credenciales").select("*").limit(2);
+
+    if(/^\d+$/.test(epcToSearch) || epcToSearch.startsWith("EPC-")){
+        query = db.from("credenciales").select("*").eq("epc", epcCompleto(epcToSearch)).limit(2);
+    }else{
+        query = db.from("credenciales").select("*").or(`nombre.ilike.%${epcToSearch}%,apellido.ilike.%${epcToSearch}%`).limit(2);
     }
+
+    const {data,error} = await query;
+
+    if(error || !data || data.length === 0){
+        mostrarDataAsistencia(null, true);
+        return;
+    }
+
+    if(data.length > 1){
+        mostrarMensajeAsistenciaMultiple(data);
+        return;
+    }
+
+    mostrarDataAsistencia(data[0], null);
+}
+
+function mostrarMensajeAsistenciaMultiple(data){
+    clearTimeout(timerAsistencia);
+
+    const banner = document.getElementById("asistenciaBanner");
+    const resultadoBox = document.getElementById("asistenciaResultado");
+
+    resultadoBox.style.display = "block";
+    banner.style.background = "#eab308";
+    banner.textContent = "VARIOS RESULTADOS";
+
+    document.getElementById("asistenciaFoto").innerHTML = "BUSCA MÁS ESPECÍFICO";
+    document.getElementById("asistenciaEpc").textContent = data.map(x => x.epc).join(", ");
+    document.getElementById("asistenciaNombre").textContent = data.map(x => `${x.nombre || ""} ${x.apellido || ""}`).join(" / ");
+    document.getElementById("asistenciaGiro").textContent = "-";
+    document.getElementById("asistenciaDias").textContent = "-";
+    document.getElementById("asistenciaHorario").textContent = "-";
+    document.getElementById("asistenciaVigencia").textContent = "-";
+
+    timerAsistencia = setTimeout(() => {
+        resultadoBox.style.display = "none";
+    }, 5000);
 }
 
 function mostrarDataAsistencia(data, error){
@@ -1867,9 +2094,9 @@ function mostrarDataAsistencia(data, error){
 
     if(error || !data){
         emitirSonido("error");
-        banner.style.background = "#dc2626"; // Rojo
+        banner.style.background = "#dc2626";
         banner.textContent = "REGISTRO NO ENCONTRADO";
-        
+
         document.getElementById("asistenciaFoto").innerHTML = "SIN FOTO";
         document.getElementById("asistenciaEpc").textContent = "-";
         document.getElementById("asistenciaNombre").textContent = "-";
@@ -1887,7 +2114,7 @@ function mostrarDataAsistencia(data, error){
 
         const fotoBox = document.getElementById("asistenciaFoto");
         if(data.foto_base64){
-            fotoBox.innerHTML = `<img src="${data.foto_base64}" style="width:100%;height:100%;object-fit:cover;">`;
+            fotoBox.innerHTML = `<img src="${data.foto_base64}">`;
         }else{
             fotoBox.innerHTML = "SIN FOTO";
         }
@@ -1896,12 +2123,14 @@ function mostrarDataAsistencia(data, error){
 
         if(estado === "ACTIVO"){
             emitirSonido("ok");
-            banner.style.background = "#16a34a"; // Verde
+            banner.style.background = "#16a34a";
             banner.textContent = "ASISTENCIA REGISTRADA";
+            alert("Asistencia registrada correctamente.");
         }else{
             emitirSonido("error");
-            banner.style.background = "#dc2626"; // Rojo
-            banner.textContent = "CREDENCIAL INACTIVA";
+            banner.style.background = "#dc2626";
+            banner.textContent = "CREDENCIAL DESACTIVADA";
+            alert("La credencial está desactivada.");
         }
     }
 
@@ -1910,8 +2139,8 @@ function mostrarDataAsistencia(data, error){
     }, 4000);
 }
 
-function emitirSonido(tipo) {
-    try {
+function emitirSonido(tipo){
+    try{
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         const ctx = new AudioContext();
         const osc = ctx.createOscillator();
@@ -1920,38 +2149,45 @@ function emitirSonido(tipo) {
         osc.connect(gainNode);
         gainNode.connect(ctx.destination);
 
-        if (tipo === "ok") {
+        if(tipo === "ok"){
             osc.type = "sine";
             osc.frequency.setValueAtTime(800, ctx.currentTime);
             gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
             osc.start();
             osc.stop(ctx.currentTime + 0.15);
-        } else {
+        }else{
             osc.type = "sawtooth";
             osc.frequency.setValueAtTime(200, ctx.currentTime);
             gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
             osc.start();
             osc.stop(ctx.currentTime + 0.4);
         }
-    } catch(e) {}
+    }catch(e){}
 }
 
 // ================= FECHAS Y PÚBLICO =================
 function fechaLargaMexico(fecha){
     if(!fecha) return "";
+
     const meses = ["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"];
+
     if(fecha.includes("-")){
         const partes = fecha.split("-");
         if(partes.length === 3) return `${parseInt(partes[2])} DE ${meses[parseInt(partes[1]) - 1]} DE ${partes[0]}`;
     }
+
     if(fecha.includes("/")){
         const partes = fecha.split("/");
         if(partes.length === 3) return `${parseInt(partes[0])} DE ${meses[parseInt(partes[1]) - 1]} DE ${partes[2]}`;
     }
+
     return fecha.toUpperCase();
 }
 
-function obtenerAnioActual() { return new Date().getFullYear(); }
+function obtenerAnioActual(){
+    return new Date().getFullYear();
+}
+
 function fechaEmisionActual(){
     const hoy = new Date();
     const meses = ["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"];
@@ -1960,7 +2196,12 @@ function fechaEmisionActual(){
 
 async function cargarVerificacionPublica(numero){
     const epc = epcCompleto(numero);
-    const {data,error} = await db.from("credenciales").select("*").eq("epc",epc).single();
+
+    const {data,error} = await db
+    .from("credenciales")
+    .select("*")
+    .eq("epc",epc)
+    .single();
 
     if(error || !data){
         document.getElementById("pubFolio").textContent = epc;
@@ -1969,13 +2210,14 @@ async function cargarVerificacionPublica(numero){
     }
 
     const estado = (data.estatus || "").toUpperCase();
+
     document.getElementById("pubFolio").textContent = data.epc || "";
     document.getElementById("pubNombre").textContent = `${data.nombre || ""} ${data.apellido || ""}`;
     document.getElementById("pubDias").textContent = data.operacion_dias || "";
     document.getElementById("pubHorario").textContent = data.operacion_horario || "";
     document.getElementById("pubAnio").textContent = obtenerAnioActual();
     document.getElementById("pubEmision").textContent = fechaEmisionActual();
-    document.getElementById("pubVigencia").textContent = fechaLargaMexico(data.vigencia || "");
+    document.getElementById("pubVigencia").textContent = fechaLargaMexico(data.vigencia || "31/12/2026");
     document.getElementById("pubGiro").textContent = data.giro || "";
 
     document.getElementById("pubStatus").textContent = estado === "ACTIVO" ? "ACTIVA" : "INACTIVA";
