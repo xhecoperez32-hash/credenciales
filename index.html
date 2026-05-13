@@ -1203,6 +1203,7 @@ const db = supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let fotoBase64 = "";
 let usuarioActual = null;
+let passwordActual = "";
 let timerAsistencia = null;
 
 async function arranque(){
@@ -1223,18 +1224,40 @@ async function entrar(){
     const usuario = document.getElementById("loginUser").value.trim();
     const pass = document.getElementById("loginPass").value.trim();
 
-    const { data, error } = await db.from("usuarios")
-                                    .select("*")
-                                    .eq("usuario", usuario)
-                                    .eq("password", pass)
-                                    .single();
+    if(!usuario || !pass){
+        alert("Escribe usuario y contraseña");
+        return;
+    }
 
-    if(error || !data){
+    let usuarioEncontrado = null;
+
+    const loginRpc = await db.rpc("login_usuario", {
+        p_usuario: usuario,
+        p_password: pass
+    });
+
+    if(!loginRpc.error && loginRpc.data && loginRpc.data.length > 0){
+        usuarioEncontrado = loginRpc.data[0];
+    }else{
+        const loginPlano = await db
+        .from("usuarios")
+        .select("id, usuario, nombre, rol, activo, password")
+        .eq("usuario", usuario)
+        .eq("password", pass)
+        .maybeSingle();
+
+        if(!loginPlano.error && loginPlano.data && loginPlano.data.activo !== false){
+            usuarioEncontrado = loginPlano.data;
+        }
+    }
+
+    if(!usuarioEncontrado){
         alert("Usuario o contraseña incorrectos");
         return;
     }
 
-    usuarioActual = data;
+    usuarioActual = usuarioEncontrado;
+    passwordActual = pass;
 
     document.getElementById("login").style.display = "none";
     document.getElementById("app").style.display = "block";
@@ -1341,10 +1364,10 @@ async function renderTablaUsuarios() {
     const tbody = document.getElementById("tablaUsuariosBody");
     tbody.innerHTML = "<tr><td colspan='4'>Cargando...</td></tr>";
 
-    const { data, error } = await db.from("usuarios").select("*").order("id", { ascending: true });
+    const { data, error } = await db.from("usuarios").select("id, usuario, nombre, rol, activo").order("id", { ascending: true });
     
     if(error){
-        alert("Error cargando usuarios: " + error.message);
+        alert("Error cargando usuarios: " + error.message + "\n\nSi usas password_hash/RLS, necesitas crear una política SELECT para admin o una función RPC para listar usuarios.");
         return;
     }
 
@@ -1370,6 +1393,8 @@ async function renderTablaUsuarios() {
 }
 
 async function guardarNuevoUsuario() {
+    if(!soloAdmin()) return;
+
     const usuario = document.getElementById("uUser").value.trim();
     const pass = document.getElementById("uPass").value.trim();
     const nombre = document.getElementById("uNombre").value.trim();
@@ -1377,6 +1402,24 @@ async function guardarNuevoUsuario() {
 
     if(!usuario || !pass || !nombre) {
         alert("Llena todos los campos para crear el usuario.");
+        return;
+    }
+
+    const crearRpc = await db.rpc("crear_usuario", {
+        p_admin_usuario: usuarioActual.usuario,
+        p_admin_password: passwordActual,
+        p_usuario: usuario,
+        p_password: pass,
+        p_nombre: nombre,
+        p_rol: rol
+    });
+
+    if(!crearRpc.error){
+        alert(crearRpc.data || "Usuario agregado exitosamente.");
+        document.getElementById("uUser").value = "";
+        document.getElementById("uPass").value = "";
+        document.getElementById("uNombre").value = "";
+        renderTablaUsuarios();
         return;
     }
 
