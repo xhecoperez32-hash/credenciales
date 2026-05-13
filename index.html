@@ -120,13 +120,21 @@ body{
     align-items:center;
 }
 
+.user-grid{
+    display:grid;
+    grid-template-columns:180px 450px;
+    gap:12px 20px;
+    align-items:center;
+    margin-bottom: 25px;
+}
+
 label{
     color:#1A5372;
     font-size:20px;
     font-weight:bold;
 }
 
-input{
+input, select {
     height:36px;
     border:1px solid #aaa;
     padding:5px 10px;
@@ -228,6 +236,13 @@ input{
     margin-top:20px;
     background:white;
     max-height:170px;
+    overflow:auto;
+}
+
+.tabla-usuarios{
+    margin-top:20px;
+    background:white;
+    max-height:300px;
     overflow:auto;
 }
 
@@ -489,7 +504,7 @@ tr:hover{
 }
 
 #inputAsistencia {
-    width: 60%;
+    width: 80%;
     height: 60px;
     font-size: 26px;
     text-align: center;
@@ -734,7 +749,8 @@ tr:hover{
     .tabs,
     .subtabs,
     #pantallaAdmin,
-    #pantallaAsistencia {
+    #pantallaAsistencia,
+    #pantallaUsuarios {
         display:none!important;
     }
 
@@ -937,8 +953,10 @@ tr:hover{
     <button id="tabAdmin" class="active" onclick="mostrarPantalla('admin')">Administrar credenciales</button>
     <button id="tabCredencial" onclick="mostrarPantalla('credencial')">Ver / imprimir credencial</button>
     <button id="tabAsistencia" onclick="mostrarPantalla('asistencia')">Escáner de Asistencia</button>
+    <button id="tabUsuarios" onclick="mostrarPantalla('usuarios')">Gestión de Usuarios</button>
 </div>
 
+<!-- =============== PANTALLA ADMINISTRAR CREDENCIALES =============== -->
 <div id="pantallaAdmin" class="pantalla active">
 <div class="admin">
 
@@ -1028,6 +1046,53 @@ BUSCAR
 </div>
 </div>
 
+<!-- =============== PANTALLA GESTIÓN DE USUARIOS (NUEVO) =============== -->
+<div id="pantallaUsuarios" class="pantalla">
+<div class="admin">
+
+<h1>GESTIÓN DE USUARIOS DEL SISTEMA</h1>
+<p style="font-size:18px; color:#555; margin-bottom: 30px;">Agrega o elimina usuarios para el control de acceso. (Se guardan de forma local en este dispositivo).</p>
+
+<div class="user-grid">
+    <label>Usuario (Login):</label>
+    <input type="text" id="uUser" placeholder="Ej: capturista3">
+
+    <label>Contraseña:</label>
+    <input type="text" id="uPass" placeholder="Contraseña">
+
+    <label>Nombre Completo:</label>
+    <input type="text" id="uNombre" placeholder="Nombre de la persona">
+
+    <label>Rol de acceso:</label>
+    <select id="uRol">
+        <option value="capturista">Capturista (Solo editar credenciales)</option>
+        <option value="asistencia">Asistencia (Solo escanear QR)</option>
+        <option value="admin">Administrador (Acceso total)</option>
+    </select>
+</div>
+
+<div class="botones">
+    <button class="guardar" onclick="guardarNuevoUsuario()" style="width:200px;">AGREGAR USUARIO</button>
+</div>
+
+<div class="tabla-usuarios">
+<table>
+<thead>
+<tr>
+<th>Usuario</th>
+<th>Nombre</th>
+<th>Rol</th>
+<th>Acción</th>
+</tr>
+</thead>
+<tbody id="tablaUsuariosBody"></tbody>
+</table>
+</div>
+
+</div>
+</div>
+
+<!-- =============== PANTALLA CREDENCIAL (IMPRESIÓN) =============== -->
 <div id="pantallaCredencial" class="pantalla">
 
 <div class="barra-credencial">
@@ -1107,12 +1172,16 @@ ACTIVO
 
 </div>
 
+<!-- =============== PANTALLA ASISTENCIA =============== -->
 <div id="pantallaAsistencia" class="pantalla">
     <div class="asistencia-container">
         <h1 style="color:#1A5372; font-size:40px; text-transform:uppercase;">Sistema de Asistencia y Accesos</h1>
-        <p style="font-size:20px; color:#555; margin-bottom:30px;">El lector se encuentra activo. Escanee la credencial ahora.</p>
+        
+        <!-- TEXTO MODIFICADO -->
+        <p style="font-size:20px; color:#555; margin-bottom:30px;">Digita los 4 dígitos del EPC para confirmar asistencia.</p>
 
-        <input type="text" id="inputAsistencia" placeholder="Esperando escaneo QR..." onkeydown="procesarAsistencia(event)" autocomplete="off">
+        <!-- INPUT MODIFICADO -->
+        <input type="text" id="inputAsistencia" placeholder="Digita los 4 dígitos del EPC para confirmar asistencia" onkeydown="procesarAsistencia(event)" autocomplete="off">
 
         <div id="asistenciaResultado">
             <div id="asistenciaBanner">ESTADO</div>
@@ -1144,15 +1213,33 @@ let fotoBase64 = "";
 let usuarioActual = null;
 let timerAsistencia = null;
 
-// ================= ROLES DE USUARIO =================
-const usuarios = [
-    { usuario:"javier", password:"admin123", nombre:"Javier Segundo Morfín", rol:"admin" },
-    { usuario:"capturista1", password:"1234", nombre:"Capturista 1", rol:"capturista" },
-    { usuario:"capturista2", password:"1234", nombre:"Capturista 2", rol:"capturista" },
-    { usuario:"asistencia1", password:"123", nombre:"Revisor Asistencia", rol:"asistencia" } // NUEVO ROL
-];
+// ================= GESTIÓN DE USUARIOS (LOCAL STORAGE) =================
+let listaUsuarios = [];
+
+function inicializarUsuarios() {
+    const usuariosGuardados = localStorage.getItem("fecopse_usuarios");
+    
+    if (usuariosGuardados) {
+        listaUsuarios = JSON.parse(usuariosGuardados);
+    } else {
+        // Usuarios por defecto si no hay nada guardado
+        listaUsuarios = [
+            { usuario:"javier", password:"admin123", nombre:"Javier Segundo Morfín", rol:"admin" },
+            { usuario:"capturista1", password:"1234", nombre:"Capturista 1", rol:"capturista" },
+            { usuario:"capturista2", password:"1234", nombre:"Capturista 2", rol:"capturista" },
+            { usuario:"asistencia1", password:"123", nombre:"Revisor Asistencia", rol:"asistencia" }
+        ];
+        guardarUsuariosEnLocal();
+    }
+}
+
+function guardarUsuariosEnLocal() {
+    localStorage.setItem("fecopse_usuarios", JSON.stringify(listaUsuarios));
+}
 
 async function arranque(){
+    inicializarUsuarios(); // Cargar usuarios primero
+
     const params = new URLSearchParams(window.location.search);
     const epc = params.get("epc");
 
@@ -1172,7 +1259,7 @@ function entrar(){
     const usuario = document.getElementById("loginUser").value.trim();
     const pass = document.getElementById("loginPass").value.trim();
 
-    const encontrado = usuarios.find(u => u.usuario === usuario && u.password === pass);
+    const encontrado = listaUsuarios.find(u => u.usuario === usuario && u.password === pass);
 
     if(!encontrado){
         alert("Usuario o contraseña incorrectos");
@@ -1196,17 +1283,20 @@ function aplicarPermisos(){
     document.getElementById("tabAdmin").style.display = "none";
     document.getElementById("tabCredencial").style.display = "none";
     document.getElementById("tabAsistencia").style.display = "none";
+    document.getElementById("tabUsuarios").style.display = "none";
 
     if(rol === "admin"){
         document.getElementById("tabAdmin").style.display = "inline-block";
         document.getElementById("tabCredencial").style.display = "inline-block";
         document.getElementById("tabAsistencia").style.display = "inline-block";
+        document.getElementById("tabUsuarios").style.display = "inline-block"; // Pestaña Usuarios habilitada
         mostrarPantalla('admin');
+        renderTablaUsuarios();
     } 
     else if(rol === "capturista"){
         document.getElementById("tabAdmin").style.display = "inline-block";
         
-        // Bloquear cosas en admin
+        // Bloquear botones administrativos en pantalla Admin
         document.getElementById("btnBuscarAdmin").style.display = "none";
         document.getElementById("btnActualizar").style.display = "none";
         document.getElementById("btnEliminar").style.display = "none";
@@ -1217,7 +1307,6 @@ function aplicarPermisos(){
         mostrarPantalla('admin');
     }
     else if(rol === "asistencia"){
-        // SOLO ve la pestaña de asistencia
         document.getElementById("tabAsistencia").style.display = "inline-block";
         mostrarPantalla('asistencia');
     }
@@ -1236,10 +1325,12 @@ function mostrarPantalla(tipo){
     document.getElementById("pantallaAdmin").classList.remove("active");
     document.getElementById("pantallaCredencial").classList.remove("active");
     document.getElementById("pantallaAsistencia").classList.remove("active");
+    document.getElementById("pantallaUsuarios").classList.remove("active");
 
     document.getElementById("tabAdmin").classList.remove("active");
     document.getElementById("tabCredencial").classList.remove("active");
     document.getElementById("tabAsistencia").classList.remove("active");
+    document.getElementById("tabUsuarios").classList.remove("active");
 
     if(tipo === "admin"){
         document.getElementById("pantallaAdmin").classList.add("active");
@@ -1252,6 +1343,11 @@ function mostrarPantalla(tipo){
         document.getElementById("pantallaAsistencia").classList.add("active");
         document.getElementById("tabAsistencia").classList.add("active");
         document.getElementById("inputAsistencia").focus();
+    }else if(tipo === "usuarios"){
+        if(!soloAdmin()) return;
+        document.getElementById("pantallaUsuarios").classList.add("active");
+        document.getElementById("tabUsuarios").classList.add("active");
+        renderTablaUsuarios();
     }
 }
 
@@ -1274,10 +1370,78 @@ document.getElementById("estatusCheck").addEventListener("change", function(){
     document.getElementById("estatusTexto").textContent = this.checked ? "ACTIVO" : "INACTIVO";
 });
 
+// ================= FUNCIONES GESTIÓN DE USUARIOS =================
+function renderTablaUsuarios() {
+    const tbody = document.getElementById("tablaUsuariosBody");
+    tbody.innerHTML = "";
+
+    listaUsuarios.forEach((u, index) => {
+        let rolEtiqueta = u.rol;
+        if(u.rol === "admin") rolEtiqueta = "Administrador";
+        if(u.rol === "capturista") rolEtiqueta = "Capturista";
+        if(u.rol === "asistencia") rolEtiqueta = "Asistencia";
+
+        tbody.innerHTML += `
+        <tr>
+            <td style="font-weight:bold;">${u.usuario}</td>
+            <td>${u.nombre}</td>
+            <td>${rolEtiqueta}</td>
+            <td>
+                <button onclick="eliminarUsuarioLocal(${index})" style="background:#dc2626; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">ELIMINAR</button>
+            </td>
+        </tr>
+        `;
+    });
+}
+
+function guardarNuevoUsuario() {
+    const usuario = document.getElementById("uUser").value.trim();
+    const pass = document.getElementById("uPass").value.trim();
+    const nombre = document.getElementById("uNombre").value.trim();
+    const rol = document.getElementById("uRol").value;
+
+    if(!usuario || !pass || !nombre) {
+        alert("Llena todos los campos para crear el usuario.");
+        return;
+    }
+
+    const existe = listaUsuarios.find(u => u.usuario.toLowerCase() === usuario.toLowerCase());
+    if(existe) {
+        alert("Ese nombre de usuario ya existe. Escribe uno diferente.");
+        return;
+    }
+
+    listaUsuarios.push({ usuario, password: pass, nombre, rol });
+    guardarUsuariosEnLocal();
+    
+    // Limpiar inputs
+    document.getElementById("uUser").value = "";
+    document.getElementById("uPass").value = "";
+    document.getElementById("uNombre").value = "";
+    
+    alert("Usuario agregado exitosamente.");
+    renderTablaUsuarios();
+}
+
+function eliminarUsuarioLocal(index) {
+    const userAEliminar = listaUsuarios[index];
+    
+    if(userAEliminar.usuario === usuarioActual.usuario) {
+        alert("No puedes eliminar tu propio usuario mientras estás conectado.");
+        return;
+    }
+
+    if(confirm(`¿Estás seguro de eliminar al usuario "${userAEliminar.usuario}"?`)) {
+        listaUsuarios.splice(index, 1);
+        guardarUsuariosEnLocal();
+        renderTablaUsuarios();
+    }
+}
+
+// ================= CRUD Y ADMIN =================
 function epcCompleto(valor){
     valor = (valor || "").trim().toUpperCase();
     if(!valor) return "";
-
     try{
         if(valor.includes("HTTP")){
             const url = new URL(valor);
@@ -1285,7 +1449,6 @@ function epcCompleto(valor){
             if(epcParam) valor = epcParam;
         }
     }catch(e){}
-
     if(valor.startsWith("EPC-")) return valor;
     return "EPC-" + valor;
 }
@@ -1298,7 +1461,6 @@ function linkCredencial(epc){
     return "https://poderdelcomercio.com/?epc=" + soloNumero(epc);
 }
 
-// ================= CRUD Y ADMIN =================
 async function listar(){
     const {data,error} = await db
     .from("credenciales")
@@ -1640,8 +1802,6 @@ function limpiarCredencial(){
 }
 
 // ================= LOGICA ASISTENCIA (ESCÁNER) =================
-
-// Auto-enfoque constante para pistola de código de barras
 setInterval(() => {
     const pantalla = document.getElementById("pantallaAsistencia");
     if(pantalla && pantalla.classList.contains("active")){
@@ -1655,11 +1815,10 @@ setInterval(() => {
 async function procesarAsistencia(event){
     if(event.key === "Enter"){
         const valorRaw = document.getElementById("inputAsistencia").value.trim();
-        document.getElementById("inputAsistencia").value = ""; // Limpiar inmediato
+        document.getElementById("inputAsistencia").value = ""; 
 
         if(!valorRaw) return;
 
-        // Extraer EPC de la URL si escanean un QR
         let epcToSearch = valorRaw;
         try{
             if(valorRaw.includes("HTTP") || valorRaw.includes("http")){
@@ -1724,13 +1883,11 @@ function mostrarDataAsistencia(data, error){
         }
     }
 
-    // Ocultar tarjeta a los 4 segundos para el siguiente escaneo
     timerAsistencia = setTimeout(() => {
         resultadoBox.style.display = "none";
     }, 4000);
 }
 
-// Sonido opcional usando Web Audio API (Sin archivos de sonido externos)
 function emitirSonido(tipo) {
     try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -1742,23 +1899,19 @@ function emitirSonido(tipo) {
         gainNode.connect(ctx.destination);
 
         if (tipo === "ok") {
-            // Sonido de éxito (Tono agudo y limpio)
             osc.type = "sine";
             osc.frequency.setValueAtTime(800, ctx.currentTime);
             gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
             osc.start();
             osc.stop(ctx.currentTime + 0.15);
         } else {
-            // Sonido de error (Graves, zumbido)
             osc.type = "sawtooth";
             osc.frequency.setValueAtTime(200, ctx.currentTime);
             gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
             osc.start();
             osc.stop(ctx.currentTime + 0.4);
         }
-    } catch(e) {
-        // En caso de que el navegador bloquee el audio, no hace nada
-    }
+    } catch(e) {}
 }
 
 // ================= FECHAS Y PÚBLICO =================
