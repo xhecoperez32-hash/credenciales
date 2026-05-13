@@ -444,10 +444,11 @@ tr:hover{
     display:flex;
     align-items:center;
     justify-content:center;
-    overflow:hidden;
 }
 
 #qrVisual{
+    width:190px;
+    height:190px;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -458,6 +459,10 @@ tr:hover{
 #qrVisual img{
     width:190px!important;
     height:190px!important;
+    max-width:190px!important;
+    max-height:190px!important;
+    object-fit:contain!important; /* Obliga a mantener proporción */
+    aspect-ratio:1/1!important; /* Lo fuerza a ser un cuadrado perfecto */
     display:block!important;
     margin:0 auto!important;
 }
@@ -846,10 +851,11 @@ tr:hover{
         display:flex!important;
         align-items:center!important;
         justify-content:center!important;
-        overflow:hidden!important;
     }
 
     #qrVisual{
+        width:190px!important;
+        height:190px!important;
         display:flex!important;
         align-items:center!important;
         justify-content:center!important;
@@ -860,6 +866,10 @@ tr:hover{
     #qrVisual img{
         width:190px!important;
         height:190px!important;
+        max-width:190px!important;
+        max-height:190px!important;
+        object-fit:contain!important;
+        aspect-ratio:1/1!important;
         display:block!important;
         margin:0 auto!important;
     }
