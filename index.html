@@ -162,7 +162,7 @@ input[type="password"]{
 
 .foto-box{
     grid-column:3;
-    grid-row:1 / span 13;
+    grid-row:1 / span 8;
     width:280px;
     height:360px;
     border:3px solid #777;
@@ -1309,12 +1309,15 @@ function aplicarPermisos(){
         mostrarPantalla("admin");
     }else if(rol === "capturista"){
         document.getElementById("tabAdmin").style.display = "inline-block";
+        document.getElementById("tabAsistencia").style.display = "inline-block";
+
         document.getElementById("btnBuscarAdmin").style.display = "none";
         document.getElementById("btnActualizar").style.display = "";
         document.getElementById("btnEliminar").style.display = "none";
         document.getElementById("btnRegistrarFalta").style.display = "none";
         document.getElementById("btnQuitarFalta").style.display = "none";
         document.getElementById("tablaBox").style.display = "none";
+
         mostrarPantalla("admin");
     }else if(rol === "asistencia"){
         document.getElementById("tabAsistencia").style.display = "inline-block";
