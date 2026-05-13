@@ -432,6 +432,7 @@ tr:hover{
     object-fit:contain;
 }
 
+/* ================= QR CORREGIDO ================= */
 .qr-box{
     position:absolute;
     top:190px;
@@ -443,13 +444,10 @@ tr:hover{
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:20px;
     overflow:hidden;
 }
 
 #qrVisual{
-    width:190px;
-    height:190px;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -461,7 +459,7 @@ tr:hover{
     width:190px!important;
     height:190px!important;
     display:block!important;
-    image-rendering:pixelated;
+    margin:0 auto!important;
 }
 
 .escanee{
@@ -836,6 +834,7 @@ tr:hover{
         -webkit-print-color-adjust:exact!important;
     }
 
+    /* ================= QR CORREGIDO (IMPRESIÓN) ================= */
     .qr-box{
         position:absolute!important;
         top:190px!important;
@@ -847,13 +846,10 @@ tr:hover{
         display:flex!important;
         align-items:center!important;
         justify-content:center!important;
-        padding:20px!important;
         overflow:hidden!important;
     }
 
     #qrVisual{
-        width:190px!important;
-        height:190px!important;
         display:flex!important;
         align-items:center!important;
         justify-content:center!important;
@@ -865,7 +861,7 @@ tr:hover{
         width:190px!important;
         height:190px!important;
         display:block!important;
-        image-rendering:pixelated!important;
+        margin:0 auto!important;
     }
 }
 </style>
