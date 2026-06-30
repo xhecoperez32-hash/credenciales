@@ -403,7 +403,7 @@ color:#0B283B;
 .atras-titulo{
 position:absolute;
 width:100%;
-top:455px;
+top:30px; /* Movido a la parte superior */
 text-align:left;
 padding-left:40px;
 box-sizing:border-box;
@@ -435,7 +435,7 @@ object-fit:contain;
 .qr-box{
 position:absolute;
 top:190px;
-left:445px;
+left:645px; /* Centrado del lado derecho */
 width:230px;
 height:230px;
 border:3px solid #777;
@@ -466,7 +466,7 @@ margin:0 auto!important;
 position:absolute;
 width:100%;
 text-align:center;
-top:430px;
+top:440px; /* Ajuste visual ligero hacia abajo para equilibrar */
 font-size:22px;
 font-weight:bold;
 color:black;
@@ -808,7 +808,7 @@ display:none!important;
 
 #vVigencia{
 position:absolute!important;
-top:22px!important;
+top:30px!important; /* Movido para impresión también */
 left:0!important;
 width:100%!important;
 text-align:left!important;
@@ -837,7 +837,7 @@ print-color-adjust:exact!important;
 .qr-box{
 position:absolute!important;
 top:190px!important;
-left:445px!important;
+left:645px!important; /* Centrado en vista de impresión */
 width:230px!important;
 height:230px!important;
 border:3px solid #777!important;
@@ -1174,19 +1174,19 @@ ESTA CREDENCIAL IDENTIFICA COMO EL SIGUIENTE REGISTRADO ANTE
 <span class="azul">EL PODER DEL COMERCIO</span>
 </div>
 
-<div id="vEstadoAtras" style="position:absolute;left:80px;top:150px;width:280px;text-align:center;font-size:28px;font-weight:bold;">
+<!-- Moví el estado "ACTIVO" para que quede alineado sobre el recuadro izquierdo -->
+<div id="vEstadoAtras" style="position:absolute;left:220px;top:150px;width:280px;text-align:center;font-size:28px;font-weight:bold;">
 ACTIVO
 </div>
 
-<div class="cuadro" style="left:80px;">
+<!-- Posición ajustada para el recuadro del lado izquierdo -->
+<div class="cuadro" style="left:220px;">
 <img src="poder_comercio.png">
 </div>
 
 <div class="qr-box">
 <div id="qrVisual"></div>
 </div>
-
-<!-- EL RECUADRO DERECHO FUE ELIMINADO COMPLETAMENTE AQUÍ -->
 
 <div class="escanee">ESCANEE PARA VALIDAR INSCRIPCIÓN</div>
 
