@@ -1174,12 +1174,10 @@ ESTA CREDENCIAL IDENTIFICA COMO EL SIGUIENTE REGISTRADO ANTE
 <span class="azul">EL PODER DEL COMERCIO</span>
 </div>
 
-<!-- Moví el estado "ACTIVO" para que quede alineado sobre el recuadro izquierdo -->
 <div id="vEstadoAtras" style="position:absolute;left:220px;top:150px;width:280px;text-align:center;font-size:28px;font-weight:bold;">
 ACTIVO
 </div>
 
-<!-- Posición ajustada para el recuadro del lado izquierdo -->
 <div class="cuadro" style="left:220px;">
 <img src="poder_comercio.png">
 </div>
@@ -1503,7 +1501,6 @@ function epcCompleto(valor){
 valor = (valor || "").trim().toUpperCase();
 if(!valor) return "";
 
-// Lógica mejorada para lidiar con escáneres con teclados cambiados
 try{
     if(valor.includes("HTTP") || valor.includes("PODERDELCOMERCIO")){
         const matchEpc = valor.match(/EPC[=)]([0-9]+)/i);
@@ -2053,14 +2050,11 @@ if(!valorOriginal) return;
 
 let epcToSearch = mayus(valorOriginal);
 
-// Lógica mejorada para escáneres con el teclado desconfigurado
 if(valorOriginal.toUpperCase().includes("HTTP") || valorOriginal.toUpperCase().includes("PODERDELCOMERCIO")){
-    // Busca el patrón epc= o epc) seguido de números
     const matchEpc = valorOriginal.match(/EPC[=)]([0-9]+)/i);
     if(matchEpc && matchEpc[1]){
         epcToSearch = matchEpc[1];
     } else {
-        // Fallback: extrae puros números que se encuentren al final de la cadena
         const matchNumeros = valorOriginal.match(/(\d+)$/);
         if(matchNumeros && matchNumeros[1]){
             epcToSearch = matchNumeros[1];
@@ -2154,21 +2148,20 @@ fotoBox.innerHTML = "SIN FOTO";
 const estado = (data.estatus || "").toUpperCase();
 
 if(estado === "ACTIVO"){
-emitirSonido("ok");
-banner.style.background = "#16a34a";
-banner.textContent = "ASISTENCIA REGISTRADA";
-alert("Asistencia registrada correctamente.");
+    emitirSonido("ok");
+    banner.style.background = "#16a34a";
+    banner.textContent = "ASISTENCIA REGISTRADA";
 }else{
-emitirSonido("error");
-banner.style.background = "#dc2626";
-banner.textContent = "CREDENCIAL DESACTIVADA";
-alert("La credencial está desactivada.");
+    emitirSonido("error");
+    banner.style.background = "#dc2626";
+    banner.textContent = "CREDENCIAL DESACTIVADA";
 }
 }
 
+// Reducido a 2 segundos (2000 ms) para escanear súper rápido
 timerAsistencia = setTimeout(() => {
 resultadoBox.style.display = "none";
-}, 4000);
+}, 2000);
 }
 
 function emitirSonido(tipo){
@@ -2209,7 +2202,7 @@ if(partes.length === 3) return `${parseInt(partes[2])} DE ${meses[parseInt(parte
 }
 
 if(fecha.includes("/")){
-const partes = split("/");
+const partes = fecha.split("/");
 if(partes.length === 3) return `${parseInt(partes[0])} DE ${meses[parseInt(partes[1]) - 1]} DE ${partes[2]}`;
 }
 
@@ -2235,6 +2228,8 @@ const {data,error} = await db
 .eq("epc",epc)
 .single();
 
+console.log("Datos recibidos de Supabase:", data);
+
 if(error || !data){
 document.getElementById("pubFolio").textContent = epc;
 document.getElementById("verificacionContenido").innerHTML = `<div class="verificacion-error">REGISTRO NO ENCONTRADO</div>`;
@@ -2256,8 +2251,12 @@ document.getElementById("pubStatus").textContent = estado === "ACTIVO" ? "ACTIVA
 document.getElementById("pubStatus").style.color = estado === "ACTIVO" ? "#28ff28" : "#dc2626";
 
 const foto = document.getElementById("pubFoto");
-if(data.foto_base64) foto.innerHTML = `<img src="${data.foto_base64}">`;
-else foto.innerHTML = "SIN FOTO";
+if(data.foto_base64 && data.foto_base64.length > 50){ 
+    foto.innerHTML = `<img src="${data.foto_base64}">`;
+} else {
+    foto.innerHTML = "SIN FOTO";
+    console.warn("La columna foto_base64 está vacía o es muy corta.");
+}
 
 const maps = document.getElementById("pubMaps");
 if(data.direccion) maps.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(data.direccion);
