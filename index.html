@@ -403,7 +403,7 @@ color:#0B283B;
 .atras-titulo{
 position:absolute;
 width:100%;
-top:30px; /* Movido a la parte superior */
+top:30px;
 text-align:left;
 padding-left:40px;
 box-sizing:border-box;
@@ -435,7 +435,7 @@ object-fit:contain;
 .qr-box{
 position:absolute;
 top:190px;
-left:645px; /* Centrado del lado derecho */
+left:645px;
 width:230px;
 height:230px;
 border:3px solid #777;
@@ -466,7 +466,7 @@ margin:0 auto!important;
 position:absolute;
 width:100%;
 text-align:center;
-top:440px; /* Ajuste visual ligero hacia abajo para equilibrar */
+top:440px;
 font-size:22px;
 font-weight:bold;
 color:black;
@@ -808,7 +808,7 @@ display:none!important;
 
 #vVigencia{
 position:absolute!important;
-top:30px!important; /* Movido para impresión también */
+top:30px!important;
 left:0!important;
 width:100%!important;
 text-align:left!important;
@@ -837,7 +837,7 @@ print-color-adjust:exact!important;
 .qr-box{
 position:absolute!important;
 top:190px!important;
-left:645px!important; /* Centrado en vista de impresión */
+left:645px!important;
 width:230px!important;
 height:230px!important;
 border:3px solid #777!important;
@@ -1503,12 +1503,19 @@ function epcCompleto(valor){
 valor = (valor || "").trim().toUpperCase();
 if(!valor) return "";
 
+// Lógica mejorada para lidiar con escáneres con teclados cambiados
 try{
-if(valor.includes("HTTP")){
-const url = new URL(valor.toLowerCase());
-const epcParam = url.searchParams.get("epc");
-if(epcParam) valor = epcParam.toUpperCase();
-}
+    if(valor.includes("HTTP") || valor.includes("PODERDELCOMERCIO")){
+        const matchEpc = valor.match(/EPC[=)]([0-9]+)/i);
+        if(matchEpc && matchEpc[1]){
+            valor = matchEpc[1].toUpperCase();
+        } else {
+            const matchNumeros = valor.match(/(\d+)$/);
+            if(matchNumeros && matchNumeros[1]){
+                valor = matchNumeros[1].toUpperCase();
+            }
+        }
+    }
 }catch(e){}
 
 if(valor.startsWith("EPC-")) return valor;
@@ -2046,14 +2053,19 @@ if(!valorOriginal) return;
 
 let epcToSearch = mayus(valorOriginal);
 
-if(valorOriginal.toUpperCase().includes("HTTP")){
-try {
-const url = new URL(valorOriginal.toLowerCase());
-const epcParam = url.searchParams.get("epc");
-if(epcParam) epcToSearch = epcParam;
-} catch(e) {
-console.log("Error leyendo URL", e);
-}
+// Lógica mejorada para escáneres con el teclado desconfigurado
+if(valorOriginal.toUpperCase().includes("HTTP") || valorOriginal.toUpperCase().includes("PODERDELCOMERCIO")){
+    // Busca el patrón epc= o epc) seguido de números
+    const matchEpc = valorOriginal.match(/EPC[=)]([0-9]+)/i);
+    if(matchEpc && matchEpc[1]){
+        epcToSearch = matchEpc[1];
+    } else {
+        // Fallback: extrae puros números que se encuentren al final de la cadena
+        const matchNumeros = valorOriginal.match(/(\d+)$/);
+        if(matchNumeros && matchNumeros[1]){
+            epcToSearch = matchNumeros[1];
+        }
+    }
 }
 
 let numeroLimpiado = soloNumero(epcToSearch);
@@ -2197,7 +2209,7 @@ if(partes.length === 3) return `${parseInt(partes[2])} DE ${meses[parseInt(parte
 }
 
 if(fecha.includes("/")){
-const partes = fecha.split("/");
+const partes = split("/");
 if(partes.length === 3) return `${parseInt(partes[0])} DE ${meses[parseInt(partes[1]) - 1]} DE ${partes[2]}`;
 }
 
