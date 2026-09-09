@@ -1000,6 +1000,13 @@ BUSCAR
 <option value="M">M</option>
 </select>
 
+<label>Tipo:</label>
+<select id="tipoUbicacion">
+<option value="">SELECCIONAR</option>
+<option value="LOCATARIO">LOCATARIO</option>
+<option value="VIA PUBLICA">VÍA PÚBLICA</option>
+</select>
+
 <label>Organización:</label>
 <input type="text" id="organizacion" value="EL PODER DEL COMERCIO" readonly style="background:#d1d5db;font-weight:bold;">
 
@@ -1054,6 +1061,7 @@ BUSCAR
 <th>Apellido</th>
 <th>CURP</th>
 <th>Sexo</th>
+<th>Tipo</th>
 <th>Estatus</th>
 <th>Faltas</th>
 </tr>
@@ -1598,7 +1606,7 @@ return null;
 async function listar(){
 const {data,error} = await db
 .from("credenciales")
-.select("id, epc, nombre, apellido, curp, sexo, estatus, faltas")
+.select("id, epc, nombre, apellido, curp, sexo, tipo_ubicacion, estatus, faltas")
 .order("id",{ascending:true});
 
 if(error){
@@ -1618,6 +1626,7 @@ tabla.innerHTML += `
 <td>${item.apellido || ""}</td>
 <td>${item.curp || ""}</td>
 <td>${item.sexo || ""}</td>
+<td>${item.tipo_ubicacion || ""}</td>
 <td>${item.estatus || ""}</td>
 <td>${item.faltas || 0}</td>
 </tr>`;
@@ -1684,6 +1693,7 @@ tabla.innerHTML += `
 <td>${item.apellido || ""}</td>
 <td>${item.curp || ""}</td>
 <td>${item.sexo || ""}</td>
+<td>${item.tipo_ubicacion || ""}</td>
 <td>${item.estatus || ""}</td>
 <td>${item.faltas || 0}</td>
 </tr>`;
@@ -1699,6 +1709,7 @@ document.getElementById("nombre").value = item.nombre || "";
 document.getElementById("apellido").value = item.apellido || "";
 document.getElementById("curp").value = item.curp || "";
 document.getElementById("sexo").value = item.sexo || "";
+document.getElementById("tipoUbicacion").value = item.tipo_ubicacion || "";
 document.getElementById("giro").value = item.giro || "";
 document.getElementById("telefono").value = item.telefono || "";
 document.getElementById("direccion").value = item.direccion || "";
@@ -1744,6 +1755,7 @@ nombre:mayus(document.getElementById("nombre").value),
 apellido:mayus(document.getElementById("apellido").value),
 curp:mayus(document.getElementById("curp").value),
 sexo:mayus(document.getElementById("sexo").value),
+tipo_ubicacion:document.getElementById("tipoUbicacion").value,
 organizacion:"EL PODER DEL COMERCIO",
 giro:mayus(document.getElementById("giro").value),
 estatus:estatus,
@@ -1886,13 +1898,19 @@ document.getElementById("estatusTexto").textContent = "INACTIVO";
 alert("El usuario llegó a 2 faltas. La credencial se desactivó automáticamente.");
 }
 
-const {error} = await db
+const {data,error} = await db
 .from("credenciales")
 .update({faltas:faltas, estatus:estatus})
-.eq("id",id);
+.eq("id",id)
+.select();
 
 if(error){
-alert(error.message);
+alert("Error al registrar falta: " + error.message);
+return;
+}
+
+if(!data || data.length === 0){
+alert("La falta NO se guardó: Supabase no actualizó ninguna fila. Revisa las políticas RLS de UPDATE en la tabla 'credenciales' (probablemente falta una policy para el rol usado por la app, o el id no coincide).");
 return;
 }
 
@@ -1915,13 +1933,19 @@ if(faltas > 0) faltas--;
 
 const estatus = faltas >= 2 ? "INACTIVO" : "ACTIVO";
 
-const {error} = await db
+const {data,error} = await db
 .from("credenciales")
 .update({faltas:faltas, estatus:estatus})
-.eq("id",id);
+.eq("id",id)
+.select();
 
 if(error){
-alert(error.message);
+alert("Error al quitar falta: " + error.message);
+return;
+}
+
+if(!data || data.length === 0){
+alert("El cambio NO se guardó: Supabase no actualizó ninguna fila. Revisa las políticas RLS de UPDATE en la tabla 'credenciales'.");
 return;
 }
 
@@ -1937,6 +1961,7 @@ document.getElementById("nombre").value = "";
 document.getElementById("apellido").value = "";
 document.getElementById("curp").value = "";
 document.getElementById("sexo").value = "";
+document.getElementById("tipoUbicacion").value = "";
 document.getElementById("giro").value = "";
 document.getElementById("telefono").value = "";
 document.getElementById("direccion").value = "";
@@ -2251,7 +2276,7 @@ document.getElementById("pubStatus").textContent = estado === "ACTIVO" ? "ACTIVA
 document.getElementById("pubStatus").style.color = estado === "ACTIVO" ? "#28ff28" : "#dc2626";
 
 const foto = document.getElementById("pubFoto");
-if(data.foto_base64 && data.foto_base64.length > 50){ 
+if(data.foto_base64 && data.foto_base64.length > 50){
     foto.innerHTML = `<img src="${data.foto_base64}">`;
 } else {
     foto.innerHTML = "SIN FOTO";
