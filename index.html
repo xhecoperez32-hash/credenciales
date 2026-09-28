@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>EL PODER DEL COMERCIO - Credenciales</title>
+<meta name="description" content="Sistema de credenciales y verificación de inscripción de El Poder del Comercio.">
+<meta name="robots" content="noindex, nofollow">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
@@ -649,7 +651,7 @@ text-transform:uppercase;
 .verificacion-status{
 font-size:62px;
 font-weight:900;
-color:#28ff28;
+color:#16a34a;
 letter-spacing:8px;
 line-height:1;
 }
@@ -722,6 +724,73 @@ padding:80px 30px;
 font-size:28px;
 font-weight:bold;
 color:#dc2626;
+}
+
+/* Verificación pública en teléfonos (se escanea desde el QR) */
+@media (max-width:760px){
+.verificacion-publica{
+width:auto;
+margin:0;
+border-radius:0;
+}
+.verificacion-header{
+flex-direction:column;
+gap:18px;
+padding:24px 16px;
+}
+.verificacion-header-left,
+.verificacion-header-right{
+width:100%;
+}
+.verificacion-header-left h1,
+.verificacion-header-right h2{
+font-size:26px;
+}
+.verificacion-header-left p{
+font-size:16px;
+}
+.verificacion-header-right p{
+font-size:20px;
+}
+.verificacion-body{
+padding:28px 16px;
+}
+.verificacion-intro{
+font-size:18px;
+margin:0 0 28px;
+}
+.verificacion-fila{
+grid-template-columns:1fr;
+gap:2px;
+font-size:18px;
+margin-bottom:16px;
+}
+.verificacion-status{
+font-size:44px;
+letter-spacing:4px;
+}
+.verificacion-foto{
+width:min(300px,100%);
+height:auto;
+aspect-ratio:300/380;
+margin:32px auto;
+}
+.verificacion-logo{
+width:min(300px,100%);
+height:auto;
+aspect-ratio:300/390;
+margin:0 auto 32px;
+}
+.verificacion-maps-box{
+font-size:18px;
+padding:16px;
+}
+}
+
+/* Filas de tabla seleccionables con teclado */
+tbody tr[tabindex]:focus{
+outline:3px solid #2563eb;
+outline-offset:-3px;
 }
 
 /* ================= IMPRESIÓN ================= */
@@ -923,20 +992,20 @@ se encuentran incluidos en el Padrón:
 </div>
 <div class="verificacion-foto" id="pubFoto">SIN FOTO</div>
 <div class="verificacion-logo">
-<img src="poder_comercio.png">
+<img src="poder_comercio.png" alt="Logo El Poder del Comercio">
 </div>
 <div class="verificacion-linea"></div>
 <div class="verificacion-ubicacion-title">Ubicación:</div>
 <div class="verificacion-maps-box">
-<a id="pubMaps" href="#" target="_blank">📍 Ver en Google Maps 📍</a>
+<a id="pubMaps" href="#" target="_blank" rel="noopener noreferrer">📍 Ver en Google Maps 📍</a>
 </div>
 </div>
 </div>
 
 <div id="login" class="login">
 <h1>EL PODER DEL COMERCIO</h1>
-<input type="text" id="loginUser" placeholder="Usuario">
-<input type="password" id="loginPass" placeholder="Contraseña" onkeydown="if(event.key==='Enter'){entrar()}">
+<input type="text" id="loginUser" placeholder="Usuario" aria-label="Usuario" autocomplete="username" onkeydown="if(event.key==='Enter'){entrar()}">
+<input type="password" id="loginPass" placeholder="Contraseña" aria-label="Contraseña" autocomplete="current-password" onkeydown="if(event.key==='Enter'){entrar()}">
 <button onclick="entrar()">ENTRAR</button>
 </div>
 
@@ -958,7 +1027,7 @@ se encuentran incluidos en el Padrón:
 
 <div class="admin-grid">
 
-<label>Número EPC:</label>
+<label for="epc">Número EPC:</label>
 <div style="display:flex; gap:10px; align-items:center;">
 <input type="text" id="epc" placeholder="AUTOMÁTICO" style="width:300px;background:#d1d5db;font-weight:bold;" readonly>
 <button id="btnGenerarEpc" class="buscar" onclick="generarSiguienteEPC()" style="width:120px;height:36px;border:none;border-radius:6px;font-weight:bold;cursor:pointer;">
@@ -968,7 +1037,7 @@ GENERAR
 
 <div class="foto-box" id="previewFoto">FOTO</div>
 
-<label>Buscar nombre:</label>
+<label for="buscarNombre">Buscar nombre:</label>
 <div style="display:flex; gap:10px; align-items:center;">
 <input type="text" id="buscarNombre" placeholder="NOMBRE O APELLIDO" style="width:300px;">
 <button id="btnBuscarNombre" class="buscar" onclick="buscarPorNombre()" style="width:120px;height:36px;border:none;border-radius:6px;font-weight:bold;cursor:pointer;">
@@ -976,7 +1045,7 @@ BUSCAR
 </button>
 </div>
 
-<label>Buscar EPC:</label>
+<label for="buscarAdminEpc">Buscar EPC:</label>
 <div style="display:flex; gap:10px; align-items:center;">
 <input type="text" id="buscarAdminEpc" placeholder="Ej: 3000" style="width:300px;">
 <button id="btnBuscarAdmin" class="buscar" onclick="buscarAdmin()" style="width:120px;height:36px;border:none;border-radius:6px;font-weight:bold;cursor:pointer;">
@@ -984,57 +1053,57 @@ BUSCAR
 </button>
 </div>
 
-<label>Nombre:</label>
+<label for="nombre">Nombre:</label>
 <input type="text" id="nombre">
 
-<label>Apellido:</label>
+<label for="apellido">Apellido:</label>
 <input type="text" id="apellido">
 
-<label>CURP:</label>
+<label for="curp">CURP:</label>
 <input type="text" id="curp" maxlength="18">
 
-<label>Sexo:</label>
+<label for="sexo">Sexo:</label>
 <select id="sexo">
 <option value="">SELECCIONAR</option>
 <option value="H">H</option>
 <option value="M">M</option>
 </select>
 
-<label>Tipo:</label>
+<label for="tipoUbicacion">Tipo:</label>
 <select id="tipoUbicacion">
 <option value="">SELECCIONAR</option>
 <option value="LOCATARIO">LOCATARIO</option>
 <option value="VIA PUBLICA">VÍA PÚBLICA</option>
 </select>
 
-<label>Organización:</label>
+<label for="organizacion">Organización:</label>
 <input type="text" id="organizacion" value="EL PODER DEL COMERCIO" readonly style="background:#d1d5db;font-weight:bold;">
 
-<label>Giro:</label>
+<label for="giro">Giro:</label>
 <input type="text" id="giro">
 
-<label>Estatus:</label>
+<label for="estatusCheck">Estatus:</label>
 <div class="check-row">
 <input type="checkbox" id="estatusCheck" checked>
 <span id="estatusTexto">ACTIVO</span>
 </div>
 
-<label>Faltas:</label>
+<label for="faltas">Faltas:</label>
 <input type="number" id="faltas" value="0" readonly style="background:#d1d5db;font-weight:bold;">
 
-<label>Teléfono:</label>
+<label for="telefono">Teléfono:</label>
 <input type="text" id="telefono">
 
-<label>Dirección:</label>
+<label for="direccion">Dirección:</label>
 <input type="text" id="direccion">
 
-<label>Días operación:</label>
+<label for="operacion_dias">Días operación:</label>
 <input type="text" id="operacion_dias">
 
-<label>Horario:</label>
+<label for="operacion_horario">Horario:</label>
 <input type="text" id="operacion_horario" placeholder="Ej: 5pm - 2am">
 
-<label>Vigencia:</label>
+<label for="vigencia">Vigencia:</label>
 <input type="text" id="vigencia" value="31/12/2026" readonly style="background:#d1d5db;font-weight:bold;">
 
 </div>
@@ -1082,23 +1151,23 @@ Los usuarios se guardan en Supabase usando contraseña encriptada por la funció
 </p>
 
 <div class="user-grid">
-<label>Usuario:</label>
+<label for="uUser">Usuario:</label>
 <input type="text" id="uUser" placeholder="Ej: CAPTURISTA3">
 
-<label>Contraseña:</label>
+<label for="uPass">Contraseña:</label>
 <input type="password" id="uPass" placeholder="Contraseña">
 
-<label>Nombre completo:</label>
+<label for="uNombre">Nombre completo:</label>
 <input type="text" id="uNombre" placeholder="Nombre de la persona">
 
-<label>Rol de acceso:</label>
+<label for="uRol">Rol de acceso:</label>
 <select id="uRol">
 <option value="capturista">CAPTURISTA</option>
 <option value="asistencia">ASISTENCIA</option>
 <option value="admin">ADMINISTRADOR</option>
 </select>
 
-<label>Vigencia de Acceso:</label>
+<label for="uVigencia">Vigencia de Acceso:</label>
 <div style="display:flex; gap:10px; align-items:center;">
 <input type="date" id="uVigencia" style="width:180px; text-transform:none;">
 <button class="actualizar" onclick="sumarVigenciaUsuario(1)" style="width:80px; padding:0; height:36px; border:none; border-radius:6px; cursor:pointer;" type="button">1 Mes</button>
@@ -1132,12 +1201,12 @@ Los usuarios se guardan en Supabase usando contraseña encriptada por la funció
 
 <div class="barra-credencial">
 <div style="display:flex;align-items:center;gap:18px;">
-<img src="fecopse.png" class="logo" onerror="this.style.display='none'">
+<img src="fecopse.png" class="logo" alt="Logo FECOPSE" onerror="this.style.display='none'">
 
 <div style="display:flex;align-items:center;gap:8px;">
 <span style="color:white;font-size:30px;font-weight:bold;letter-spacing:1px;">EL PODER DEL COMERCIO-</span>
 <span style="color:white;font-size:30px;font-weight:bold;">EPC-</span>
-<input type="text" id="buscarEpc" onkeydown="enterBuscar(event)" autocomplete="off">
+<input type="text" id="buscarEpc" onkeydown="enterBuscar(event)" autocomplete="off" inputmode="numeric" aria-label="Número EPC a mostrar">
 </div>
 </div>
 
@@ -1187,7 +1256,7 @@ ACTIVO
 </div>
 
 <div class="cuadro" style="left:220px;">
-<img src="poder_comercio.png">
+<img src="poder_comercio.png" alt="Logo El Poder del Comercio">
 </div>
 
 <div class="qr-box">
@@ -1210,7 +1279,7 @@ ACTIVO
 Escanea el QR, digita los 4 dígitos del EPC o escribe el nombre para confirmar asistencia.
 </p>
 
-<input type="text" id="inputAsistencia" placeholder="ESCANEA QR, EPC O NOMBRE" onkeydown="procesarAsistencia(event)" autocomplete="off">
+<input type="text" id="inputAsistencia" placeholder="ESCANEA QR, EPC O NOMBRE" aria-label="Escanea QR, EPC o nombre" onkeydown="procesarAsistencia(event)" autocomplete="off">
 
 <div id="asistenciaResultado">
 <div id="asistenciaBanner">ESTADO</div>
@@ -1238,11 +1307,27 @@ const SUPABASE_URL = "https://htthhjxlvvlcblbmelvf.supabase.co";
 const SUPABASE_KEY = "sb_publishable_CjyA8MK4VMLbYd4_QizxxA_-sJE3v1V";
 const db = supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
+// Vigencia única de las credenciales (antes repetida en 7 lugares del código)
+const VIGENCIA_CREDENCIAL = "31/12/2026";
+
+// Tamaño máximo con el que se guarda una foto nueva (se sigue guardando como data URL)
+const FOTO_MAX_ANCHO = 720;
+const FOTO_MAX_ALTO = 900;
+const FOTO_CALIDAD_JPEG = 0.85;
+const FOTO_BYTES_SIN_REDUCIR = 300 * 1024;
+
+// Columnas que necesita cada pantalla (evita enviar CURP/teléfono donde no se usan)
+const COLUMNAS_TABLA = "id, epc, nombre, apellido, curp, sexo, tipo_ubicacion, estatus, faltas";
+const COLUMNAS_CREDENCIAL = "epc, nombre, apellido, giro, estatus, direccion, vigencia, operacion_horario, operacion_dias, foto_base64";
+const COLUMNAS_ASISTENCIA = "epc, nombre, apellido, giro, estatus, vigencia, operacion_horario, operacion_dias, foto_base64";
+const COLUMNAS_PUBLICAS = "epc, nombre, apellido, giro, estatus, direccion, vigencia, operacion_horario, operacion_dias, foto_base64";
+
 let fotoBase64 = "";
 let usuarioActual = null;
 let loginUsuarioActual = "";
 let loginPasswordActual = "";
 let timerAsistencia = null;
+let audioCtx = null;
 
 async function arranque(){
 const params = new URLSearchParams(window.location.search);
@@ -1251,6 +1336,7 @@ const epc = params.get("epc");
 activarMayusculasAutomaticas();
 
 if(epc){
+activarVistaMovil();
 document.getElementById("login").style.display = "none";
 document.getElementById("app").style.display = "none";
 document.getElementById("verificacionPublica").style.display = "block";
@@ -1258,7 +1344,19 @@ await cargarVerificacionPublica(epc);
 return;
 }
 
-document.getElementById("vigencia").value = "31/12/2026";
+document.getElementById("vigencia").value = VIGENCIA_CREDENCIAL;
+}
+
+// La verificación pública se abre desde el QR en teléfonos: ahí sí se usa el ancho real del dispositivo.
+// El panel administrativo conserva su diseño de escritorio de ancho fijo.
+function activarVistaMovil(){
+let meta = document.querySelector('meta[name="viewport"]');
+if(!meta){
+meta = document.createElement("meta");
+meta.name = "viewport";
+document.head.appendChild(meta);
+}
+meta.content = "width=device-width, initial-scale=1";
 }
 
 async function entrar(){
@@ -1288,13 +1386,14 @@ return;
 usuarioActual = data[0];
 loginUsuarioActual = usuario;
 loginPasswordActual = pass;
+document.getElementById("loginPass").value = "";
 
 document.getElementById("login").style.display = "none";
 document.getElementById("app").style.display = "block";
 
 aplicarPermisos();
 listar();
-generarSiguienteEPC();
+if(puedeActualizar()) generarSiguienteEPC();
 }
 
 // ================= PERMISOS Y PESTAÑAS =================
@@ -1343,33 +1442,28 @@ return usuarioActual && (usuarioActual.rol === "admin" || usuarioActual.rol === 
 }
 
 // ================= NAVEGACIÓN =================
+const PANTALLAS = {
+admin:{pantalla:"pantallaAdmin", tab:"tabAdmin"},
+credencial:{pantalla:"pantallaCredencial", tab:"tabCredencial"},
+asistencia:{pantalla:"pantallaAsistencia", tab:"tabAsistencia"},
+usuarios:{pantalla:"pantallaUsuarios", tab:"tabUsuarios"}
+};
+
 function mostrarPantalla(tipo){
-document.getElementById("pantallaAdmin").classList.remove("active");
-document.getElementById("pantallaCredencial").classList.remove("active");
-document.getElementById("pantallaAsistencia").classList.remove("active");
-document.getElementById("pantallaUsuarios").classList.remove("active");
+if(!usuarioActual || !PANTALLAS[tipo]) return;
+if(tipo === "admin" && !puedeActualizar()) return;
+if((tipo === "credencial" || tipo === "usuarios") && !soloAdmin()) return;
 
-document.getElementById("tabAdmin").classList.remove("active");
-document.getElementById("tabCredencial").classList.remove("active");
-document.getElementById("tabAsistencia").classList.remove("active");
-document.getElementById("tabUsuarios").classList.remove("active");
+Object.values(PANTALLAS).forEach(p=>{
+document.getElementById(p.pantalla).classList.remove("active");
+document.getElementById(p.tab).classList.remove("active");
+});
 
-if(tipo === "admin"){
-if(usuarioActual.rol === "asistencia") return;
-document.getElementById("pantallaAdmin").classList.add("active");
-document.getElementById("tabAdmin").classList.add("active");
-}else if(tipo === "credencial"){
-if(!soloAdmin()) return;
-document.getElementById("pantallaCredencial").classList.add("active");
-document.getElementById("tabCredencial").classList.add("active");
-}else if(tipo === "asistencia"){
-document.getElementById("pantallaAsistencia").classList.add("active");
-document.getElementById("tabAsistencia").classList.add("active");
+document.getElementById(PANTALLAS[tipo].pantalla).classList.add("active");
+document.getElementById(PANTALLAS[tipo].tab).classList.add("active");
+
+if(tipo === "asistencia"){
 setTimeout(()=>document.getElementById("inputAsistencia").focus(),200);
-}else if(tipo === "usuarios"){
-if(!soloAdmin()) return;
-document.getElementById("pantallaUsuarios").classList.add("active");
-document.getElementById("tabUsuarios").classList.add("active");
 }
 }
 
@@ -1446,6 +1540,40 @@ function mayus(valor){
 return (valor || "").toString().trim().toUpperCase();
 }
 
+// Valor seguro para filtros .or() de Supabase/PostgREST: se entrecomilla para que
+// comas, puntos o paréntesis escritos por el usuario no alteren el filtro.
+function valorFiltro(valor){
+return '"' + String(valor).replace(/\\/g, "\\\\").replace(/"/g, '\\"') + '"';
+}
+
+// Solo se muestran como imagen las fotos guardadas como data URL de imagen (o URL https).
+function fotoValida(src){
+return typeof src === "string" && (/^data:image\/[a-z0-9.+-]+;base64,/i.test(src) || /^https:\/\//i.test(src));
+}
+
+// Inserta la foto con createElement (no con innerHTML) para evitar inyección de HTML.
+function ponerFoto(contenedor, src, textoVacio){
+contenedor.textContent = "";
+if(fotoValida(src)){
+const img = document.createElement("img");
+img.src = src;
+img.alt = "Fotografía del registrado";
+contenedor.appendChild(img);
+}else{
+contenedor.textContent = textoVacio;
+}
+}
+
+// Si el texto viene de un QR (URL), extrae el número de EPC; si no, lo regresa en mayúsculas.
+function extraerEpcDeEscaneo(valor){
+valor = (valor || "").trim().toUpperCase();
+if(valor.includes("HTTP") || valor.includes("PODERDELCOMERCIO")){
+const coincidencia = valor.match(/EPC[=)]([0-9]+)/i) || valor.match(/(\d+)$/);
+if(coincidencia) return coincidencia[1];
+}
+return valor;
+}
+
 function activarMayusculasAutomaticas(){
 document.addEventListener("input", function(e){
 const el = e.target;
@@ -1467,8 +1595,6 @@ let texto = original.toLowerCase()
 .replaceAll(".", "")
 .replaceAll("a m", "am")
 .replaceAll("p m", "pm")
-.replaceAll("a.m", "am")
-.replaceAll("p.m", "pm")
 .replaceAll("–", "-")
 .replaceAll("—", "-");
 
@@ -1506,22 +1632,8 @@ return uno;
 }
 
 function epcCompleto(valor){
-valor = (valor || "").trim().toUpperCase();
+valor = extraerEpcDeEscaneo(valor);
 if(!valor) return "";
-
-try{
-    if(valor.includes("HTTP") || valor.includes("PODERDELCOMERCIO")){
-        const matchEpc = valor.match(/EPC[=)]([0-9]+)/i);
-        if(matchEpc && matchEpc[1]){
-            valor = matchEpc[1].toUpperCase();
-        } else {
-            const matchNumeros = valor.match(/(\d+)$/);
-            if(matchNumeros && matchNumeros[1]){
-                valor = matchNumeros[1].toUpperCase();
-            }
-        }
-    }
-}catch(e){}
 
 if(valor.startsWith("EPC-")) return valor;
 return "EPC-" + valor;
@@ -1571,11 +1683,11 @@ input.value = String(max + 1);
 async function validarDuplicados(nuevo, idActual){
 let orParts = [];
 
-if(nuevo.epc) orParts.push(`epc.eq.${nuevo.epc}`);
-if(nuevo.curp) orParts.push(`curp.eq.${nuevo.curp}`);
+if(nuevo.epc) orParts.push(`epc.eq.${valorFiltro(nuevo.epc)}`);
+if(nuevo.curp) orParts.push(`curp.eq.${valorFiltro(nuevo.curp)}`);
 
 if(nuevo.nombre && nuevo.apellido){
-orParts.push(`and(nombre.eq.${nuevo.nombre},apellido.eq.${nuevo.apellido})`);
+orParts.push(`and(nombre.eq.${valorFiltro(nuevo.nombre)},apellido.eq.${valorFiltro(nuevo.apellido)})`);
 }
 
 if(orParts.length === 0) return null;
@@ -1604,9 +1716,16 @@ return null;
 
 // ================= CRUD Y ADMIN =================
 async function listar(){
+// El padrón completo solo se carga para administradores (los demás roles no ven la tabla).
+if(!usuarioActual || usuarioActual.rol !== "admin"){
+document.getElementById("tabla").textContent = "";
+document.getElementById("tablaBox").style.display = "none";
+return;
+}
+
 const {data,error} = await db
 .from("credenciales")
-.select("id, epc, nombre, apellido, curp, sexo, tipo_ubicacion, estatus, faltas")
+.select(COLUMNAS_TABLA)
 .order("id",{ascending:true});
 
 if(error){
@@ -1614,23 +1733,34 @@ alert("Error al cargar tabla: " + error.message);
 return;
 }
 
-const tabla = document.getElementById("tabla");
-tabla.innerHTML = "";
+pintarTabla(data);
+}
 
-data.forEach(item=>{
-tabla.innerHTML += `
-<tr onclick='buscarAdminDesdeTabla("${item.epc}")'>
-<td>${item.id || ""}</td>
-<td>${item.epc || ""}</td>
-<td>${item.nombre || ""}</td>
-<td>${item.apellido || ""}</td>
-<td>${item.curp || ""}</td>
-<td>${item.sexo || ""}</td>
-<td>${item.tipo_ubicacion || ""}</td>
-<td>${item.estatus || ""}</td>
-<td>${item.faltas || 0}</td>
-</tr>`;
+function pintarTabla(data){
+const tabla = document.getElementById("tabla");
+const fragmento = document.createDocumentFragment();
+
+(data || []).forEach(item=>{
+const tr = document.createElement("tr");
+tr.tabIndex = 0;
+
+[item.id, item.epc, item.nombre, item.apellido, item.curp, item.sexo, item.tipo_ubicacion, item.estatus, item.faltas || 0]
+.forEach(valor=>{
+const td = document.createElement("td");
+td.textContent = valor ?? "";
+tr.appendChild(td);
 });
+
+tr.addEventListener("click", ()=>buscarAdminDesdeTabla(item.epc));
+tr.addEventListener("keydown", e=>{
+if(e.key === "Enter") buscarAdminDesdeTabla(item.epc);
+});
+
+fragmento.appendChild(tr);
+});
+
+tabla.textContent = "";
+tabla.appendChild(fragmento);
 }
 
 async function buscarAdminDesdeTabla(epc){
@@ -1660,10 +1790,12 @@ alert("Escribe un nombre para buscar.");
 return;
 }
 
+const patron = valorFiltro(`%${nombre}%`);
+
 const {data,error} = await db
 .from("credenciales")
 .select("*")
-.or(`nombre.ilike.%${nombre}%,apellido.ilike.%${nombre}%`)
+.or(`nombre.ilike.${patron},apellido.ilike.${patron}`)
 .limit(20);
 
 if(error){
@@ -1681,23 +1813,9 @@ seleccionar(data[0]);
 return;
 }
 
-const tabla = document.getElementById("tabla");
-tabla.innerHTML = "";
-
-data.forEach(item=>{
-tabla.innerHTML += `
-<tr onclick='buscarAdminDesdeTabla("${item.epc}")'>
-<td>${item.id || ""}</td>
-<td>${item.epc || ""}</td>
-<td>${item.nombre || ""}</td>
-<td>${item.apellido || ""}</td>
-<td>${item.curp || ""}</td>
-<td>${item.sexo || ""}</td>
-<td>${item.tipo_ubicacion || ""}</td>
-<td>${item.estatus || ""}</td>
-<td>${item.faltas || 0}</td>
-</tr>`;
-});
+pintarTabla(data);
+// El capturista no ve el padrón completo, pero sí necesita ver estos resultados para elegir uno.
+document.getElementById("tablaBox").style.display = "";
 
 alert("Se encontraron varios registros. Selecciona uno en la tabla.");
 }
@@ -1715,7 +1833,7 @@ document.getElementById("telefono").value = item.telefono || "";
 document.getElementById("direccion").value = item.direccion || "";
 document.getElementById("operacion_dias").value = item.operacion_dias || "";
 document.getElementById("operacion_horario").value = item.operacion_horario || "";
-document.getElementById("vigencia").value = "31/12/2026";
+document.getElementById("vigencia").value = VIGENCIA_CREDENCIAL;
 document.getElementById("faltas").value = item.faltas || 0;
 
 const activo = (item.estatus || "ACTIVO").toUpperCase() === "ACTIVO";
@@ -1730,21 +1848,66 @@ function cargarFoto(event){
 const file = event.target.files[0];
 if(!file) return;
 
+if(!file.type.startsWith("image/")){
+alert("El archivo seleccionado no es una imagen.");
+event.target.value = "";
+return;
+}
+
 const reader = new FileReader();
-reader.onload = function(e){
-fotoBase64 = e.target.result;
+reader.onload = async function(e){
+const foto = await reducirImagen(e.target.result);
+if(!foto){
+alert("No se pudo leer la imagen. Usa una foto JPG o PNG.");
+event.target.value = "";
+return;
+}
+fotoBase64 = foto;
 mostrarFotoAdmin(fotoBase64);
+};
+reader.onerror = function(){
+alert("No se pudo leer la imagen.");
 };
 reader.readAsDataURL(file);
 }
 
+// Reduce fotos grandes (p. ej. de celular, varios MB) a un tamaño suficiente para la credencial.
+// Así cada registro pesa decenas de KB en lugar de megas y todas las pantallas cargan más rápido.
+function reducirImagen(dataUrl){
+return new Promise(resolve=>{
+const img = new Image();
+img.onload = function(){
+const escala = Math.min(1, FOTO_MAX_ANCHO / img.width, FOTO_MAX_ALTO / img.height);
+
+if(escala === 1 && dataUrl.length <= FOTO_BYTES_SIN_REDUCIR){
+resolve(dataUrl);
+return;
+}
+
+const canvas = document.createElement("canvas");
+canvas.width = Math.round(img.width * escala);
+canvas.height = Math.round(img.height * escala);
+
+const ctx = canvas.getContext("2d");
+ctx.fillStyle = "#ffffff";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+resolve(canvas.toDataURL("image/jpeg", FOTO_CALIDAD_JPEG));
+};
+img.onerror = function(){
+resolve(null);
+};
+img.src = dataUrl;
+});
+}
+
 function mostrarFotoAdmin(base64){
-const box = document.getElementById("previewFoto");
-box.innerHTML = base64 ? `<img src="${base64}">` : "FOTO";
+ponerFoto(document.getElementById("previewFoto"), base64, "FOTO");
 }
 
 function datosFormulario(){
-const faltas = parseInt(document.getElementById("faltas").value || "0");
+const faltas = parseInt(document.getElementById("faltas").value || "0", 10);
 let estatus = document.getElementById("estatusCheck").checked ? "ACTIVO" : "INACTIVO";
 
 if(faltas >= 2) estatus = "INACTIVO";
@@ -1764,12 +1927,17 @@ telefono:mayus(document.getElementById("telefono").value),
 direccion:mayus(document.getElementById("direccion").value),
 operacion_dias:mayus(document.getElementById("operacion_dias").value),
 operacion_horario:convertirHorarioMilitar(document.getElementById("operacion_horario").value),
-vigencia:"31/12/2026",
+vigencia:VIGENCIA_CREDENCIAL,
 foto_base64:fotoBase64
 };
 }
 
 async function agregar(){
+if(!puedeActualizar()){
+alert("No tienes permiso para guardar credenciales.");
+return;
+}
+
 const nuevo = datosFormulario();
 
 if(!nuevo.epc || !nuevo.nombre || !nuevo.curp || !nuevo.sexo){
@@ -1792,7 +1960,6 @@ return;
 alert("Credencial agregada correctamente.");
 limpiar();
 listar();
-generarSiguienteEPC();
 }
 
 async function buscarAdmin(){
@@ -1845,7 +2012,6 @@ return;
 alert("Datos actualizados correctamente.");
 limpiar();
 listar();
-generarSiguienteEPC();
 }
 
 async function eliminar(){
@@ -1873,7 +2039,6 @@ return;
 alert("Eliminado");
 limpiar();
 listar();
-generarSiguienteEPC();
 }
 
 async function registrarFalta(){
@@ -1886,7 +2051,7 @@ alert("Busca o selecciona una credencial primero");
 return;
 }
 
-let faltas = parseInt(document.getElementById("faltas").value || "0");
+let faltas = parseInt(document.getElementById("faltas").value || "0", 10);
 faltas++;
 
 let estatus = document.getElementById("estatusCheck").checked ? "ACTIVO" : "INACTIVO";
@@ -1928,7 +2093,7 @@ alert("Busca o selecciona una credencial primero");
 return;
 }
 
-let faltas = parseInt(document.getElementById("faltas").value || "0");
+let faltas = parseInt(document.getElementById("faltas").value || "0", 10);
 if(faltas > 0) faltas--;
 
 const estatus = faltas >= 2 ? "INACTIVO" : "ACTIVO";
@@ -1967,7 +2132,7 @@ document.getElementById("telefono").value = "";
 document.getElementById("direccion").value = "";
 document.getElementById("operacion_dias").value = "";
 document.getElementById("operacion_horario").value = "";
-document.getElementById("vigencia").value = "31/12/2026";
+document.getElementById("vigencia").value = VIGENCIA_CREDENCIAL;
 document.getElementById("faltas").value = "0";
 document.getElementById("estatusCheck").checked = true;
 document.getElementById("estatusTexto").textContent = "ACTIVO";
@@ -1980,6 +2145,8 @@ generarSiguienteEPC();
 // ================= VISUALIZAR CREDENCIAL =================
 function enterBuscar(event){
 if(event.key === "Enter") buscarCredencial();
+// Permite atajos como Ctrl/Cmd + V (pegar) o Ctrl/Cmd + A
+if(event.ctrlKey || event.metaKey) return;
 const permitidos = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab","Enter"];
 if(!permitidos.includes(event.key) && !/^[0-9]$/.test(event.key)){
 event.preventDefault();
@@ -1997,7 +2164,7 @@ const epc = epcCompleto(numero);
 
 const {data,error} = await db
 .from("credenciales")
-.select("*")
+.select(COLUMNAS_CREDENCIAL)
 .eq("epc",epc)
 .single();
 
@@ -2013,7 +2180,7 @@ document.getElementById("vOrganizacion").textContent = "EL PODER DEL COMERCIO";
 document.getElementById("vGiro").textContent = data.giro || "";
 document.getElementById("vEstatus").textContent = data.estatus || "";
 document.getElementById("vDireccion").textContent = data.direccion || "";
-document.getElementById("vVigencia").textContent = "VIGENCIA " + (data.vigencia || "31/12/2026");
+document.getElementById("vVigencia").textContent = "VIGENCIA " + (data.vigencia || VIGENCIA_CREDENCIAL);
 document.getElementById("vOperacion").textContent = "OPERACIÓN DE " + (data.operacion_horario || "") + " DE " + (data.operacion_dias || "");
 
 const estado = (data.estatus || "").toUpperCase();
@@ -2021,8 +2188,7 @@ const estadoAtras = document.getElementById("vEstadoAtras");
 estadoAtras.textContent = estado;
 estadoAtras.style.color = estado === "ACTIVO" ? "#16a34a" : "#dc2626";
 
-const foto = document.getElementById("vFoto");
-foto.innerHTML = data.foto_base64 ? `<img src="${data.foto_base64}">` : "SIN FOTO";
+ponerFoto(document.getElementById("vFoto"), data.foto_base64, "SIN FOTO");
 
 generarQR(data);
 mostrarCredencial("frente");
@@ -2050,7 +2216,7 @@ document.getElementById("vEstatus").textContent = "";
 document.getElementById("vDireccion").textContent = "";
 document.getElementById("vVigencia").textContent = "VIGENCIA";
 document.getElementById("vOperacion").textContent = "OPERACIÓN";
-document.getElementById("vFoto").innerHTML = "FOTO";
+document.getElementById("vFoto").textContent = "FOTO";
 document.getElementById("qrVisual").innerHTML = "";
 }
 
@@ -2073,28 +2239,16 @@ document.getElementById("inputAsistencia").value = "";
 
 if(!valorOriginal) return;
 
-let epcToSearch = mayus(valorOriginal);
+const epcToSearch = extraerEpcDeEscaneo(valorOriginal);
+const numeroLimpiado = soloNumero(epcToSearch);
 
-if(valorOriginal.toUpperCase().includes("HTTP") || valorOriginal.toUpperCase().includes("PODERDELCOMERCIO")){
-    const matchEpc = valorOriginal.match(/EPC[=)]([0-9]+)/i);
-    if(matchEpc && matchEpc[1]){
-        epcToSearch = matchEpc[1];
-    } else {
-        const matchNumeros = valorOriginal.match(/(\d+)$/);
-        if(matchNumeros && matchNumeros[1]){
-            epcToSearch = matchNumeros[1];
-        }
-    }
-}
-
-let numeroLimpiado = soloNumero(epcToSearch);
-
-let query = db.from("credenciales").select("*").limit(2);
+let query;
 
 if(/^\d+$/.test(numeroLimpiado)){
-query = db.from("credenciales").select("*").eq("epc", "EPC-" + numeroLimpiado).limit(2);
+query = db.from("credenciales").select(COLUMNAS_ASISTENCIA).eq("epc", "EPC-" + numeroLimpiado).limit(2);
 } else {
-query = db.from("credenciales").select("*").or(`nombre.ilike.%${epcToSearch}%,apellido.ilike.%${epcToSearch}%`).limit(2);
+const patron = valorFiltro(`%${epcToSearch}%`);
+query = db.from("credenciales").select(COLUMNAS_ASISTENCIA).or(`nombre.ilike.${patron},apellido.ilike.${patron}`).limit(2);
 }
 
 const {data,error} = await query;
@@ -2122,7 +2276,7 @@ resultadoBox.style.display = "block";
 banner.style.background = "#eab308";
 banner.textContent = "VARIOS RESULTADOS";
 
-document.getElementById("asistenciaFoto").innerHTML = "BUSCA MÁS ESPECÍFICO";
+document.getElementById("asistenciaFoto").textContent = "BUSCA MÁS ESPECÍFICO";
 document.getElementById("asistenciaEpc").textContent = data.map(x => x.epc).join(", ");
 document.getElementById("asistenciaNombre").textContent = data.map(x => `${x.nombre || ""} ${x.apellido || ""}`).join(" / ");
 document.getElementById("asistenciaGiro").textContent = "-";
@@ -2148,7 +2302,7 @@ emitirSonido("error");
 banner.style.background = "#dc2626";
 banner.textContent = "REGISTRO NO ENCONTRADO";
 
-document.getElementById("asistenciaFoto").innerHTML = "SIN FOTO";
+document.getElementById("asistenciaFoto").textContent = "SIN FOTO";
 document.getElementById("asistenciaEpc").textContent = "-";
 document.getElementById("asistenciaNombre").textContent = "-";
 document.getElementById("asistenciaGiro").textContent = "-";
@@ -2163,12 +2317,7 @@ document.getElementById("asistenciaDias").textContent = data.operacion_dias || "
 document.getElementById("asistenciaHorario").textContent = data.operacion_horario || "";
 document.getElementById("asistenciaVigencia").textContent = data.vigencia || "";
 
-const fotoBox = document.getElementById("asistenciaFoto");
-if(data.foto_base64){
-fotoBox.innerHTML = `<img src="${data.foto_base64}">`;
-}else{
-fotoBox.innerHTML = "SIN FOTO";
-}
+ponerFoto(document.getElementById("asistenciaFoto"), data.foto_base64, "SIN FOTO");
 
 const estado = (data.estatus || "").toUpperCase();
 
@@ -2191,8 +2340,14 @@ resultadoBox.style.display = "none";
 
 function emitirSonido(tipo){
 try{
-const AudioContext = window.AudioContext || window.webkitAudioContext;
-const ctx = new AudioContext();
+if(!audioCtx){
+const ContextoAudio = window.AudioContext || window.webkitAudioContext;
+if(!ContextoAudio) return;
+audioCtx = new ContextoAudio();
+}
+if(audioCtx.state === "suspended") audioCtx.resume();
+
+const ctx = audioCtx;
 const osc = ctx.createOscillator();
 const gainNode = ctx.createGain();
 
@@ -2249,11 +2404,9 @@ const epc = epcCompleto(numero);
 
 const {data,error} = await db
 .from("credenciales")
-.select("*")
+.select(COLUMNAS_PUBLICAS)
 .eq("epc",epc)
 .single();
-
-console.log("Datos recibidos de Supabase:", data);
 
 if(error || !data){
 document.getElementById("pubFolio").textContent = epc;
@@ -2269,19 +2422,13 @@ document.getElementById("pubDias").textContent = data.operacion_dias || "";
 document.getElementById("pubHorario").textContent = data.operacion_horario || "";
 document.getElementById("pubAnio").textContent = obtenerAnioActual();
 document.getElementById("pubEmision").textContent = fechaEmisionActual();
-document.getElementById("pubVigencia").textContent = fechaLargaMexico(data.vigencia || "31/12/2026");
+document.getElementById("pubVigencia").textContent = fechaLargaMexico(data.vigencia || VIGENCIA_CREDENCIAL);
 document.getElementById("pubGiro").textContent = data.giro || "";
 
 document.getElementById("pubStatus").textContent = estado === "ACTIVO" ? "ACTIVA" : "INACTIVA";
-document.getElementById("pubStatus").style.color = estado === "ACTIVO" ? "#28ff28" : "#dc2626";
+document.getElementById("pubStatus").style.color = estado === "ACTIVO" ? "#16a34a" : "#dc2626";
 
-const foto = document.getElementById("pubFoto");
-if(data.foto_base64 && data.foto_base64.length > 50){
-    foto.innerHTML = `<img src="${data.foto_base64}">`;
-} else {
-    foto.innerHTML = "SIN FOTO";
-    console.warn("La columna foto_base64 está vacía o es muy corta.");
-}
+ponerFoto(document.getElementById("pubFoto"), data.foto_base64, "SIN FOTO");
 
 const maps = document.getElementById("pubMaps");
 if(data.direccion) maps.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(data.direccion);
