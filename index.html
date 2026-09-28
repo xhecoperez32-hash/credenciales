@@ -95,6 +95,12 @@ background:#0B283B;
 color:white;
 }
 
+.tabs button.salir{
+background:#dc2626;
+color:white;
+border-color:#dc2626;
+}
+
 .pantalla{
 display:none;
 }
@@ -1016,6 +1022,7 @@ se encuentran incluidos en el Padrón:
 <button id="tabCredencial" onclick="mostrarPantalla('credencial')">Ver / imprimir credencial</button>
 <button id="tabAsistencia" onclick="mostrarPantalla('asistencia')">Escáner de Asistencia</button>
 <button id="tabUsuarios" onclick="mostrarPantalla('usuarios')">Gestión de Usuarios</button>
+<button id="btnSalir" class="salir" type="button" onclick="cerrarSesion()">SALIR</button>
 </div>
 
 <div id="pantallaAdmin" class="pantalla active">
@@ -1427,6 +1434,16 @@ mostrarPantalla("admin");
 document.getElementById("tabAsistencia").style.display = "inline-block";
 mostrarPantalla("asistencia");
 }
+}
+
+// Cierra la sesión recargando la página sin parámetros: así se borra de memoria el usuario,
+// la contraseña, los datos cargados y cualquier formulario a medio llenar.
+function cerrarSesion(){
+if(!confirm("¿Cerrar sesión?")) return;
+usuarioActual = null;
+loginUsuarioActual = "";
+loginPasswordActual = "";
+window.location.replace(window.location.pathname);
 }
 
 function soloAdmin(){
