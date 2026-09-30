@@ -569,193 +569,6 @@ display:inline-block;
 width:190px;
 }
 
-/* ================= CONTROL DE ASISTENCIA (JORNADA) ================= */
-.asist-encabezado{
-background:white;
-border-radius:15px;
-box-shadow:0 5px 20px rgba(0,0,0,.15);
-padding:22px 30px;
-margin-bottom:25px;
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:14px 30px;
-align-items:center;
-text-align:left;
-}
-
-.asist-titulo{
-color:#0B283B;
-font-size:34px;
-font-weight:900;
-letter-spacing:1px;
-}
-
-.asist-fecha{
-font-size:22px;
-font-weight:bold;
-color:#333;
-text-align:right;
-}
-
-.asist-estado{
-font-size:24px;
-font-weight:900;
-}
-
-.asist-estado.abierta{color:#16a34a}
-.asist-estado.sin{color:#dc2626}
-
-.asist-contadores{
-display:flex;
-gap:14px;
-justify-content:flex-end;
-}
-
-.asist-contadores div{
-background:#f2f2f2;
-border-radius:10px;
-padding:8px 18px;
-text-align:center;
-font-size:15px;
-font-weight:bold;
-color:#555;
-min-width:130px;
-}
-
-.asist-contadores span{
-display:block;
-font-size:34px;
-color:#0B283B;
-}
-
-.asist-ultimo{
-grid-column:1 / -1;
-border-top:1px solid #ddd;
-padding-top:12px;
-font-size:18px;
-color:#333;
-}
-
-.asist-ultimo strong{
-color:#0B283B;
-}
-
-#btnActivarJornada{
-display:none;
-height:40px;
-padding:0 18px;
-border:none;
-border-radius:8px;
-background:#16a34a;
-color:white;
-font-weight:bold;
-font-size:16px;
-cursor:pointer;
-margin-left:12px;
-}
-
-/* ================= HISTORIAL Y REPORTES ================= */
-.celda-ver{
-padding:2px 10px;
-border:none;
-border-radius:4px;
-background:#2563eb;
-color:white;
-font-weight:bold;
-cursor:pointer;
-}
-
-.historial{
-margin-top:25px;
-background:white;
-border:1px solid #ddd;
-border-radius:10px;
-padding:20px 25px;
-}
-
-.historial h2,
-.reporte h2{
-color:#0B283B;
-font-size:22px;
-margin:0 0 12px;
-}
-
-.historial-resumen,
-.rep-cards{
-display:flex;
-flex-wrap:wrap;
-gap:12px;
-margin-bottom:15px;
-}
-
-.historial-resumen div,
-.rep-cards div{
-background:#f2f2f2;
-border-radius:8px;
-padding:8px 16px;
-font-size:14px;
-font-weight:bold;
-color:#555;
-}
-
-.historial-resumen span,
-.rep-cards span{
-display:block;
-font-size:24px;
-color:#0B283B;
-}
-
-.historial-lista{
-list-style:none;
-margin:0;
-padding:0;
-max-height:260px;
-overflow:auto;
-font-size:17px;
-}
-
-.historial-lista li{
-padding:7px 4px;
-border-bottom:1px solid #eee;
-}
-
-.estado-asistencia{color:#16a34a;font-weight:bold}
-.estado-falta{color:#dc2626;font-weight:bold}
-.estado-pendiente{color:#a16207;font-weight:bold}
-
-.reporte-filtros{
-display:flex;
-flex-wrap:wrap;
-gap:12px;
-align-items:center;
-margin-bottom:22px;
-}
-
-.reporte-filtros button{
-height:38px;
-padding:0 16px;
-border:none;
-border-radius:6px;
-font-weight:bold;
-cursor:pointer;
-}
-
-.reporte-seccion{
-margin-top:25px;
-}
-
-.tabla-rep{
-background:white;
-max-height:340px;
-overflow:auto;
-}
-
-.nota-rep{
-font-size:14px;
-color:#555;
-margin:6px 0 0;
-}
-
 /* ================= VERIFICACIÓN PÚBLICA QR ================= */
 .verificacion-publica{
 display:none;
@@ -1003,8 +816,7 @@ padding:0;
 .subtabs,
 #pantallaAdmin,
 #pantallaAsistencia,
-#pantallaUsuarios,
-#pantallaReportes{
+#pantallaUsuarios{
 display:none!important;
 }
 
@@ -1210,7 +1022,6 @@ se encuentran incluidos en el Padrón:
 <button id="tabCredencial" onclick="mostrarPantalla('credencial')">Ver / imprimir credencial</button>
 <button id="tabAsistencia" onclick="mostrarPantalla('asistencia')">Escáner de Asistencia</button>
 <button id="tabUsuarios" onclick="mostrarPantalla('usuarios')">Gestión de Usuarios</button>
-<button id="tabReportes" onclick="mostrarPantalla('reportes')">Reportes → Asistencias</button>
 <button id="btnSalir" class="salir" type="button" onclick="cerrarSesion()">SALIR</button>
 </div>
 
@@ -1328,20 +1139,11 @@ BUSCAR
 <th>Sexo</th>
 <th>Tipo</th>
 <th>Estatus</th>
-<th>Asistencias</th>
 <th>Faltas</th>
-<th>% Asistencia</th>
-<th>Acciones</th>
 </tr>
 </thead>
 <tbody id="tabla"></tbody>
 </table>
-</div>
-
-<div id="historialBox" class="historial oculto">
-<h2>HISTORIAL DE ASISTENCIA — <span id="historialNombre"></span></h2>
-<div class="historial-resumen" id="historialResumen"></div>
-<ul class="historial-lista" id="historialLista"></ul>
 </div>
 
 </div>
@@ -1479,20 +1281,7 @@ ACTIVO
 
 <div id="pantallaAsistencia" class="pantalla">
 <div class="asistencia-container">
-<div class="asist-encabezado">
-<div class="asist-titulo">CONTROL DE ASISTENCIA</div>
-<div class="asist-fecha" id="asistFecha"></div>
-<div>
-<span class="asist-estado" id="asistEstadoJornada">CARGANDO…</span>
-<button id="btnActivarJornada" type="button" onclick="abrirJornadaHoy(true)">ACTIVAR JORNADA DE HOY</button>
-</div>
-<div class="asist-contadores">
-<div><span id="asistRegistrados">0</span>Registrados</div>
-<div><span id="asistPendientes">0</span>Pendientes</div>
-</div>
-<div class="asist-ultimo" id="asistUltimo">Último registro: —</div>
-</div>
-
+<h1 style="color:#0B283B; font-size:40px; text-transform:uppercase;">Sistema de Asistencia y Accesos</h1>
 <p class="asistencia-ayuda">
 Escanea el QR, digita los 4 dígitos del EPC o escribe el nombre para confirmar asistencia.
 </p>
@@ -1512,68 +1301,9 @@ Escanea el QR, digita los 4 dígitos del EPC o escribe el nombre para confirmar 
 <p><strong>Días oper.:</strong> <span id="asistenciaDias"></span></p>
 <p><strong>Horario:</strong> <span id="asistenciaHorario"></span></p>
 <p><strong>Vigencia:</strong> <span id="asistenciaVigencia"></span></p>
-<p><strong>Hora registro:</strong> <span id="asistenciaHora"></span></p>
 </div>
 </div>
 </div>
-</div>
-</div>
-
-<div id="pantallaReportes" class="pantalla">
-<div class="admin reporte">
-
-<h1>REPORTES → ASISTENCIAS</h1>
-
-<div class="reporte-filtros">
-<label for="repMes">Mes:</label>
-<select id="repMes"></select>
-<label for="repAnio">Año:</label>
-<input type="number" id="repAnio" min="2020" max="2100" style="width:110px;">
-<button class="buscar" type="button" onclick="consultarReporte()">CONSULTAR</button>
-<button class="eliminar" type="button" onclick="exportarReportePDF()">EXPORTAR PDF</button>
-<button class="guardar" type="button" onclick="exportarReporteExcel()">EXPORTAR EXCEL</button>
-</div>
-
-<div class="rep-cards" id="repResumen"></div>
-<p class="nota-rep">Solo cuentan los días en que un administrador abrió el escáner. El porcentaje es asistencias ÷ (asistencias + faltas).</p>
-
-<div class="reporte-seccion">
-<h2>Jornadas del mes</h2>
-<div class="tabla-rep">
-<table>
-<thead><tr><th>Fecha</th><th>Estado</th><th>Considerados</th><th>Asistencias</th><th>Faltas</th><th>Pendientes</th><th>% Asistencia</th></tr></thead>
-<tbody id="repJornadas"></tbody>
-</table>
-</div>
-</div>
-
-<div class="reporte-seccion oculto" id="repDetalleBox">
-<h2 id="repDetalleTitulo"></h2>
-<div class="rep-cards" id="repDetalleResumen"></div>
-<div class="tabla-rep">
-<table>
-<thead><tr><th>EPC</th><th>Afiliado</th><th>Estado</th><th>Hora</th><th>Registró</th></tr></thead>
-<tbody id="repDetalle"></tbody>
-</table>
-</div>
-</div>
-
-<div class="reporte-seccion">
-<h2>Afiliados</h2>
-<div class="tabla-rep">
-<table>
-<thead><tr><th>EPC</th><th>Afiliado</th><th>Asistencias</th><th>Faltas</th><th>Pendientes</th><th>% Asistencia</th></tr></thead>
-<tbody id="repAfiliados"></tbody>
-</table>
-</div>
-</div>
-
-<div class="historial oculto" id="repHistorialBox">
-<h2 id="repHistorialTitulo"></h2>
-<div class="historial-resumen" id="repHistorialResumen"></div>
-<ul class="historial-lista" id="repHistorialLista"></ul>
-</div>
-
 </div>
 </div>
 
@@ -1605,12 +1335,6 @@ let loginUsuarioActual = "";
 let loginPasswordActual = "";
 let timerAsistencia = null;
 let audioCtx = null;
-
-// Totales de asistencia por EPC para la tabla principal (solo se cargan para administradores)
-let estadisticasAfiliados = {};
-let estadisticasCargadas = false;
-// Último reporte mensual consultado (se usa para exportar)
-let reporteActual = null;
 
 async function arranque(){
 const params = new URLSearchParams(window.location.search);
@@ -1687,14 +1411,12 @@ document.getElementById("tabAdmin").style.display = "none";
 document.getElementById("tabCredencial").style.display = "none";
 document.getElementById("tabAsistencia").style.display = "none";
 document.getElementById("tabUsuarios").style.display = "none";
-document.getElementById("tabReportes").style.display = "none";
 
 if(rol === "admin"){
 document.getElementById("tabAdmin").style.display = "inline-block";
 document.getElementById("tabCredencial").style.display = "inline-block";
 document.getElementById("tabAsistencia").style.display = "inline-block";
 document.getElementById("tabUsuarios").style.display = "inline-block";
-document.getElementById("tabReportes").style.display = "inline-block";
 mostrarPantalla("admin");
 }else if(rol === "capturista"){
 document.getElementById("tabAdmin").style.display = "inline-block";
@@ -1741,14 +1463,13 @@ const PANTALLAS = {
 admin:{pantalla:"pantallaAdmin", tab:"tabAdmin"},
 credencial:{pantalla:"pantallaCredencial", tab:"tabCredencial"},
 asistencia:{pantalla:"pantallaAsistencia", tab:"tabAsistencia"},
-usuarios:{pantalla:"pantallaUsuarios", tab:"tabUsuarios"},
-reportes:{pantalla:"pantallaReportes", tab:"tabReportes"}
+usuarios:{pantalla:"pantallaUsuarios", tab:"tabUsuarios"}
 };
 
 function mostrarPantalla(tipo){
 if(!usuarioActual || !PANTALLAS[tipo]) return;
 if(tipo === "admin" && !puedeActualizar()) return;
-if((tipo === "credencial" || tipo === "usuarios" || tipo === "reportes") && !soloAdmin()) return;
+if((tipo === "credencial" || tipo === "usuarios") && !soloAdmin()) return;
 
 Object.values(PANTALLAS).forEach(p=>{
 document.getElementById(p.pantalla).classList.remove("active");
@@ -1760,12 +1481,6 @@ document.getElementById(PANTALLAS[tipo].tab).classList.add("active");
 
 if(tipo === "asistencia"){
 setTimeout(()=>document.getElementById("inputAsistencia").focus(),200);
-// Un administrador que entra al escáner activa (o reutiliza) la jornada de hoy.
-abrirJornadaHoy(false);
-}
-
-if(tipo === "reportes"){
-prepararReportes();
 }
 }
 
@@ -1797,7 +1512,7 @@ let anio = d.getFullYear();
 let mes = String(d.getMonth() + 1).padStart(2, '0');
 let dia = String(d.getDate()).padStart(2, '0');
 
-document.getElementById("uVigencia").value = `${anio}-${mes}-${dia}`;
+document.getElementById("uVigencia").value = ${anio}-${mes}-${dia};
 }
 
 async function guardarNuevoUsuario(){
@@ -1985,11 +1700,11 @@ input.value = String(max + 1);
 async function validarDuplicados(nuevo, idActual){
 let orParts = [];
 
-if(nuevo.epc) orParts.push(`epc.eq.${valorFiltro(nuevo.epc)}`);
-if(nuevo.curp) orParts.push(`curp.eq.${valorFiltro(nuevo.curp)}`);
+if(nuevo.epc) orParts.push(epc.eq.${valorFiltro(nuevo.epc)});
+if(nuevo.curp) orParts.push(curp.eq.${valorFiltro(nuevo.curp)});
 
 if(nuevo.nombre && nuevo.apellido){
-orParts.push(`and(nombre.eq.${valorFiltro(nuevo.nombre)},apellido.eq.${valorFiltro(nuevo.apellido)})`);
+orParts.push(and(nombre.eq.${valorFiltro(nuevo.nombre)},apellido.eq.${valorFiltro(nuevo.apellido)}));
 }
 
 if(orParts.length === 0) return null;
@@ -2025,11 +1740,10 @@ document.getElementById("tablaBox").style.display = "none";
 return;
 }
 
-const [respuesta] = await Promise.all([
-db.from("credenciales").select(COLUMNAS_TABLA).order("id",{ascending:true}),
-cargarEstadisticasAfiliados()
-]);
-const {data,error} = respuesta;
+const {data,error} = await db
+.from("credenciales")
+.select(COLUMNAS_TABLA)
+.order("id",{ascending:true});
 
 if(error){
 alert("Error al cargar tabla: " + error.message);
@@ -2037,19 +1751,6 @@ return;
 }
 
 pintarTabla(data);
-}
-
-// Asistencias / faltas por jornada de cada afiliado, en una sola consulta agregada.
-async function cargarEstadisticasAfiliados(){
-estadisticasAfiliados = {};
-estadisticasCargadas = false;
-try{
-const filas = await rpcAsistencia("asist_resumen_afiliados", {});
-(filas || []).forEach(f=>{ estadisticasAfiliados[f.epc] = f; });
-estadisticasCargadas = true;
-}catch(e){
-console.warn("No se pudieron cargar las estadísticas de asistencia:", e.message);
-}
 }
 
 function pintarTabla(data){
@@ -2060,32 +1761,12 @@ const fragmento = document.createDocumentFragment();
 const tr = document.createElement("tr");
 tr.tabIndex = 0;
 
-// Sin estadísticas cargadas (p. ej. capturista) se muestra "—"; cargadas y sin jornadas, 0.
-const est = estadisticasAfiliados[item.epc] || (estadisticasCargadas ? {asistencias:0, faltas_jornadas:0} : null);
-const asistencias = est ? est.asistencias : null;
-
-[item.id, item.epc, item.nombre, item.apellido, item.curp, item.sexo, item.tipo_ubicacion, item.estatus,
-asistencias ?? "—",
-item.faltas || 0,
-est ? textoPorcentaje(est.asistencias, est.faltas_jornadas) : "—"]
+[item.id, item.epc, item.nombre, item.apellido, item.curp, item.sexo, item.tipo_ubicacion, item.estatus, item.faltas || 0]
 .forEach(valor=>{
 const td = document.createElement("td");
 td.textContent = valor ?? "";
 tr.appendChild(td);
 });
-
-const tdAcciones = document.createElement("td");
-const btnVer = document.createElement("button");
-btnVer.type = "button";
-btnVer.className = "celda-ver";
-btnVer.textContent = "Ver";
-btnVer.addEventListener("click", async e=>{
-e.stopPropagation();
-await buscarAdminDesdeTabla(item.epc);
-document.getElementById("historialBox").scrollIntoView({behavior:"smooth", block:"start"});
-});
-tdAcciones.appendChild(btnVer);
-tr.appendChild(tdAcciones);
 
 tr.addEventListener("click", ()=>buscarAdminDesdeTabla(item.epc));
 tr.addEventListener("keydown", e=>{
@@ -2113,7 +1794,7 @@ alert("Error al abrir registro: " + error.message);
 return;
 }
 
-await seleccionar(data);
+seleccionar(data);
 }
 
 async function buscarPorNombre(){
@@ -2126,12 +1807,12 @@ alert("Escribe un nombre para buscar.");
 return;
 }
 
-const patron = valorFiltro(`%${nombre}%`);
+const patron = valorFiltro(%${nombre}%);
 
 const {data,error} = await db
 .from("credenciales")
 .select("*")
-.or(`nombre.ilike.${patron},apellido.ilike.${patron}`)
+.or(nombre.ilike.${patron},apellido.ilike.${patron})
 .limit(20);
 
 if(error){
@@ -2178,8 +1859,6 @@ document.getElementById("estatusTexto").textContent = activo ? "ACTIVO" : "INACT
 
 fotoBase64 = item.foto_base64 || "";
 mostrarFotoAdmin(fotoBase64);
-
-return cargarHistorialAfiliado(item.epc);
 }
 
 function cargarFoto(event){
@@ -2477,7 +2156,6 @@ document.getElementById("estatusTexto").textContent = "ACTIVO";
 document.getElementById("fotoInput").value = "";
 fotoBase64 = "";
 mostrarFotoAdmin("");
-document.getElementById("historialBox").classList.add("oculto");
 generarSiguienteEPC();
 }
 
@@ -2514,7 +2192,7 @@ return;
 }
 
 document.getElementById("buscarEpc").value = soloNumero(data.epc);
-document.getElementById("vNombre").textContent = `${data.nombre || ""} ${data.apellido || ""}`;
+document.getElementById("vNombre").textContent = ${data.nombre || ""} ${data.apellido || ""};
 document.getElementById("vOrganizacion").textContent = "EL PODER DEL COMERCIO";
 document.getElementById("vGiro").textContent = data.giro || "";
 document.getElementById("vEstatus").textContent = data.estatus || "";
@@ -2573,9 +2251,8 @@ input.focus();
 async function procesarAsistencia(event){
 if(event.key !== "Enter") return;
 
-const input = document.getElementById("inputAsistencia");
-const valorOriginal = input.value.trim();
-input.value = "";
+const valorOriginal = document.getElementById("inputAsistencia").value.trim();
+document.getElementById("inputAsistencia").value = "";
 
 if(!valorOriginal) return;
 
@@ -2587,14 +2264,14 @@ let query;
 if(/^\d+$/.test(numeroLimpiado)){
 query = db.from("credenciales").select(COLUMNAS_ASISTENCIA).eq("epc", "EPC-" + numeroLimpiado).limit(2);
 } else {
-const patron = valorFiltro(`%${epcToSearch}%`);
-query = db.from("credenciales").select(COLUMNAS_ASISTENCIA).or(`nombre.ilike.${patron},apellido.ilike.${patron}`).limit(2);
+const patron = valorFiltro(%${epcToSearch}%);
+query = db.from("credenciales").select(COLUMNAS_ASISTENCIA).or(nombre.ilike.${patron},apellido.ilike.${patron}).limit(2);
 }
 
 const {data,error} = await query;
 
 if(error || !data || data.length === 0){
-mostrarDataAsistencia(null, "NO_ENCONTRADO");
+mostrarDataAsistencia(null, true);
 return;
 }
 
@@ -2603,19 +2280,7 @@ mostrarMensajeAsistenciaMultiple(data);
 return;
 }
 
-// El registro real (jornada, duplicados, estatus) lo decide el servidor.
-const credencial = data[0];
-let respuesta;
-
-try{
-respuesta = await rpcAsistencia("asist_registrar", {p_epc: credencial.epc});
-}catch(e){
-mostrarDataAsistencia(credencial, "ERROR", {mensaje: e.message});
-return;
-}
-
-actualizarEncabezadoJornada(respuesta);
-mostrarDataAsistencia(credencial, respuesta.resultado, respuesta);
+mostrarDataAsistencia(data[0], null);
 }
 
 function mostrarMensajeAsistenciaMultiple(data){
@@ -2630,7 +2295,7 @@ banner.textContent = "VARIOS RESULTADOS";
 
 document.getElementById("asistenciaFoto").textContent = "BUSCA MÁS ESPECÍFICO";
 document.getElementById("asistenciaEpc").textContent = data.map(x => x.epc).join(", ");
-document.getElementById("asistenciaNombre").textContent = data.map(x => `${x.nombre || ""} ${x.apellido || ""}`).join(" / ");
+document.getElementById("asistenciaNombre").textContent = data.map(x => ${x.nombre || ""} ${x.apellido || ""}).join(" / ");
 document.getElementById("asistenciaGiro").textContent = "-";
 document.getElementById("asistenciaDias").textContent = "-";
 document.getElementById("asistenciaHorario").textContent = "-";
@@ -2641,29 +2306,19 @@ resultadoBox.style.display = "none";
 }, 5000);
 }
 
-const BANNERS_ASISTENCIA = {
-REGISTRADA:{texto:"✅ ASISTENCIA REGISTRADA", color:"#16a34a", sonido:"ok"},
-YA_REGISTRADA:{texto:"⚠️ ASISTENCIA YA REGISTRADA", color:"#d97706", sonido:"aviso"},
-INACTIVO:{texto:"CREDENCIAL DESACTIVADA", color:"#dc2626", sonido:"error"},
-SIN_JORNADA:{texto:"SIN JORNADA ACTIVA HOY", color:"#dc2626", sonido:"error"},
-NO_ENCONTRADO:{texto:"REGISTRO NO ENCONTRADO", color:"#dc2626", sonido:"error"},
-ERROR:{texto:"ERROR AL REGISTRAR", color:"#dc2626", sonido:"error"}
-};
-
-function mostrarDataAsistencia(data, resultado, info){
+function mostrarDataAsistencia(data, error){
 clearTimeout(timerAsistencia);
-info = info || {};
 
 const banner = document.getElementById("asistenciaBanner");
 const resultadoBox = document.getElementById("asistenciaResultado");
-const config = BANNERS_ASISTENCIA[resultado] || BANNERS_ASISTENCIA.ERROR;
 
 resultadoBox.style.display = "block";
-emitirSonido(config.sonido);
-banner.style.background = config.color;
-banner.textContent = config.texto;
 
-if(!data){
+if(error || !data){
+emitirSonido("error");
+banner.style.background = "#dc2626";
+banner.textContent = "REGISTRO NO ENCONTRADO";
+
 document.getElementById("asistenciaFoto").textContent = "SIN FOTO";
 document.getElementById("asistenciaEpc").textContent = "-";
 document.getElementById("asistenciaNombre").textContent = "-";
@@ -2671,29 +2326,33 @@ document.getElementById("asistenciaGiro").textContent = "-";
 document.getElementById("asistenciaDias").textContent = "-";
 document.getElementById("asistenciaHorario").textContent = "-";
 document.getElementById("asistenciaVigencia").textContent = "-";
-document.getElementById("asistenciaHora").textContent = "-";
 }else{
 document.getElementById("asistenciaEpc").textContent = data.epc || "";
-document.getElementById("asistenciaNombre").textContent = `${data.nombre || ""} ${data.apellido || ""}`;
+document.getElementById("asistenciaNombre").textContent = ${data.nombre || ""} ${data.apellido || ""};
 document.getElementById("asistenciaGiro").textContent = data.giro || "";
 document.getElementById("asistenciaDias").textContent = data.operacion_dias || "";
 document.getElementById("asistenciaHorario").textContent = data.operacion_horario || "";
 document.getElementById("asistenciaVigencia").textContent = data.vigencia || "";
 
-let hora = "-";
-if(resultado === "REGISTRADA") hora = horaMexico(info.hora);
-else if(resultado === "YA_REGISTRADA") hora = horaMexico(info.hora) + " (registro original)";
-else if(resultado === "SIN_JORNADA") hora = "Un administrador debe abrir el escáner hoy";
-else if(resultado === "ERROR") hora = info.mensaje || "-";
-document.getElementById("asistenciaHora").textContent = hora;
-
 ponerFoto(document.getElementById("asistenciaFoto"), data.foto_base64, "SIN FOTO");
+
+const estado = (data.estatus || "").toUpperCase();
+
+if(estado === "ACTIVO"){
+    emitirSonido("ok");
+    banner.style.background = "#16a34a";
+    banner.textContent = "ASISTENCIA REGISTRADA";
+}else{
+    emitirSonido("error");
+    banner.style.background = "#dc2626";
+    banner.textContent = "CREDENCIAL DESACTIVADA";
+}
 }
 
-// Éxito: 2 s para seguir escaneando rápido. Avisos y errores quedan un poco más.
+// Reducido a 2 segundos (2000 ms) para escanear súper rápido
 timerAsistencia = setTimeout(() => {
 resultadoBox.style.display = "none";
-}, resultado === "REGISTRADA" ? 2000 : 4000);
+}, 2000);
 }
 
 function emitirSonido(tipo){
@@ -2718,12 +2377,6 @@ osc.frequency.setValueAtTime(800, ctx.currentTime);
 gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
 osc.start();
 osc.stop(ctx.currentTime + 0.15);
-}else if(tipo === "aviso"){
-osc.type = "triangle";
-osc.frequency.setValueAtTime(520, ctx.currentTime);
-gainNode.gain.setValueAtTime(0.12, ctx.currentTime);
-osc.start();
-osc.stop(ctx.currentTime + 0.3);
 }else{
 osc.type = "sawtooth";
 osc.frequency.setValueAtTime(200, ctx.currentTime);
@@ -2734,652 +2387,6 @@ osc.stop(ctx.currentTime + 0.4);
 }catch(e){}
 }
 
-// ================= CONTROL DE ASISTENCIA POR JORNADAS =================
-// Todas las operaciones de asistencia pasan por funciones de Supabase que vuelven a validar
-// usuario y contraseña en el servidor (igual que crear_usuario). Las tablas de asistencia
-// no se pueden leer ni modificar directamente con la llave pública.
-async function rpcAsistencia(nombre, parametros){
-const {data,error} = await db.rpc(nombre, {
-p_usuario: loginUsuarioActual,
-p_password: loginPasswordActual,
-...parametros
-});
-
-if(error){
-if(/NO_AUTORIZADO/.test(error.message)) throw new Error("No tienes permiso para esta acción de asistencia.");
-throw new Error(error.message);
-}
-return data;
-}
-
-const MESES_ES = ["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"];
-const ZONA_HORARIA = "America/Mexico_City";
-
-function fechaCorta(fechaIso){
-if(!fechaIso) return "";
-const [a,m,d] = String(fechaIso).slice(0,10).split("-");
-return `${d}/${m}/${a}`;
-}
-
-function horaMexico(iso){
-if(!iso) return "-";
-return new Date(iso).toLocaleTimeString("es-MX", {hour:"2-digit", minute:"2-digit", hour12:true, timeZone:ZONA_HORARIA});
-}
-
-function porcentajeNumero(asistencias, faltas){
-const total = (asistencias || 0) + (faltas || 0);
-return total > 0 ? (asistencias || 0) * 100 / total : null;
-}
-
-function textoPorcentaje(asistencias, faltas){
-const p = porcentajeNumero(asistencias, faltas);
-return p === null ? "—" : p.toFixed(1) + "%";
-}
-
-// ---------- Escáner ----------
-// Admin: crea la jornada de hoy si no existe (una por fecha, protegido en la base de datos).
-// Otros roles del escáner: solo consultan; si nadie la abrió, no se registra nada ese día.
-async function abrirJornadaHoy(){
-const estadoEl = document.getElementById("asistEstadoJornada");
-try{
-const funcion = usuarioActual && usuarioActual.rol === "admin" ? "asist_abrir_jornada" : "asist_estado_hoy";
-actualizarEncabezadoJornada(await rpcAsistencia(funcion, {}));
-}catch(e){
-estadoEl.className = "asist-estado sin";
-estadoEl.textContent = "⚠️ " + e.message;
-}
-}
-
-async function refrescarEstadoJornada(){
-try{
-actualizarEncabezadoJornada(await rpcAsistencia("asist_estado_hoy", {}));
-}catch(e){
-console.warn("No se pudo actualizar la jornada:", e.message);
-}
-}
-
-function actualizarEncabezadoJornada(estado){
-if(!estado) return;
-
-const abierta = estado.estado === "ABIERTA";
-const estadoEl = document.getElementById("asistEstadoJornada");
-const esAdmin = usuarioActual && usuarioActual.rol === "admin";
-
-document.getElementById("asistFecha").textContent = fechaLargaMexico(String(estado.fecha || ""));
-estadoEl.className = "asist-estado " + (abierta ? "abierta" : "sin");
-estadoEl.textContent = abierta ? "🟢 JORNADA ACTIVA" : (esAdmin ? "🔴 SIN JORNADA HOY" : "🔴 SIN JORNADA HOY — un administrador debe abrir el escáner");
-document.getElementById("btnActivarJornada").style.display = !abierta && esAdmin ? "inline-block" : "none";
-document.getElementById("asistRegistrados").textContent = estado.registrados ?? 0;
-document.getElementById("asistPendientes").textContent = estado.pendientes ?? 0;
-
-const ultimo = document.getElementById("asistUltimo");
-ultimo.textContent = "Último registro: ";
-if(estado.ultimo){
-const nombre = document.createElement("strong");
-nombre.textContent = "✅ " + (estado.ultimo.nombre || "");
-ultimo.appendChild(nombre);
-ultimo.appendChild(document.createTextNode(` · ${estado.ultimo.epc || ""} · Asistencia registrada · ${horaMexico(estado.ultimo.hora)}`));
-}else{
-ultimo.appendChild(document.createTextNode("—"));
-}
-}
-
-// Mantiene los contadores al día cuando hay varios escáneres trabajando a la vez.
-setInterval(() => {
-const pantalla = document.getElementById("pantallaAsistencia");
-if(usuarioActual && pantalla && pantalla.classList.contains("active")) refrescarEstadoJornada();
-}, 30000);
-
-// ---------- Historial por afiliado ----------
-let historialSolicitado = "";
-
-async function cargarHistorialAfiliado(epc){
-const box = document.getElementById("historialBox");
-
-if(!usuarioActual || usuarioActual.rol !== "admin" || !epc){
-box.classList.add("oculto");
-return;
-}
-
-historialSolicitado = epc;
-
-try{
-const historial = await rpcAsistencia("asist_historial", {p_epc: epc});
-if(historialSolicitado !== epc) return; // se seleccionó otro registro mientras cargaba
-pintarHistorial(historial, "historialNombre", "historialResumen", "historialLista");
-document.getElementById("historialNombre").textContent = `${historial.nombre || ""} (${historial.epc || epc})`;
-box.classList.remove("oculto");
-}catch(e){
-box.classList.add("oculto");
-console.warn("No se pudo cargar el historial:", e.message);
-}
-}
-
-function tarjeta(contenedor, titulo, valor){
-const div = document.createElement("div");
-const span = document.createElement("span");
-span.textContent = valor;
-div.appendChild(span);
-div.appendChild(document.createTextNode(titulo));
-contenedor.appendChild(div);
-}
-
-function pintarHistorial(h, idNombre, idResumen, idLista){
-const resumen = document.getElementById(idResumen);
-const lista = document.getElementById(idLista);
-resumen.textContent = "";
-lista.textContent = "";
-
-tarjeta(resumen, "Asistencias", h.asistencias || 0);
-tarjeta(resumen, "Faltas", h.faltas || 0);
-tarjeta(resumen, "% Asistencia", textoPorcentaje(h.asistencias, h.faltas));
-if(h.pendientes) tarjeta(resumen, "Pendiente hoy", h.pendientes);
-if(h.faltas_total !== null && h.faltas_total !== undefined) tarjeta(resumen, "Faltas acumuladas (total)", h.faltas_total);
-
-(h.registros || []).forEach(r=>{
-const li = document.createElement("li");
-const estado = document.createElement("span");
-if(r.estado === "ASISTENCIA"){
-estado.className = "estado-asistencia";
-estado.textContent = "✅ Asistencia";
-}else if(r.estado === "FALTA"){
-estado.className = "estado-falta";
-estado.textContent = "❌ Falta";
-}else{
-estado.className = "estado-pendiente";
-estado.textContent = "⏳ Pendiente (jornada en curso)";
-}
-li.appendChild(document.createTextNode(fechaCorta(r.fecha) + " — "));
-li.appendChild(estado);
-if(r.estado === "ASISTENCIA") li.appendChild(document.createTextNode(" — " + horaMexico(r.hora)));
-lista.appendChild(li);
-});
-
-if(h.faltas_manuales > 0){
-const li = document.createElement("li");
-li.className = "estado-falta";
-li.textContent = `Faltas registradas manualmente antes del control por QR (sin fecha): ${h.faltas_manuales}`;
-lista.appendChild(li);
-}
-
-if(!lista.children.length){
-const li = document.createElement("li");
-li.textContent = "Sin jornadas registradas todavía.";
-lista.appendChild(li);
-}
-}
-
-// ---------- Reporte mensual ----------
-function prepararReportes(){
-const selMes = document.getElementById("repMes");
-const inputAnio = document.getElementById("repAnio");
-
-if(!selMes.options.length){
-MESES_ES.forEach((m,i)=>{
-const op = document.createElement("option");
-op.value = i + 1;
-op.textContent = m;
-selMes.appendChild(op);
-});
-const hoy = new Date(new Date().toLocaleString("en-US", {timeZone:ZONA_HORARIA}));
-selMes.value = hoy.getMonth() + 1;
-inputAnio.value = hoy.getFullYear();
-}
-
-consultarReporte();
-}
-
-function filaTabla(tbody, valores, alHacerClic){
-const tr = document.createElement("tr");
-valores.forEach(v=>{
-const td = document.createElement("td");
-td.textContent = v ?? "";
-tr.appendChild(td);
-});
-if(alHacerClic){
-tr.tabIndex = 0;
-tr.addEventListener("click", alHacerClic);
-tr.addEventListener("keydown", e=>{ if(e.key === "Enter") alHacerClic(); });
-}
-tbody.appendChild(tr);
-return tr;
-}
-
-function textoPct(valor){
-return valor === null || valor === undefined ? "—" : Number(valor).toFixed(1) + "%";
-}
-
-async function consultarReporte(){
-if(!soloAdmin()) return;
-
-const anio = parseInt(document.getElementById("repAnio").value, 10);
-const mes = parseInt(document.getElementById("repMes").value, 10);
-
-if(!anio || !mes){
-alert("Selecciona mes y año.");
-return;
-}
-
-try{
-reporteActual = await rpcAsistencia("asist_reporte_mensual", {p_anio: anio, p_mes: mes});
-}catch(e){
-reporteActual = null;
-alert("Error al consultar el reporte: " + e.message);
-return;
-}
-
-pintarReporte(reporteActual);
-}
-
-function pintarReporte(rep){
-const r = rep.resumen || {};
-const cards = document.getElementById("repResumen");
-cards.textContent = "";
-tarjeta(cards, "Jornadas realizadas", r.jornadas || 0);
-tarjeta(cards, "Total de asistencias", r.asistencias || 0);
-tarjeta(cards, "Total de faltas", r.faltas || 0);
-if(r.pendientes) tarjeta(cards, "Pendientes (jornada en curso)", r.pendientes);
-tarjeta(cards, "% general de asistencia", textoPct(r.porcentaje));
-
-const tJornadas = document.getElementById("repJornadas");
-tJornadas.textContent = "";
-if(!rep.jornadas.length) filaTabla(tJornadas, ["No hubo jornadas de asistencia en este mes.","","","","","",""]);
-rep.jornadas.forEach(j=>{
-filaTabla(tJornadas,
-[fechaCorta(j.fecha), j.estado === "ABIERTA" ? "EN CURSO" : "CERRADA", j.considerados, j.asistencias, j.faltas, j.pendientes, textoPct(j.porcentaje)],
-()=>verDetalleJornada(j));
-});
-
-const tAfiliados = document.getElementById("repAfiliados");
-tAfiliados.textContent = "";
-rep.afiliados.forEach(a=>{
-filaTabla(tAfiliados,
-[a.epc, a.nombre, a.asistencias, a.faltas, a.pendientes, textoPct(a.porcentaje)],
-()=>verHistorialMes(a.epc, a.nombre));
-});
-
-document.getElementById("repDetalleBox").classList.add("oculto");
-document.getElementById("repHistorialBox").classList.add("oculto");
-}
-
-async function verDetalleJornada(j){
-let detalle;
-try{
-detalle = await rpcAsistencia("asist_detalle_jornada", {p_jornada_id: j.id});
-}catch(e){
-alert("Error al consultar la jornada: " + e.message);
-return;
-}
-
-document.getElementById("repDetalleTitulo").textContent =
-fechaLargaMexico(String(detalle.fecha)) + (detalle.estado === "ABIERTA" ? " — EN CURSO" : "");
-
-const cards = document.getElementById("repDetalleResumen");
-cards.textContent = "";
-tarjeta(cards, "Afiliados considerados", j.considerados);
-tarjeta(cards, "Asistencias", j.asistencias);
-tarjeta(cards, "Faltas", j.faltas);
-if(j.pendientes) tarjeta(cards, "Pendientes", j.pendientes);
-
-const tbody = document.getElementById("repDetalle");
-tbody.textContent = "";
-(detalle.registros || []).forEach(r=>{
-const tr = filaTabla(tbody, [
-r.epc, r.nombre,
-r.estado === "ASISTENCIA" ? "✅ ASISTENCIA" : r.estado === "FALTA" ? "❌ FALTA" : "⏳ PENDIENTE",
-r.estado === "ASISTENCIA" ? horaMexico(r.hora) : "",
-r.registrado_por || ""
-]);
-tr.children[2].className = r.estado === "ASISTENCIA" ? "estado-asistencia" : r.estado === "FALTA" ? "estado-falta" : "estado-pendiente";
-});
-
-const box = document.getElementById("repDetalleBox");
-box.classList.remove("oculto");
-box.scrollIntoView({behavior:"smooth", block:"start"});
-}
-
-async function verHistorialMes(epc, nombre){
-if(!reporteActual) return;
-const {anio, mes} = reporteActual;
-const mm = String(mes).padStart(2, "0");
-const ultimoDia = new Date(anio, mes, 0).getDate();
-
-let historial;
-try{
-historial = await rpcAsistencia("asist_historial", {
-p_epc: epc,
-p_desde: `${anio}-${mm}-01`,
-p_hasta: `${anio}-${mm}-${String(ultimoDia).padStart(2, "0")}`
-});
-}catch(e){
-alert("Error al consultar el historial: " + e.message);
-return;
-}
-
-// En el mes solo se muestran los datos del periodo (sin el acumulado histórico)
-historial.faltas_total = null;
-historial.faltas_manuales = 0;
-pintarHistorial(historial, "repHistorialTitulo", "repHistorialResumen", "repHistorialLista");
-document.getElementById("repHistorialTitulo").textContent = `HISTORIAL DE ${nombre || ""} (${epc}) — ${MESES_ES[mes - 1]} ${anio}`;
-
-const box = document.getElementById("repHistorialBox");
-box.classList.remove("oculto");
-box.scrollIntoView({behavior:"smooth", block:"start"});
-}
-
-// ---------- Exportar (PDF / Excel) ----------
-// Las librerías se cargan solo al exportar para no hacer más lenta la página.
-const LIB_JSPDF = "https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js";
-const LIB_AUTOTABLE = "https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js";
-const LIB_EXCELJS = "https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js";
-const scriptsCargados = {};
-
-function cargarScript(src){
-if(!scriptsCargados[src]){
-scriptsCargados[src] = new Promise((resolve, reject)=>{
-const s = document.createElement("script");
-s.src = src;
-s.onload = resolve;
-s.onerror = ()=>{ delete scriptsCargados[src]; reject(new Error("No se pudo cargar " + src)); };
-document.head.appendChild(s);
-});
-}
-return scriptsCargados[src];
-}
-
-// Logos existentes del proyecto (fecopse.png y poder_comercio.png). Si no cargan, el reporte sale sin ellos.
-async function imagenComoDataUrl(ruta){
-try{
-const resp = await fetch(ruta);
-if(!resp.ok) return null;
-const blob = await resp.blob();
-const dataUrl = await new Promise((resolve, reject)=>{
-const lector = new FileReader();
-lector.onload = ()=>resolve(lector.result);
-lector.onerror = reject;
-lector.readAsDataURL(blob);
-});
-const dims = await new Promise(resolve=>{
-const img = new Image();
-img.onload = ()=>resolve({ancho:img.naturalWidth, alto:img.naturalHeight});
-img.onerror = ()=>resolve(null);
-img.src = dataUrl;
-});
-if(!dims) return null;
-return {dataUrl, extension: blob.type.includes("jpeg") || blob.type.includes("jpg") ? "jpeg" : "png", ...dims};
-}catch(e){
-return null;
-}
-}
-
-function ajustarLogo(logo, maxAncho, maxAlto){
-const escala = Math.min(maxAncho / logo.ancho, maxAlto / logo.alto);
-return {ancho: logo.ancho * escala, alto: logo.alto * escala};
-}
-
-function nombreArchivoReporte(ext){
-return `reporte_asistencias_${reporteActual.anio}_${String(reporteActual.mes).padStart(2, "0")}.${ext}`;
-}
-
-function fechaGeneracion(){
-return new Date().toLocaleString("es-MX", {timeZone:ZONA_HORARIA, dateStyle:"short", timeStyle:"short"});
-}
-
-function descargarBlob(blob, nombre){
-const url = URL.createObjectURL(blob);
-const a = document.createElement("a");
-a.href = url;
-a.download = nombre;
-document.body.appendChild(a);
-a.click();
-a.remove();
-setTimeout(()=>URL.revokeObjectURL(url), 2000);
-}
-
-async function exportarReportePDF(){
-if(!soloAdmin()) return;
-if(!reporteActual){
-alert("Primero consulta un mes.");
-return;
-}
-
-try{
-await cargarScript(LIB_JSPDF);
-await cargarScript(LIB_AUTOTABLE);
-const [logoFecopse, logoPoder] = await Promise.all([imagenComoDataUrl("fecopse.png"), imagenComoDataUrl("poder_comercio.png")]);
-
-const rep = reporteActual;
-const r = rep.resumen || {};
-const {jsPDF} = window.jspdf;
-const doc = new jsPDF({unit:"mm", format:"letter"});
-const W = doc.internal.pageSize.getWidth();
-const AZUL = [11,40,59];
-
-// Encabezado con la identidad existente
-doc.setFillColor(...AZUL);
-doc.rect(0, 0, W, 34, "F");
-[[logoFecopse, 10], [logoPoder, W - 34]].forEach(([logo, x])=>{
-if(!logo) return;
-const t = ajustarLogo(logo, 24, 24);
-doc.addImage(logo.dataUrl, logo.extension.toUpperCase(), x + (24 - t.ancho) / 2, 5 + (24 - t.alto) / 2, t.ancho, t.alto);
-});
-doc.setTextColor(255, 255, 255);
-doc.setFont("helvetica", "bold");
-doc.setFontSize(18);
-doc.text("REPORTE DE ASISTENCIAS", W / 2, 14, {align:"center"});
-doc.setFontSize(12);
-doc.text(`${MESES_ES[rep.mes - 1]} ${rep.anio}`, W / 2, 21.5, {align:"center"});
-doc.setFont("helvetica", "normal");
-doc.setFontSize(9);
-doc.text("EL PODER DEL COMERCIO · FECOPSE", W / 2, 28, {align:"center"});
-
-// Resumen
-const tarjetas = [
-["Jornadas realizadas", String(r.jornadas || 0)],
-["Total de asistencias", String(r.asistencias || 0)],
-["Total de faltas", String(r.faltas || 0)],
-["% general de asistencia", textoPct(r.porcentaje)]
-];
-const anchoTarjeta = (W - 20 - 3 * 4) / 4;
-tarjetas.forEach(([titulo, valor], i)=>{
-const x = 10 + i * (anchoTarjeta + 4);
-doc.setFillColor(242, 242, 242);
-doc.roundedRect(x, 40, anchoTarjeta, 18, 2, 2, "F");
-doc.setTextColor(85, 85, 85);
-doc.setFont("helvetica", "bold");
-doc.setFontSize(8);
-doc.text(titulo, x + anchoTarjeta / 2, 46, {align:"center"});
-doc.setTextColor(...AZUL);
-doc.setFontSize(15);
-doc.text(valor, x + anchoTarjeta / 2, 54, {align:"center"});
-});
-
-let y = 64;
-doc.setTextColor(85, 85, 85);
-doc.setFont("helvetica", "normal");
-doc.setFontSize(8);
-doc.text("Solo se consideran los días en que se abrió el escáner de asistencia. % = asistencias ÷ (asistencias + faltas).", 10, y);
-if(r.pendientes){
-y += 4;
-doc.text(`Hay ${r.pendientes} registros pendientes de una jornada en curso; se convertirán en falta al cerrar el día.`, 10, y);
-}
-
-const estiloTabla = {
-headStyles:{fillColor:AZUL, textColor:255, fontStyle:"bold", halign:"center"},
-alternateRowStyles:{fillColor:[245,247,250]},
-styles:{fontSize:9, cellPadding:2},
-margin:{left:10, right:10, bottom:16}
-};
-
-doc.autoTable({
-...estiloTabla,
-startY: y + 4,
-head:[["EPC","Nombre","Asistencias","Faltas","% Asistencia"]],
-body: rep.afiliados.map(a=>[a.epc, a.nombre, a.asistencias, a.faltas, textoPct(a.porcentaje)]),
-columnStyles:{0:{cellWidth:24}, 2:{halign:"right", cellWidth:24}, 3:{halign:"right", cellWidth:20}, 4:{halign:"right", cellWidth:26}}
-});
-
-if(rep.jornadas.length){
-let yJ = doc.lastAutoTable.finalY + 10;
-if(yJ > doc.internal.pageSize.getHeight() - 40){ doc.addPage(); yJ = 20; }
-doc.setTextColor(...AZUL);
-doc.setFont("helvetica", "bold");
-doc.setFontSize(12);
-doc.text("Detalle por jornada", 10, yJ);
-doc.autoTable({
-...estiloTabla,
-startY: yJ + 3,
-head:[["Fecha","Considerados","Asistencias","Faltas","Pendientes","% Asistencia"]],
-body: rep.jornadas.map(j=>[fechaCorta(j.fecha), j.considerados, j.asistencias, j.faltas, j.pendientes, textoPct(j.porcentaje)]),
-columnStyles:{1:{halign:"right"}, 2:{halign:"right"}, 3:{halign:"right"}, 4:{halign:"right"}, 5:{halign:"right"}}
-});
-}
-
-// Pie de página
-const paginas = doc.getNumberOfPages();
-const altoPagina = doc.internal.pageSize.getHeight();
-for(let i = 1; i <= paginas; i++){
-doc.setPage(i);
-doc.setDrawColor(...AZUL);
-doc.line(10, altoPagina - 12, W - 10, altoPagina - 12);
-doc.setTextColor(110, 110, 110);
-doc.setFont("helvetica", "normal");
-doc.setFontSize(8);
-doc.text(`El Poder del Comercio · Generado el ${fechaGeneracion()}`, 10, altoPagina - 7);
-doc.text(`Página ${i} de ${paginas}`, W - 10, altoPagina - 7, {align:"right"});
-}
-
-doc.save(nombreArchivoReporte("pdf"));
-}catch(e){
-alert("No se pudo generar el PDF: " + e.message);
-}
-}
-
-async function exportarReporteExcel(){
-if(!soloAdmin()) return;
-if(!reporteActual){
-alert("Primero consulta un mes.");
-return;
-}
-
-try{
-await cargarScript(LIB_EXCELJS);
-const [logoFecopse, logoPoder] = await Promise.all([imagenComoDataUrl("fecopse.png"), imagenComoDataUrl("poder_comercio.png")]);
-
-const rep = reporteActual;
-const r = rep.resumen || {};
-const AZUL = "FF0B283B";
-const GRIS = "FFF2F2F2";
-const borde = {style:"thin", color:{argb:"FFCCCCCC"}};
-const bordes = {top:borde, left:borde, bottom:borde, right:borde};
-
-const wb = new ExcelJS.Workbook();
-wb.creator = "El Poder del Comercio";
-wb.created = new Date();
-
-// Encabezado de marca, reutilizado en ambas hojas
-function encabezado(ws, ultimaColumna){
-for(let fila = 1; fila <= 4; fila++){
-ws.getRow(fila).height = 22;
-for(let col = 1; col <= ultimaColumna; col++){
-ws.getCell(fila, col).fill = {type:"pattern", pattern:"solid", fgColor:{argb:AZUL}};
-}
-}
-const letraFin = String.fromCharCode(64 + ultimaColumna - 1);
-ws.mergeCells(`B1:${letraFin}2`);
-ws.mergeCells(`B3:${letraFin}3`);
-ws.mergeCells(`B4:${letraFin}4`);
-const blanco = {color:{argb:"FFFFFFFF"}, name:"Arial"};
-Object.assign(ws.getCell("B1"), {value:"REPORTE DE ASISTENCIAS", font:{...blanco, bold:true, size:18}, alignment:{horizontal:"center", vertical:"middle"}});
-Object.assign(ws.getCell("B3"), {value:`${MESES_ES[rep.mes - 1]} ${rep.anio}`, font:{...blanco, bold:true, size:13}, alignment:{horizontal:"center", vertical:"middle"}});
-Object.assign(ws.getCell("B4"), {value:"EL PODER DEL COMERCIO · FECOPSE", font:{...blanco, size:10}, alignment:{horizontal:"center", vertical:"middle"}});
-
-[[logoFecopse, 0.1], [logoPoder, ultimaColumna - 0.9]].forEach(([logo, col])=>{
-if(!logo) return;
-const t = ajustarLogo(logo, 95, 105);
-const id = wb.addImage({base64: logo.dataUrl, extension: logo.extension});
-ws.addImage(id, {tl:{col, row:0.1}, ext:{width:t.ancho, height:t.alto}, editAs:"oneCell"});
-});
-}
-
-function cabeceraTabla(ws, fila, titulos){
-const row = ws.getRow(fila);
-titulos.forEach((t,i)=>{
-const c = row.getCell(i + 1);
-c.value = t;
-c.font = {bold:true, color:{argb:"FFFFFFFF"}, name:"Arial"};
-c.fill = {type:"pattern", pattern:"solid", fgColor:{argb:AZUL}};
-c.alignment = {horizontal:"center", vertical:"middle"};
-c.border = bordes;
-});
-row.height = 20;
-}
-
-function filaDatos(ws, fila, valores, formatos){
-const row = ws.getRow(fila);
-valores.forEach((v,i)=>{
-const c = row.getCell(i + 1);
-c.value = v;
-c.border = bordes;
-c.font = {name:"Arial", size:10};
-if(formatos[i]) c.numFmt = formatos[i];
-if(typeof v === "number") c.alignment = {horizontal:"right"};
-if(fila % 2 === 0) c.fill = {type:"pattern", pattern:"solid", fgColor:{argb:"FFF5F7FA"}};
-});
-}
-
-const pct = v => v === null || v === undefined ? "—" : Number(v) / 100;
-
-// Hoja 1: por afiliado
-const ws = wb.addWorksheet("Asistencias", {
-views:[{state:"frozen", ySplit:9}],
-pageSetup:{orientation:"portrait", paperSize:1, fitToPage:true, fitToWidth:1, fitToHeight:0}
-});
-ws.columns = [{width:14},{width:42},{width:14},{width:12},{width:16}];
-encabezado(ws, 5);
-
-[["Jornadas realizadas", r.jornadas || 0, null],
-["Total de asistencias", r.asistencias || 0, null],
-["Total de faltas", r.faltas || 0, null],
-["Pendientes", r.pendientes || 0, null],
-["% general", pct(r.porcentaje), "0.0%"]].forEach(([titulo, valor, fmt], i)=>{
-const t = ws.getCell(6, i + 1);
-const v = ws.getCell(7, i + 1);
-t.value = titulo;
-t.font = {bold:true, size:9, color:{argb:"FF555555"}, name:"Arial"};
-v.value = valor;
-v.font = {bold:true, size:14, color:{argb:AZUL}, name:"Arial"};
-if(fmt) v.numFmt = fmt;
-[t, v].forEach(c=>{
-c.fill = {type:"pattern", pattern:"solid", fgColor:{argb:GRIS}};
-c.alignment = {horizontal:"center", vertical:"middle", wrapText:true};
-});
-});
-
-cabeceraTabla(ws, 9, ["EPC","Nombre","Asistencias","Faltas","% Asistencia"]);
-rep.afiliados.forEach((a,i)=>{
-filaDatos(ws, 10 + i, [a.epc, a.nombre, a.asistencias, a.faltas, pct(a.porcentaje)], [null,null,"0","0","0.0%"]);
-});
-ws.autoFilter = {from:"A9", to:"E9"};
-ws.getCell(11 + rep.afiliados.length, 1).value = `Generado el ${fechaGeneracion()} · Solo se consideran los días en que se abrió el escáner de asistencia.`;
-ws.getCell(11 + rep.afiliados.length, 1).font = {italic:true, size:9, color:{argb:"FF6B7280"}, name:"Arial"};
-
-// Hoja 2: por jornada
-const wj = wb.addWorksheet("Jornadas", {views:[{state:"frozen", ySplit:6}]});
-wj.columns = [{width:14},{width:15},{width:14},{width:12},{width:13},{width:15}];
-encabezado(wj, 6);
-cabeceraTabla(wj, 6, ["Fecha","Considerados","Asistencias","Faltas","Pendientes","% Asistencia"]);
-rep.jornadas.forEach((j,i)=>{
-filaDatos(wj, 7 + i, [fechaCorta(j.fecha), j.considerados, j.asistencias, j.faltas, j.pendientes, pct(j.porcentaje)], [null,"0","0","0","0","0.0%"]);
-});
-
-const buffer = await wb.xlsx.writeBuffer();
-descargarBlob(new Blob([buffer], {type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}), nombreArchivoReporte("xlsx"));
-}catch(e){
-alert("No se pudo generar el Excel: " + e.message);
-}
-}
-
 // ================= FECHAS Y PÚBLICO =================
 function fechaLargaMexico(fecha){
 if(!fecha) return "";
@@ -3388,12 +2395,12 @@ const meses = ["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO"
 
 if(fecha.includes("-")){
 const partes = fecha.split("-");
-if(partes.length === 3) return `${parseInt(partes[2])} DE ${meses[parseInt(partes[1]) - 1]} DE ${partes[0]}`;
+if(partes.length === 3) return ${parseInt(partes[2])} DE ${meses[parseInt(partes[1]) - 1]} DE ${partes[0]};
 }
 
 if(fecha.includes("/")){
 const partes = fecha.split("/");
-if(partes.length === 3) return `${parseInt(partes[0])} DE ${meses[parseInt(partes[1]) - 1]} DE ${partes[2]}`;
+if(partes.length === 3) return ${parseInt(partes[0])} DE ${meses[parseInt(partes[1]) - 1]} DE ${partes[2]};
 }
 
 return fecha.toUpperCase();
@@ -3406,7 +2413,7 @@ return new Date().getFullYear();
 function fechaEmisionActual(){
 const hoy = new Date();
 const meses = ["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"];
-return `${hoy.getDate()} DE ${meses[hoy.getMonth()]} DE ${hoy.getFullYear()}`;
+return ${hoy.getDate()} DE ${meses[hoy.getMonth()]} DE ${hoy.getFullYear()};
 }
 
 async function cargarVerificacionPublica(numero){
@@ -3420,14 +2427,14 @@ const {data,error} = await db
 
 if(error || !data){
 document.getElementById("pubFolio").textContent = epc;
-document.getElementById("verificacionContenido").innerHTML = `<div class="verificacion-error">REGISTRO NO ENCONTRADO</div>`;
+document.getElementById("verificacionContenido").innerHTML = <div class="verificacion-error">REGISTRO NO ENCONTRADO</div>;
 return;
 }
 
 const estado = (data.estatus || "").toUpperCase();
 
 document.getElementById("pubFolio").textContent = data.epc || "";
-document.getElementById("pubNombre").textContent = `${data.nombre || ""} ${data.apellido || ""}`;
+document.getElementById("pubNombre").textContent = ${data.nombre || ""} ${data.apellido || ""};
 document.getElementById("pubDias").textContent = data.operacion_dias || "";
 document.getElementById("pubHorario").textContent = data.operacion_horario || "";
 document.getElementById("pubAnio").textContent = obtenerAnioActual();
