@@ -1512,7 +1512,7 @@ let anio = d.getFullYear();
 let mes = String(d.getMonth() + 1).padStart(2, '0');
 let dia = String(d.getDate()).padStart(2, '0');
 
-document.getElementById("uVigencia").value = ${anio}-${mes}-${dia};
+document.getElementById("uVigencia").value = `${anio}-${mes}-${dia}`;
 }
 
 async function guardarNuevoUsuario(){
@@ -1700,11 +1700,11 @@ input.value = String(max + 1);
 async function validarDuplicados(nuevo, idActual){
 let orParts = [];
 
-if(nuevo.epc) orParts.push(epc.eq.${valorFiltro(nuevo.epc)});
-if(nuevo.curp) orParts.push(curp.eq.${valorFiltro(nuevo.curp)});
+if(nuevo.epc) orParts.push(`epc.eq.${valorFiltro(nuevo.epc)}`);
+if(nuevo.curp) orParts.push(`curp.eq.${valorFiltro(nuevo.curp)}`);
 
 if(nuevo.nombre && nuevo.apellido){
-orParts.push(and(nombre.eq.${valorFiltro(nuevo.nombre)},apellido.eq.${valorFiltro(nuevo.apellido)}));
+orParts.push(`and(nombre.eq.${valorFiltro(nuevo.nombre)},apellido.eq.${valorFiltro(nuevo.apellido)})`);
 }
 
 if(orParts.length === 0) return null;
@@ -1807,12 +1807,12 @@ alert("Escribe un nombre para buscar.");
 return;
 }
 
-const patron = valorFiltro(%${nombre}%);
+const patron = valorFiltro(`%${nombre}%`);
 
 const {data,error} = await db
 .from("credenciales")
 .select("*")
-.or(nombre.ilike.${patron},apellido.ilike.${patron})
+.or(`nombre.ilike.${patron},apellido.ilike.${patron}`)
 .limit(20);
 
 if(error){
@@ -2192,7 +2192,7 @@ return;
 }
 
 document.getElementById("buscarEpc").value = soloNumero(data.epc);
-document.getElementById("vNombre").textContent = ${data.nombre || ""} ${data.apellido || ""};
+document.getElementById("vNombre").textContent = `${data.nombre || ""} ${data.apellido || ""}`;
 document.getElementById("vOrganizacion").textContent = "EL PODER DEL COMERCIO";
 document.getElementById("vGiro").textContent = data.giro || "";
 document.getElementById("vEstatus").textContent = data.estatus || "";
@@ -2264,8 +2264,8 @@ let query;
 if(/^\d+$/.test(numeroLimpiado)){
 query = db.from("credenciales").select(COLUMNAS_ASISTENCIA).eq("epc", "EPC-" + numeroLimpiado).limit(2);
 } else {
-const patron = valorFiltro(%${epcToSearch}%);
-query = db.from("credenciales").select(COLUMNAS_ASISTENCIA).or(nombre.ilike.${patron},apellido.ilike.${patron}).limit(2);
+const patron = valorFiltro(`%${epcToSearch}%`);
+query = db.from("credenciales").select(COLUMNAS_ASISTENCIA).or(`nombre.ilike.${patron},apellido.ilike.${patron}`).limit(2);
 }
 
 const {data,error} = await query;
@@ -2295,7 +2295,7 @@ banner.textContent = "VARIOS RESULTADOS";
 
 document.getElementById("asistenciaFoto").textContent = "BUSCA MÁS ESPECÍFICO";
 document.getElementById("asistenciaEpc").textContent = data.map(x => x.epc).join(", ");
-document.getElementById("asistenciaNombre").textContent = data.map(x => ${x.nombre || ""} ${x.apellido || ""}).join(" / ");
+document.getElementById("asistenciaNombre").textContent = data.map(x => `${x.nombre || ""} ${x.apellido || ""}`).join(" / ");
 document.getElementById("asistenciaGiro").textContent = "-";
 document.getElementById("asistenciaDias").textContent = "-";
 document.getElementById("asistenciaHorario").textContent = "-";
@@ -2328,7 +2328,7 @@ document.getElementById("asistenciaHorario").textContent = "-";
 document.getElementById("asistenciaVigencia").textContent = "-";
 }else{
 document.getElementById("asistenciaEpc").textContent = data.epc || "";
-document.getElementById("asistenciaNombre").textContent = ${data.nombre || ""} ${data.apellido || ""};
+document.getElementById("asistenciaNombre").textContent = `${data.nombre || ""} ${data.apellido || ""}`;
 document.getElementById("asistenciaGiro").textContent = data.giro || "";
 document.getElementById("asistenciaDias").textContent = data.operacion_dias || "";
 document.getElementById("asistenciaHorario").textContent = data.operacion_horario || "";
@@ -2395,12 +2395,12 @@ const meses = ["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO"
 
 if(fecha.includes("-")){
 const partes = fecha.split("-");
-if(partes.length === 3) return ${parseInt(partes[2])} DE ${meses[parseInt(partes[1]) - 1]} DE ${partes[0]};
+if(partes.length === 3) return `${parseInt(partes[2])} DE ${meses[parseInt(partes[1]) - 1]} DE ${partes[0]}`;
 }
 
 if(fecha.includes("/")){
 const partes = fecha.split("/");
-if(partes.length === 3) return ${parseInt(partes[0])} DE ${meses[parseInt(partes[1]) - 1]} DE ${partes[2]};
+if(partes.length === 3) return `${parseInt(partes[0])} DE ${meses[parseInt(partes[1]) - 1]} DE ${partes[2]}`;
 }
 
 return fecha.toUpperCase();
@@ -2413,7 +2413,7 @@ return new Date().getFullYear();
 function fechaEmisionActual(){
 const hoy = new Date();
 const meses = ["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"];
-return ${hoy.getDate()} DE ${meses[hoy.getMonth()]} DE ${hoy.getFullYear()};
+return `${hoy.getDate()} DE ${meses[hoy.getMonth()]} DE ${hoy.getFullYear()}`;
 }
 
 async function cargarVerificacionPublica(numero){
@@ -2427,14 +2427,14 @@ const {data,error} = await db
 
 if(error || !data){
 document.getElementById("pubFolio").textContent = epc;
-document.getElementById("verificacionContenido").innerHTML = <div class="verificacion-error">REGISTRO NO ENCONTRADO</div>;
+document.getElementById("verificacionContenido").innerHTML = `<div class="verificacion-error">REGISTRO NO ENCONTRADO</div>`;
 return;
 }
 
 const estado = (data.estatus || "").toUpperCase();
 
 document.getElementById("pubFolio").textContent = data.epc || "";
-document.getElementById("pubNombre").textContent = ${data.nombre || ""} ${data.apellido || ""};
+document.getElementById("pubNombre").textContent = `${data.nombre || ""} ${data.apellido || ""}`;
 document.getElementById("pubDias").textContent = data.operacion_dias || "";
 document.getElementById("pubHorario").textContent = data.operacion_horario || "";
 document.getElementById("pubAnio").textContent = obtenerAnioActual();
