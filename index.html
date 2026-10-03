@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>EL PODER DEL COMERCIO - Credenciales</title>
 <meta name="description" content="Sistema de credenciales y verificación de inscripción de El Poder del Comercio.">
 <meta name="robots" content="noindex, nofollow">
@@ -24,11 +25,11 @@ background:#e5e7eb;
 }
 
 body{
-overflow-x:auto;
+overflow-x:hidden;
 }
 
 .login{
-width:420px;
+width:min(420px,calc(100% - 24px));
 margin:120px auto;
 background:#f2f2f2;
 padding:35px;
@@ -65,7 +66,8 @@ cursor:pointer;
 
 .app{
 display:none;
-width:1200px;
+width:min(1200px,calc(100% - 24px));
+max-width:1200px;
 margin:20px auto;
 background:#f2f2f2;
 border-radius:12px;
@@ -99,6 +101,50 @@ color:white;
 background:#dc2626;
 color:white;
 border-color:#dc2626;
+}
+
+.tabs button.clave{
+background:#7c3aed;
+color:white;
+border-color:#7c3aed;
+}
+
+.dialogo-clave{
+width:min(440px,calc(100% - 24px));
+border:0;
+border-radius:14px;
+padding:28px;
+box-shadow:0 16px 50px rgba(0,0,0,.35);
+}
+
+.dialogo-clave::backdrop{
+background:rgba(11,40,59,.72);
+}
+
+.dialogo-clave h2{
+margin-top:0;
+color:#0B283B;
+}
+
+.dialogo-clave input{
+width:100%;
+margin:8px 0 16px;
+text-transform:none;
+}
+
+.dialogo-clave .dialogo-botones{
+display:flex;
+gap:10px;
+justify-content:flex-end;
+}
+
+.dialogo-clave button{
+min-height:44px;
+padding:8px 18px;
+border:0;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
 }
 
 .pantalla{
@@ -200,7 +246,7 @@ flex-wrap:wrap;
 
 .botones button{
 width:145px;
-height:40px;
+min-height:44px;
 border:none;
 border-radius:6px;
 cursor:pointer;
@@ -211,6 +257,7 @@ font-weight:bold;
 .buscar{background:#2563eb;color:white}
 .actualizar{background:#eab308;color:black}
 .eliminar{background:#dc2626;color:white}
+.reactivar{background:#7c3aed;color:white}
 .limpiar{background:#6b7280;color:white}
 .subir{background:white;border:1px solid #999!important;color:black}
 .falta{background:#f97316;color:white}
@@ -255,12 +302,34 @@ cursor:pointer;
 }
 
 .barra-credencial{
-height:80px;
+min-height:80px;
 background:#0B283B;
 display:flex;
 align-items:center;
 justify-content:space-between;
 padding:0 25px;
+gap:16px;
+}
+
+.marca-credencial,
+.busqueda-credencial,
+.acciones-credencial{
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+.marca-texto,
+.epc-prefijo,
+.folio-impresion{
+color:white;
+font-size:30px;
+font-weight:bold;
+letter-spacing:1px;
+}
+
+.folio-impresion{
+display:none;
 }
 
 .logo{
@@ -287,7 +356,7 @@ color:rgba(255,255,255,.7);
 }
 
 .barra-credencial button{
-width:150px;
+min-width:120px;
 height:38px;
 border:none;
 border-radius:6px;
@@ -295,6 +364,23 @@ font-weight:bold;
 cursor:pointer;
 background:white;
 color:black;
+}
+
+.barra-credencial button:disabled,
+.botones button:disabled{
+opacity:.5;
+cursor:not-allowed;
+}
+
+.credencial-viewport{
+width:100%;
+overflow:hidden;
+margin:0 auto;
+}
+
+.credencial-scale{
+width:1120px;
+transform-origin:top left;
 }
 
 .subtabs{
@@ -326,6 +412,22 @@ border:1px solid #ddd;
 background-size:100% 100%;
 background-position:center;
 background-repeat:no-repeat;
+}
+
+.credencial.inactiva::after{
+content:"CREDENCIAL INACTIVA";
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%) rotate(-18deg);
+z-index:20;
+padding:14px 24px;
+border:7px solid rgba(220,38,38,.68);
+color:rgba(220,38,38,.74);
+font-size:62px;
+font-weight:900;
+white-space:nowrap;
+pointer-events:none;
 }
 
 #panelFrente{
@@ -793,6 +895,187 @@ padding:16px;
 }
 }
 
+/* ================= APLICACIÓN EN TELÉFONOS ================= */
+@media (max-width:760px){
+.login{
+margin:32px auto;
+padding:24px 16px;
+}
+
+.login h1{
+font-size:28px;
+}
+
+.app{
+width:100%;
+margin:0;
+padding:8px;
+border-radius:0;
+}
+
+.tabs{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:8px;
+}
+
+.tabs button{
+min-height:44px;
+padding:8px;
+font-size:14px;
+}
+
+.admin{
+padding:20px 12px;
+min-height:0;
+}
+
+.admin h1{
+font-size:25px;
+}
+
+.admin-grid,
+.user-grid,
+.asistencia-grid{
+grid-template-columns:1fr;
+gap:7px;
+}
+
+.admin-grid label,
+.user-grid label{
+margin-top:8px;
+font-size:17px;
+}
+
+.admin-grid > input,
+.admin-grid > select,
+.admin-grid > div:not(.foto-box),
+.user-grid > input,
+.user-grid > select,
+.user-grid > div{
+width:100%!important;
+min-width:0;
+}
+
+.admin-grid > div:not(.foto-box),
+.user-grid > div{
+flex-wrap:wrap;
+}
+
+.admin-grid > div:not(.foto-box) input,
+.user-grid > div input{
+width:min(100%,300px)!important;
+flex:1 1 210px;
+}
+
+.foto-box{
+position:static;
+grid-column:1;
+grid-row:auto;
+width:min(280px,100%);
+height:auto;
+aspect-ratio:7/9;
+margin:16px auto;
+}
+
+.botones{
+display:grid;
+grid-template-columns:1fr 1fr;
+}
+
+.botones button{
+width:100%;
+min-height:46px;
+}
+
+.barra-credencial{
+height:auto;
+padding:12px;
+flex-direction:column;
+align-items:stretch;
+gap:12px;
+}
+
+.marca-credencial,
+.busqueda-credencial,
+.acciones-credencial{
+min-width:0;
+flex-wrap:wrap;
+}
+
+.marca-texto,
+.epc-prefijo{
+font-size:18px;
+}
+
+.logo{
+width:46px;
+height:46px;
+}
+
+#buscarEpc{
+width:100%;
+min-width:0;
+font-size:23px;
+background:rgba(255,255,255,.12);
+border:1px solid rgba(255,255,255,.4);
+border-radius:6px;
+padding:6px 10px;
+}
+
+.acciones-credencial button{
+flex:1 1 120px;
+min-height:44px;
+}
+
+.subtabs button{
+min-height:44px;
+}
+
+#inputAsistencia{
+width:100%;
+font-size:18px;
+}
+
+.asistencia-container{
+margin:16px auto;
+}
+
+.asistencia-container h1{
+font-size:27px!important;
+}
+
+.asistencia-grid{
+padding:16px;
+gap:20px;
+}
+
+.foto-asistencia{
+width:min(280px,100%);
+height:auto;
+aspect-ratio:280/360;
+margin:auto;
+}
+
+.asistencia-datos{
+font-size:18px;
+}
+
+.asistencia-datos strong{
+width:auto;
+min-width:120px;
+}
+
+#asistenciaBanner{
+font-size:28px;
+}
+
+.tabla,
+.tabla-usuarios{
+overflow:auto;
+}
+}
+
 /* Filas de tabla seleccionables con teclado */
 tbody tr[tabindex]:focus{
 outline:3px solid #2563eb;
@@ -801,7 +1084,7 @@ outline-offset:-3px;
 
 /* ================= IMPRESIÓN ================= */
 @page{
-size:landscape;
+size:letter landscape;
 margin:0;
 }
 
@@ -810,6 +1093,15 @@ body{
 background:white;
 margin:0;
 padding:0;
+}
+
+.app{
+width:auto!important;
+max-width:none!important;
+margin:0!important;
+padding:0!important;
+border-radius:0!important;
+box-shadow:none!important;
 }
 
 .tabs,
@@ -822,6 +1114,19 @@ display:none!important;
 
 #pantallaCredencial{
 display:block!important;
+overflow:visible!important;
+}
+
+body:not(.impresion-autorizada) #pantallaCredencial{
+display:none!important;
+}
+
+body:not(.impresion-autorizada)::before{
+content:"No hay una credencial activa cargada para imprimir.";
+display:block;
+padding:40px;
+font:700 22px Arial,sans-serif;
+color:#dc2626;
 }
 
 .barra-credencial{
@@ -836,6 +1141,26 @@ margin:0!important;
 
 .barra-credencial button{
 display:none!important;
+}
+
+.busqueda-credencial,
+.acciones-credencial{
+display:none!important;
+}
+
+.folio-impresion{
+display:inline!important;
+}
+
+.credencial-viewport{
+width:1120px!important;
+height:auto!important;
+overflow:visible!important;
+}
+
+.credencial-scale{
+width:1120px!important;
+transform:none!important;
 }
 
 #panelFrente{
@@ -855,7 +1180,8 @@ display:block!important;
 margin-top:0!important;
 border:none!important;
 position:relative!important;
-page-break-after:always;
+page-break-after:auto;
+break-after:auto;
 background-image:url("atras_base.png")!important;
 background-size:100% 100%!important;
 background-repeat:no-repeat!important;
@@ -902,6 +1228,10 @@ outline:none!important;
 color:white!important;
 font-size:30px!important;
 font-weight:bold!important;
+}
+
+.credencial.inactiva::after{
+display:none!important;
 }
 
 img{
@@ -1022,6 +1352,7 @@ se encuentran incluidos en el Padrón:
 <button id="tabCredencial" onclick="mostrarPantalla('credencial')">Ver / imprimir credencial</button>
 <button id="tabAsistencia" onclick="mostrarPantalla('asistencia')">Escáner de Asistencia</button>
 <button id="tabUsuarios" onclick="mostrarPantalla('usuarios')">Gestión de Usuarios</button>
+<button id="btnCambiarPassword" class="clave" type="button" onclick="abrirCambioPassword()">CAMBIAR CONTRASEÑA</button>
 <button id="btnSalir" class="salir" type="button" onclick="cerrarSesion()">SALIR</button>
 </div>
 
@@ -1031,6 +1362,7 @@ se encuentran incluidos en el Padrón:
 <h1>ADMINISTRAR CREDENCIALES</h1>
 
 <input type="hidden" id="id">
+<input type="hidden" id="version" value="0">
 
 <div class="admin-grid">
 
@@ -1067,7 +1399,7 @@ BUSCAR
 <input type="text" id="apellido">
 
 <label for="curp">CURP:</label>
-<input type="text" id="curp" maxlength="18">
+<input type="text" id="curp" maxlength="18" autocapitalize="characters" spellcheck="false">
 
 <label for="sexo">Sexo:</label>
 <select id="sexo">
@@ -1091,7 +1423,7 @@ BUSCAR
 
 <label for="estatusCheck">Estatus:</label>
 <div class="check-row">
-<input type="checkbox" id="estatusCheck" checked>
+<input type="checkbox" id="estatusCheck" checked disabled aria-describedby="estatusTexto">
 <span id="estatusTexto">ACTIVO</span>
 </div>
 
@@ -1099,7 +1431,7 @@ BUSCAR
 <input type="number" id="faltas" value="0" readonly style="background:#d1d5db;font-weight:bold;">
 
 <label for="telefono">Teléfono:</label>
-<input type="text" id="telefono">
+<input type="tel" id="telefono" inputmode="tel" autocomplete="tel">
 
 <label for="direccion">Dirección:</label>
 <input type="text" id="direccion">
@@ -1120,7 +1452,8 @@ BUSCAR
 <div class="botones">
 <button class="guardar" onclick="agregar()">GUARDAR</button>
 <button id="btnActualizar" class="actualizar" onclick="actualizar()">ACTUALIZAR</button>
-<button id="btnEliminar" class="eliminar" onclick="eliminar()">ELIMINAR</button>
+<button id="btnDarBaja" class="eliminar" onclick="darDeBaja()">DAR DE BAJA</button>
+<button id="btnReactivar" class="reactivar" onclick="reactivarCredencial()">REACTIVAR</button>
 <button class="limpiar" onclick="limpiar()">LIMPIAR</button>
 <button class="subir" onclick="document.getElementById('fotoInput').click()">SUBIR FOTO</button>
 <button id="btnRegistrarFalta" class="falta" onclick="registrarFalta()">REGISTRAR FALTA</button>
@@ -1207,23 +1540,30 @@ Los usuarios se guardan en Supabase usando contraseña encriptada por la funció
 <div id="pantallaCredencial" class="pantalla">
 
 <div class="barra-credencial">
-<div style="display:flex;align-items:center;gap:18px;">
+<div class="marca-credencial">
 <img src="fecopse.png" class="logo" alt="Logo FECOPSE" onerror="this.style.display='none'">
-
-<div style="display:flex;align-items:center;gap:8px;">
-<span style="color:white;font-size:30px;font-weight:bold;letter-spacing:1px;">EL PODER DEL COMERCIO-</span>
-<span style="color:white;font-size:30px;font-weight:bold;">EPC-</span>
-<input type="text" id="buscarEpc" onkeydown="enterBuscar(event)" autocomplete="off" inputmode="numeric" aria-label="Número EPC a mostrar">
-</div>
+<span class="marca-texto">EL PODER DEL COMERCIO</span>
+<span id="folioImpresion" class="folio-impresion">EPC-</span>
 </div>
 
-<button onclick="window.print()">IMPRIMIR</button>
+<div class="busqueda-credencial">
+<span class="epc-prefijo">EPC-</span>
+<input type="search" id="buscarEpc" onkeydown="enterBuscar(event)" autocomplete="off" inputmode="text" enterkeyhint="search" autocapitalize="characters" spellcheck="false" aria-label="Número EPC a mostrar">
+</div>
+
+<div class="acciones-credencial">
+<button id="btnBuscarCredencial" type="button" onclick="buscarCredencial()">BUSCAR</button>
+<button id="btnImprimir" type="button" onclick="imprimirCredencial()" disabled>IMPRIMIR</button>
+</div>
 </div>
 
 <div class="subtabs">
 <button id="btnFrente" class="active" onclick="mostrarCredencial('frente')">Frente</button>
 <button id="btnAtras" onclick="mostrarCredencial('atras')">Atrás</button>
 </div>
+
+<div id="credencialViewport" class="credencial-viewport">
+<div id="credencialEscala" class="credencial-scale">
 
 <div id="panelFrente" class="credencial">
 <div class="frente">
@@ -1278,6 +1618,9 @@ ACTIVO
 </div>
 
 </div>
+</div>
+
+</div>
 
 <div id="pantallaAsistencia" class="pantalla">
 <div class="asistencia-container">
@@ -1286,7 +1629,7 @@ ACTIVO
 Escanea el QR, digita los 4 dígitos del EPC o escribe el nombre para confirmar asistencia.
 </p>
 
-<input type="text" id="inputAsistencia" placeholder="ESCANEA QR, EPC O NOMBRE" aria-label="Escanea QR, EPC o nombre" onkeydown="procesarAsistencia(event)" autocomplete="off">
+<input type="text" id="inputAsistencia" placeholder="ESCANEA QR, EPC O NOMBRE" aria-label="Escanea QR, EPC o nombre" onkeydown="procesarAsistencia(event)" autocomplete="off" enterkeyhint="search" autocapitalize="characters" spellcheck="false">
 
 <div id="asistenciaResultado">
 <div id="asistenciaBanner">ESTADO</div>
@@ -1309,6 +1652,19 @@ Escanea el QR, digita los 4 dígitos del EPC o escribe el nombre para confirmar 
 
 </div>
 
+<dialog id="dialogPassword" class="dialogo-clave">
+<h2>CAMBIAR CONTRASEÑA</h2>
+<p>Usa al menos 10 caracteres. La contraseña no se mostrará ni se guardará en esta página.</p>
+<label for="passwordNueva">Nueva contraseña:</label>
+<input type="password" id="passwordNueva" autocomplete="new-password" minlength="10" maxlength="72">
+<label for="passwordConfirmar">Confirmar contraseña:</label>
+<input type="password" id="passwordConfirmar" autocomplete="new-password" minlength="10" maxlength="72">
+<div class="dialogo-botones">
+<button type="button" class="limpiar" onclick="cerrarCambioPassword()">CANCELAR</button>
+<button type="button" class="guardar" onclick="guardarCambioPassword()">GUARDAR</button>
+</div>
+</dialog>
+
 <script>
 const SUPABASE_URL = "https://htthhjxlvvlcblbmelvf.supabase.co";
 const SUPABASE_KEY = "sb_publishable_CjyA8MK4VMLbYd4_QizxxA_-sJE3v1V";
@@ -1323,35 +1679,40 @@ const FOTO_MAX_ALTO = 900;
 const FOTO_CALIDAD_JPEG = 0.85;
 const FOTO_BYTES_SIN_REDUCIR = 300 * 1024;
 
-// Columnas que necesita cada pantalla (evita enviar CURP/teléfono donde no se usan)
-const COLUMNAS_TABLA = "id, epc, nombre, apellido, curp, sexo, tipo_ubicacion, estatus, faltas";
-const COLUMNAS_CREDENCIAL = "epc, nombre, apellido, giro, estatus, direccion, vigencia, operacion_horario, operacion_dias, foto_base64";
-const COLUMNAS_ASISTENCIA = "epc, nombre, apellido, giro, estatus, vigencia, operacion_horario, operacion_dias, foto_base64";
-const COLUMNAS_PUBLICAS = "epc, nombre, apellido, giro, estatus, direccion, vigencia, operacion_horario, operacion_dias, foto_base64";
-
 let fotoBase64 = "";
 let usuarioActual = null;
 let loginUsuarioActual = "";
 let loginPasswordActual = "";
 let timerAsistencia = null;
 let audioCtx = null;
+let credencialCargada = null;
+let ajusteCredencialPendiente = null;
 
 async function arranque(){
 const params = new URLSearchParams(window.location.search);
 const epc = params.get("epc");
+const token = params.get("token");
 
 activarMayusculasAutomaticas();
+
+const inputBuscarEpc = document.getElementById("buscarEpc");
+inputBuscarEpc.addEventListener("input", invalidarCredencialCargada);
+window.addEventListener("resize", programarAjusteCredencial);
+window.addEventListener("orientationchange", programarAjusteCredencial);
+window.addEventListener("beforeprint", prepararImpresion);
 
 if(epc){
 activarVistaMovil();
 document.getElementById("login").style.display = "none";
 document.getElementById("app").style.display = "none";
 document.getElementById("verificacionPublica").style.display = "block";
-await cargarVerificacionPublica(epc);
+await cargarVerificacionPublica(epc, token);
 return;
 }
 
 document.getElementById("vigencia").value = VIGENCIA_CREDENCIAL;
+actualizarBotonesEstado(null);
+programarAjusteCredencial();
 }
 
 // La verificación pública se abre desde el QR en teléfonos: ahí sí se usa el ancho real del dispositivo.
@@ -1424,7 +1785,8 @@ document.getElementById("tabAsistencia").style.display = "inline-block";
 
 document.getElementById("btnBuscarAdmin").style.display = "none";
 document.getElementById("btnActualizar").style.display = "";
-document.getElementById("btnEliminar").style.display = "none";
+document.getElementById("btnDarBaja").style.display = "none";
+document.getElementById("btnReactivar").style.display = "none";
 document.getElementById("btnRegistrarFalta").style.display = "none";
 document.getElementById("btnQuitarFalta").style.display = "none";
 document.getElementById("tablaBox").style.display = "none";
@@ -1444,6 +1806,54 @@ usuarioActual = null;
 loginUsuarioActual = "";
 loginPasswordActual = "";
 window.location.replace(window.location.pathname);
+}
+
+function abrirCambioPassword(){
+if(!usuarioActual) return;
+const dialogo = document.getElementById("dialogPassword");
+document.getElementById("passwordNueva").value = "";
+document.getElementById("passwordConfirmar").value = "";
+dialogo.showModal();
+setTimeout(()=>document.getElementById("passwordNueva").focus(), 50);
+}
+
+function cerrarCambioPassword(){
+const dialogo = document.getElementById("dialogPassword");
+document.getElementById("passwordNueva").value = "";
+document.getElementById("passwordConfirmar").value = "";
+dialogo.close();
+}
+
+async function guardarCambioPassword(){
+const nueva = document.getElementById("passwordNueva").value;
+const confirmar = document.getElementById("passwordConfirmar").value;
+const bytes = new TextEncoder().encode(nueva).length;
+
+if(nueva.length < 10){
+alert("La nueva contraseña debe tener al menos 10 caracteres.");
+return;
+}
+if(bytes > 72){
+alert("La contraseña no puede superar 72 bytes.");
+return;
+}
+if(nueva !== confirmar){
+alert("Las contraseñas no coinciden.");
+return;
+}
+if(nueva === loginPasswordActual){
+alert("La nueva contraseña debe ser diferente de la actual.");
+return;
+}
+
+try{
+await rpcPrivada("app_cambiar_password", {p_password_nuevo:nueva}, "cambiar la contraseña");
+loginPasswordActual = nueva;
+cerrarCambioPassword();
+alert("Contraseña actualizada. Úsala la próxima vez que inicies sesión.");
+}catch(error){
+alert(error.message);
+}
 }
 
 function soloAdmin(){
@@ -1482,6 +1892,8 @@ document.getElementById(PANTALLAS[tipo].tab).classList.add("active");
 if(tipo === "asistencia"){
 setTimeout(()=>document.getElementById("inputAsistencia").focus(),200);
 }
+
+if(tipo === "credencial") programarAjusteCredencial();
 }
 
 function mostrarCredencial(tipo){
@@ -1497,6 +1909,8 @@ document.getElementById("btnFrente").classList.add("active");
 document.getElementById("panelAtras").classList.remove("oculto");
 document.getElementById("btnAtras").classList.add("active");
 }
+
+programarAjusteCredencial();
 }
 
 document.getElementById("estatusCheck").addEventListener("change", function(){
@@ -1505,8 +1919,13 @@ document.getElementById("estatusTexto").textContent = this.checked ? "ACTIVO" : 
 
 // ================= USUARIOS =================
 function sumarVigenciaUsuario(meses) {
-let d = new Date();
+const actual = document.getElementById("uVigencia").value;
+let d = actual ? new Date(actual + "T12:00:00") : new Date();
+const diaOriginal = d.getDate();
+d.setDate(1);
 d.setMonth(d.getMonth() + meses);
+const ultimoDia = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+d.setDate(Math.min(diaOriginal, ultimoDia));
 
 let anio = d.getFullYear();
 let mes = String(d.getMonth() + 1).padStart(2, '0');
@@ -1555,6 +1974,55 @@ document.getElementById("uVigencia").value = "";
 // ================= UTILIDADES =================
 function mayus(valor){
 return (valor || "").toString().trim().toUpperCase();
+}
+
+function mensajeErrorBase(error, accion){
+const detalle = error && error.message ? error.message : "Error desconocido";
+const codigo = error && error.code ? error.code : "";
+
+if(codigo === "PGRST202" || /schema cache|function .* does not exist/i.test(detalle)){
+return "La actualización de la base de datos todavía no está instalada. Ejecuta primero 01_base_y_funciones.sql.\n\nDetalle: " + detalle;
+}
+
+if(codigo === "42501" || /NO_AUTORIZADO/i.test(detalle)){
+return "Tu sesión no tiene permiso para " + accion + ". Cierra sesión, vuelve a entrar y verifica tu rol.";
+}
+
+if(codigo === "23505" || /duplicate key|DUPLICAD/i.test(detalle)){
+return "No se guardó porque el EPC o la CURP ya existen.";
+}
+
+return "No se pudo " + accion + ": " + detalle;
+}
+
+async function rpcPrivada(nombre, parametros, accion){
+if(!loginUsuarioActual || !loginPasswordActual){
+throw new Error("La sesión terminó. Vuelve a iniciar sesión.");
+}
+
+const {data,error} = await db.rpc(nombre, {
+p_usuario:loginUsuarioActual,
+p_password:loginPasswordActual,
+...(parametros || {})
+});
+
+if(error){
+const err = new Error(mensajeErrorBase(error, accion));
+err.original = error;
+throw err;
+}
+
+return data;
+}
+
+async function rpcPublica(nombre, parametros, accion){
+const {data,error} = await db.rpc(nombre, parametros || {});
+if(error){
+const err = new Error(mensajeErrorBase(error, accion));
+err.original = error;
+throw err;
+}
+return data;
 }
 
 // Valor seguro para filtros .or() de Supabase/PostgREST: se entrecomilla para que
@@ -1660,75 +2128,32 @@ function soloNumero(valor){
 return (valor || "").toUpperCase().replace("EPC-","");
 }
 
-function linkCredencial(epc){
-return "https://poderdelcomercio.com/?epc=" + soloNumero(epc);
+function linkCredencial(epc, token){
+const url = new URL("https://poderdelcomercio.com/");
+url.searchParams.set("epc", soloNumero(epc));
+if(token) url.searchParams.set("token", token);
+return url.toString();
 }
 
 // ================= EPC AUTOMÁTICO =================
 async function generarSiguienteEPC(){
 const input = document.getElementById("epc");
+const boton = document.getElementById("btnGenerarEpc");
 
 try{
-const {data,error} = await db.rpc("siguiente_epc");
-
-if(!error && data){
+boton.disabled = true;
+const data = await rpcPrivada("app_siguiente_epc", {}, "generar el siguiente EPC");
+if(data){
 input.value = soloNumero(data);
 return;
 }
-}catch(e){}
-
-const {data,error} = await db
-.from("credenciales")
-.select("epc");
-
-if(error || !data){
-input.value = "3000";
-return;
+throw new Error("La base no devolvió un EPC.");
+}catch(error){
+input.value = "";
+alert(error.message || "No se pudo generar el EPC.");
+}finally{
+boton.disabled = false;
 }
-
-let max = 2999;
-
-data.forEach(item=>{
-const n = parseInt(soloNumero(item.epc),10);
-if(!isNaN(n) && n > max) max = n;
-});
-
-input.value = String(max + 1);
-}
-
-// ================= DUPLICADOS =================
-async function validarDuplicados(nuevo, idActual){
-let orParts = [];
-
-if(nuevo.epc) orParts.push(`epc.eq.${valorFiltro(nuevo.epc)}`);
-if(nuevo.curp) orParts.push(`curp.eq.${valorFiltro(nuevo.curp)}`);
-
-if(nuevo.nombre && nuevo.apellido){
-orParts.push(`and(nombre.eq.${valorFiltro(nuevo.nombre)},apellido.eq.${valorFiltro(nuevo.apellido)})`);
-}
-
-if(orParts.length === 0) return null;
-
-let query = db
-.from("credenciales")
-.select("id, epc, curp, nombre, apellido")
-.or(orParts.join(","));
-
-const {data,error} = await query;
-
-if(error){
-alert("Error revisando duplicados: " + error.message);
-return "ERROR";
-}
-
-const duplicado = (data || []).find(x => String(x.id) !== String(idActual || ""));
-
-if(duplicado){
-alert("Datos repetidos detectados. Revisa EPC, CURP o nombre completo.");
-return duplicado;
-}
-
-return null;
 }
 
 // ================= CRUD Y ADMIN =================
@@ -1740,17 +2165,12 @@ document.getElementById("tablaBox").style.display = "none";
 return;
 }
 
-const {data,error} = await db
-.from("credenciales")
-.select(COLUMNAS_TABLA)
-.order("id",{ascending:true});
-
-if(error){
-alert("Error al cargar tabla: " + error.message);
-return;
+try{
+const data = await rpcPrivada("app_listar_credenciales", {}, "cargar el padrón");
+pintarTabla(Array.isArray(data) ? data : []);
+}catch(error){
+alert(error.message);
 }
-
-pintarTabla(data);
 }
 
 function pintarTabla(data){
@@ -1783,18 +2203,13 @@ tabla.appendChild(fragmento);
 async function buscarAdminDesdeTabla(epc){
 if(!puedeActualizar()) return;
 
-const {data,error} = await db
-.from("credenciales")
-.select("*")
-.eq("epc",epc)
-.single();
-
-if(error){
-alert("Error al abrir registro: " + error.message);
-return;
-}
-
+try{
+const data = await rpcPrivada("app_buscar_credencial", {p_epc:epcCompleto(epc)}, "abrir la credencial");
+if(!data) throw new Error("No se encontró la credencial.");
 seleccionar(data);
+}catch(error){
+alert(error.message);
+}
 }
 
 async function buscarPorNombre(){
@@ -1807,16 +2222,11 @@ alert("Escribe un nombre para buscar.");
 return;
 }
 
-const patron = valorFiltro(`%${nombre}%`);
-
-const {data,error} = await db
-.from("credenciales")
-.select("*")
-.or(`nombre.ilike.${patron},apellido.ilike.${patron}`)
-.limit(20);
-
-if(error){
-alert("Error buscando por nombre: " + error.message);
+let data;
+try{
+data = await rpcPrivada("app_buscar_credenciales_nombre", {p_busqueda:nombre}, "buscar por nombre");
+}catch(error){
+alert(error.message);
 return;
 }
 
@@ -1839,6 +2249,7 @@ alert("Se encontraron varios registros. Selecciona uno en la tabla.");
 
 function seleccionar(item){
 document.getElementById("id").value = item.id || "";
+document.getElementById("version").value = item.version || 1;
 document.getElementById("epc").value = soloNumero(item.epc);
 document.getElementById("nombre").value = item.nombre || "";
 document.getElementById("apellido").value = item.apellido || "";
@@ -1850,7 +2261,7 @@ document.getElementById("telefono").value = item.telefono || "";
 document.getElementById("direccion").value = item.direccion || "";
 document.getElementById("operacion_dias").value = item.operacion_dias || "";
 document.getElementById("operacion_horario").value = item.operacion_horario || "";
-document.getElementById("vigencia").value = VIGENCIA_CREDENCIAL;
+document.getElementById("vigencia").value = item.vigencia || VIGENCIA_CREDENCIAL;
 document.getElementById("faltas").value = item.faltas || 0;
 
 const activo = (item.estatus || "ACTIVO").toUpperCase() === "ACTIVO";
@@ -1859,6 +2270,20 @@ document.getElementById("estatusTexto").textContent = activo ? "ACTIVO" : "INACT
 
 fotoBase64 = item.foto_base64 || "";
 mostrarFotoAdmin(fotoBase64);
+actualizarBotonesEstado(item);
+}
+
+function actualizarBotonesEstado(item){
+const esAdmin = usuarioActual && usuarioActual.rol === "admin";
+const cargada = Boolean(item && item.id);
+const inactiva = cargada && mayus(item.estatus) !== "ACTIVO";
+
+const btnBaja = document.getElementById("btnDarBaja");
+const btnReactivar = document.getElementById("btnReactivar");
+if(!btnBaja || !btnReactivar) return;
+
+btnBaja.disabled = !esAdmin || !cargada || inactiva;
+btnReactivar.disabled = !esAdmin || !cargada || !inactiva;
 }
 
 function cargarFoto(event){
@@ -1924,11 +2349,6 @@ ponerFoto(document.getElementById("previewFoto"), base64, "FOTO");
 }
 
 function datosFormulario(){
-const faltas = parseInt(document.getElementById("faltas").value || "0", 10);
-let estatus = document.getElementById("estatusCheck").checked ? "ACTIVO" : "INACTIVO";
-
-if(faltas >= 2) estatus = "INACTIVO";
-
 return{
 epc:epcCompleto(document.getElementById("epc").value),
 nombre:mayus(document.getElementById("nombre").value),
@@ -1938,15 +2358,33 @@ sexo:mayus(document.getElementById("sexo").value),
 tipo_ubicacion:document.getElementById("tipoUbicacion").value,
 organizacion:"EL PODER DEL COMERCIO",
 giro:mayus(document.getElementById("giro").value),
-estatus:estatus,
-faltas:faltas,
 telefono:mayus(document.getElementById("telefono").value),
 direccion:mayus(document.getElementById("direccion").value),
 operacion_dias:mayus(document.getElementById("operacion_dias").value),
 operacion_horario:convertirHorarioMilitar(document.getElementById("operacion_horario").value),
-vigencia:VIGENCIA_CREDENCIAL,
+vigencia:document.getElementById("vigencia").value || VIGENCIA_CREDENCIAL,
 foto_base64:fotoBase64
 };
+}
+
+function validarDatosCredencial(datos){
+if(!datos.epc || !datos.nombre || !datos.curp || !datos.sexo){
+return "EPC, nombre, CURP y sexo son obligatorios.";
+}
+
+if(!/^EPC-\d+$/.test(datos.epc)){
+return "El EPC debe contener un número válido.";
+}
+
+if(!/^[A-Z0-9]{18}$/.test(datos.curp)){
+return "La CURP debe tener exactamente 18 letras y números.";
+}
+
+if(!["H","M"].includes(datos.sexo)){
+return "Selecciona un sexo válido.";
+}
+
+return "";
 }
 
 async function agregar(){
@@ -1956,21 +2394,17 @@ return;
 }
 
 const nuevo = datosFormulario();
+const errorValidacion = validarDatosCredencial(nuevo);
 
-if(!nuevo.epc || !nuevo.nombre || !nuevo.curp || !nuevo.sexo){
-alert("EPC, nombre, CURP y sexo son obligatorios");
+if(errorValidacion){
+alert(errorValidacion);
 return;
 }
 
-const duplicado = await validarDuplicados(nuevo, null);
-if(duplicado) return;
-
-const {error} = await db
-.from("credenciales")
-.insert([nuevo]);
-
-if(error){
-alert("Error al guardar: " + error.message);
+try{
+await rpcPrivada("app_agregar_credencial", {p_datos:nuevo}, "guardar la credencial");
+}catch(error){
+alert(error.message);
 return;
 }
 
@@ -1984,18 +2418,16 @@ if(!puedeActualizar()) return;
 
 const epc = epcCompleto(document.getElementById("buscarAdminEpc").value || document.getElementById("epc").value);
 
-const {data,error} = await db
-.from("credenciales")
-.select("*")
-.eq("epc",epc)
-.single();
-
-if(error){
+try{
+const data = await rpcPrivada("app_buscar_credencial", {p_epc:epc}, "buscar la credencial");
+if(!data){
 alert("No encontrado");
 return;
 }
-
 seleccionar(data);
+}catch(error){
+alert(error.message);
+}
 }
 
 async function actualizar(){
@@ -2012,16 +2444,20 @@ return;
 }
 
 const actualizado = datosFormulario();
+const errorValidacion = validarDatosCredencial(actualizado);
 
-const duplicado = await validarDuplicados(actualizado, id);
-if(duplicado) return;
+if(errorValidacion){
+alert(errorValidacion);
+return;
+}
 
-const {error} = await db
-.from("credenciales")
-.update(actualizado)
-.eq("id",id);
-
-if(error){
+try{
+await rpcPrivada("app_actualizar_credencial", {
+p_id:Number(id),
+p_datos:actualizado,
+p_version:Number(document.getElementById("version").value || 1)
+}, "actualizar la credencial");
+}catch(error){
 alert(error.message);
 return;
 }
@@ -2031,31 +2467,66 @@ limpiar();
 listar();
 }
 
-async function eliminar(){
+async function darDeBaja(){
 if(!soloAdmin()) return;
 
 const id = document.getElementById("id").value;
 
 if(!id){
-alert("Selecciona uno");
+alert("Busca o selecciona una credencial primero.");
 return;
 }
 
-if(!confirm("¿Eliminar registro?")) return;
+if(!confirm("¿Dar de baja esta credencial? El registro se conservará para auditoría.")) return;
 
-const {error} = await db
-.from("credenciales")
-.delete()
-.eq("id",id);
+const motivo = prompt("Motivo de la baja:", "BAJA SOLICITADA POR ADMINISTRACIÓN");
+if(motivo === null) return;
+if(!motivo.trim()){
+alert("Escribe el motivo de la baja.");
+return;
+}
 
-if(error){
+try{
+const data = await rpcPrivada("app_dar_baja_credencial", {
+p_id:Number(id),
+p_motivo:mayus(motivo)
+}, "dar de baja la credencial");
+
+if(!data || mayus(data.estatus) !== "INACTIVO"){
+throw new Error("La base no confirmó la baja.");
+}
+
+seleccionar(data);
+await listar();
+alert("Credencial dada de baja. El historial y el QR se conservaron como INACTIVOS.");
+}catch(error){
 alert(error.message);
 return;
 }
+}
 
-alert("Eliminado");
-limpiar();
-listar();
+async function reactivarCredencial(){
+if(!soloAdmin()) return;
+
+const id = document.getElementById("id").value;
+if(!id){
+alert("Busca o selecciona una credencial primero.");
+return;
+}
+
+if(!confirm("¿Reactivar esta credencial?")) return;
+
+try{
+const data = await rpcPrivada("app_reactivar_credencial", {p_id:Number(id)}, "reactivar la credencial");
+if(!data || mayus(data.estatus) !== "ACTIVO"){
+throw new Error("La base no confirmó la reactivación.");
+}
+seleccionar(data);
+await listar();
+alert("Credencial reactivada.");
+}catch(error){
+alert(error.message);
+}
 }
 
 async function registrarFalta(){
@@ -2068,36 +2539,19 @@ alert("Busca o selecciona una credencial primero");
 return;
 }
 
-let faltas = parseInt(document.getElementById("faltas").value || "0", 10);
-faltas++;
-
-let estatus = document.getElementById("estatusCheck").checked ? "ACTIVO" : "INACTIVO";
-
-if(faltas >= 2){
-estatus = "INACTIVO";
-document.getElementById("estatusCheck").checked = false;
-document.getElementById("estatusTexto").textContent = "INACTIVO";
-alert("El usuario llegó a 2 faltas. La credencial se desactivó automáticamente.");
+try{
+const data = await rpcPrivada("app_registrar_falta", {p_id:Number(id)}, "registrar la falta");
+if(!data) throw new Error("La base no confirmó la falta.");
+seleccionar(data);
+await listar();
+if(Number(data.faltas) >= 2){
+alert("Falta registrada. Al llegar a 2 faltas, la credencial quedó INACTIVA.");
+}else{
+alert("Falta registrada correctamente.");
 }
-
-const {data,error} = await db
-.from("credenciales")
-.update({faltas:faltas, estatus:estatus})
-.eq("id",id)
-.select();
-
-if(error){
-alert("Error al registrar falta: " + error.message);
-return;
+}catch(error){
+alert(error.message);
 }
-
-if(!data || data.length === 0){
-alert("La falta NO se guardó: Supabase no actualizó ninguna fila. Revisa las políticas RLS de UPDATE en la tabla 'credenciales' (probablemente falta una policy para el rol usado por la app, o el id no coincide).");
-return;
-}
-
-document.getElementById("faltas").value = faltas;
-listar();
 }
 
 async function quitarFalta(){
@@ -2110,35 +2564,20 @@ alert("Busca o selecciona una credencial primero");
 return;
 }
 
-let faltas = parseInt(document.getElementById("faltas").value || "0", 10);
-if(faltas > 0) faltas--;
-
-const estatus = faltas >= 2 ? "INACTIVO" : "ACTIVO";
-
-const {data,error} = await db
-.from("credenciales")
-.update({faltas:faltas, estatus:estatus})
-.eq("id",id)
-.select();
-
-if(error){
-alert("Error al quitar falta: " + error.message);
-return;
+try{
+const data = await rpcPrivada("app_quitar_falta", {p_id:Number(id)}, "quitar la falta");
+if(!data) throw new Error("La base no confirmó el cambio.");
+seleccionar(data);
+await listar();
+alert("Falta retirada correctamente.");
+}catch(error){
+alert(error.message);
 }
-
-if(!data || data.length === 0){
-alert("El cambio NO se guardó: Supabase no actualizó ninguna fila. Revisa las políticas RLS de UPDATE en la tabla 'credenciales'.");
-return;
-}
-
-document.getElementById("faltas").value = faltas;
-document.getElementById("estatusCheck").checked = estatus === "ACTIVO";
-document.getElementById("estatusTexto").textContent = estatus;
-listar();
 }
 
 function limpiar(){
 document.getElementById("id").value = "";
+document.getElementById("version").value = "0";
 document.getElementById("nombre").value = "";
 document.getElementById("apellido").value = "";
 document.getElementById("curp").value = "";
@@ -2156,38 +2595,42 @@ document.getElementById("estatusTexto").textContent = "ACTIVO";
 document.getElementById("fotoInput").value = "";
 fotoBase64 = "";
 mostrarFotoAdmin("");
+actualizarBotonesEstado(null);
 generarSiguienteEPC();
 }
 
 // ================= VISUALIZAR CREDENCIAL =================
 function enterBuscar(event){
-if(event.key === "Enter") buscarCredencial();
-// Permite atajos como Ctrl/Cmd + V (pegar) o Ctrl/Cmd + A
-if(event.ctrlKey || event.metaKey) return;
-const permitidos = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab","Enter"];
-if(!permitidos.includes(event.key) && !/^[0-9]$/.test(event.key)){
+if(event.key !== "Enter") return;
 event.preventDefault();
-}
+buscarCredencial();
 }
 
 async function buscarCredencial(){
 if(!soloAdmin()) return;
 const numero = document.getElementById("buscarEpc").value.trim();
+if(!numero){
+alert("Escribe el EPC que quieres buscar.");
+return;
+}
 await cargarCredencial(numero, true);
 }
 
 async function cargarCredencial(numero, mostrarAlertas){
 const epc = epcCompleto(numero);
+let data;
 
-const {data,error} = await db
-.from("credenciales")
-.select(COLUMNAS_CREDENCIAL)
-.eq("epc",epc)
-.single();
+try{
+data = await rpcPrivada("app_buscar_credencial", {p_epc:epc}, "buscar la credencial");
+}catch(error){
+if(mostrarAlertas) alert(error.message);
+limpiarCredencial(true);
+return;
+}
 
-if(error){
+if(!data){
 if(mostrarAlertas) alert("No encontrado");
-limpiarCredencial();
+limpiarCredencial(true);
 return;
 }
 
@@ -2208,7 +2651,14 @@ estadoAtras.style.color = estado === "ACTIVO" ? "#16a34a" : "#dc2626";
 ponerFoto(document.getElementById("vFoto"), data.foto_base64, "SIN FOTO");
 
 generarQR(data);
+credencialCargada = {epc:epcCompleto(data.epc), estatus:estado};
+document.getElementById("folioImpresion").textContent = epcCompleto(data.epc);
+document.getElementById("btnImprimir").disabled = estado !== "ACTIVO";
+document.getElementById("panelFrente").classList.toggle("inactiva", estado !== "ACTIVO");
+document.getElementById("panelAtras").classList.toggle("inactiva", estado !== "ACTIVO");
+prepararImpresion();
 mostrarCredencial("frente");
+programarAjusteCredencial();
 }
 
 function generarQR(data){
@@ -2216,7 +2666,7 @@ const qr = document.getElementById("qrVisual");
 qr.innerHTML = "";
 
 new QRCode(qr,{
-text:linkCredencial(data.epc),
+text:linkCredencial(data.epc, data.token_publico),
 width:190,
 height:190,
 colorDark:"#000000",
@@ -2225,7 +2675,12 @@ correctLevel:QRCode.CorrectLevel.H
 });
 }
 
-function limpiarCredencial(){
+function limpiarCredencial(conservarBusqueda){
+credencialCargada = null;
+document.body.classList.remove("impresion-autorizada");
+document.getElementById("btnImprimir").disabled = true;
+document.getElementById("folioImpresion").textContent = "EPC-";
+if(!conservarBusqueda) document.getElementById("buscarEpc").value = "";
 document.getElementById("vNombre").textContent = "";
 document.getElementById("vOrganizacion").textContent = "";
 document.getElementById("vGiro").textContent = "";
@@ -2234,7 +2689,63 @@ document.getElementById("vDireccion").textContent = "";
 document.getElementById("vVigencia").textContent = "VIGENCIA";
 document.getElementById("vOperacion").textContent = "OPERACIÓN";
 document.getElementById("vFoto").textContent = "FOTO";
+document.getElementById("vEstadoAtras").textContent = "";
+document.getElementById("vEstadoAtras").style.color = "";
 document.getElementById("qrVisual").innerHTML = "";
+document.getElementById("panelFrente").classList.remove("inactiva");
+document.getElementById("panelAtras").classList.remove("inactiva");
+programarAjusteCredencial();
+}
+
+function invalidarCredencialCargada(){
+if(!credencialCargada) return;
+limpiarCredencial(true);
+}
+
+function credencialListaParaImprimir(){
+if(!credencialCargada || credencialCargada.estatus !== "ACTIVO") return false;
+const escrito = epcCompleto(document.getElementById("buscarEpc").value);
+return escrito === credencialCargada.epc;
+}
+
+function prepararImpresion(){
+document.body.classList.toggle("impresion-autorizada", credencialListaParaImprimir());
+}
+
+function imprimirCredencial(){
+if(!credencialCargada){
+alert("Primero busca y carga una credencial.");
+return;
+}
+
+if(credencialCargada.estatus !== "ACTIVO"){
+alert("Esta credencial está INACTIVA y no se puede imprimir.");
+return;
+}
+
+if(!credencialListaParaImprimir()){
+alert("El EPC escrito no coincide con la credencial cargada. Vuelve a buscarla antes de imprimir.");
+return;
+}
+
+prepararImpresion();
+window.print();
+}
+
+function programarAjusteCredencial(){
+if(ajusteCredencialPendiente) cancelAnimationFrame(ajusteCredencialPendiente);
+ajusteCredencialPendiente = requestAnimationFrame(ajustarEscalaCredencial);
+}
+
+function ajustarEscalaCredencial(){
+ajusteCredencialPendiente = null;
+const viewport = document.getElementById("credencialViewport");
+const escala = document.getElementById("credencialEscala");
+if(!viewport || !escala || viewport.clientWidth <= 0) return;
+
+const factor = Math.min(1, viewport.clientWidth / 1120);
+escala.style.transform = `scale(${factor})`;
+viewport.style.height = `${Math.ceil(520 * factor)}px`;
 }
 
 // ================= ASISTENCIA =================
@@ -2256,21 +2767,16 @@ document.getElementById("inputAsistencia").value = "";
 
 if(!valorOriginal) return;
 
-const epcToSearch = extraerEpcDeEscaneo(valorOriginal);
-const numeroLimpiado = soloNumero(epcToSearch);
-
-let query;
-
-if(/^\d+$/.test(numeroLimpiado)){
-query = db.from("credenciales").select(COLUMNAS_ASISTENCIA).eq("epc", "EPC-" + numeroLimpiado).limit(2);
-} else {
-const patron = valorFiltro(`%${epcToSearch}%`);
-query = db.from("credenciales").select(COLUMNAS_ASISTENCIA).or(`nombre.ilike.${patron},apellido.ilike.${patron}`).limit(2);
+let data;
+try{
+data = await rpcPrivada("app_registrar_asistencia", {p_busqueda:valorOriginal}, "registrar la asistencia");
+}catch(error){
+alert(error.message);
+mostrarDataAsistencia(null, true);
+return;
 }
 
-const {data,error} = await query;
-
-if(error || !data || data.length === 0){
+if(!Array.isArray(data) || data.length === 0){
 mostrarDataAsistencia(null, true);
 return;
 }
@@ -2410,22 +2916,38 @@ function obtenerAnioActual(){
 return new Date().getFullYear();
 }
 
-function fechaEmisionActual(){
-const hoy = new Date();
-const meses = ["ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"];
-return `${hoy.getDate()} DE ${meses[hoy.getMonth()]} DE ${hoy.getFullYear()}`;
+function obtenerAnioRegistro(fecha){
+if(!fecha) return "";
+const coincidencia = String(fecha).match(/^(\d{4})/);
+return coincidencia ? coincidencia[1] : "";
 }
 
-async function cargarVerificacionPublica(numero){
+function fechaEmisionActual(){
+const partes = new Intl.DateTimeFormat("es-MX", {
+timeZone:"America/Mexico_City",
+day:"numeric",
+month:"long",
+year:"numeric"
+}).formatToParts(new Date());
+
+const dia = partes.find(p=>p.type === "day")?.value || "";
+const mes = partes.find(p=>p.type === "month")?.value || "";
+const anio = partes.find(p=>p.type === "year")?.value || "";
+return `${dia} DE ${mes.toUpperCase()} DE ${anio}`;
+}
+
+async function cargarVerificacionPublica(numero, token){
 const epc = epcCompleto(numero);
+let data;
 
-const {data,error} = await db
-.from("credenciales")
-.select(COLUMNAS_PUBLICAS)
-.eq("epc",epc)
-.single();
+try{
+data = await rpcPublica("app_verificacion_publica", {p_epc:epc, p_token:token || null}, "verificar la credencial");
+}catch(error){
+console.error(error);
+data = null;
+}
 
-if(error || !data){
+if(!data){
 document.getElementById("pubFolio").textContent = epc;
 document.getElementById("verificacionContenido").innerHTML = `<div class="verificacion-error">REGISTRO NO ENCONTRADO</div>`;
 return;
@@ -2437,7 +2959,7 @@ document.getElementById("pubFolio").textContent = data.epc || "";
 document.getElementById("pubNombre").textContent = `${data.nombre || ""} ${data.apellido || ""}`;
 document.getElementById("pubDias").textContent = data.operacion_dias || "";
 document.getElementById("pubHorario").textContent = data.operacion_horario || "";
-document.getElementById("pubAnio").textContent = obtenerAnioActual();
+document.getElementById("pubAnio").textContent = obtenerAnioRegistro(data.fecha_registro) || obtenerAnioActual();
 document.getElementById("pubEmision").textContent = fechaEmisionActual();
 document.getElementById("pubVigencia").textContent = fechaLargaMexico(data.vigencia || VIGENCIA_CREDENCIAL);
 document.getElementById("pubGiro").textContent = data.giro || "";
@@ -2448,8 +2970,17 @@ document.getElementById("pubStatus").style.color = estado === "ACTIVO" ? "#16a34
 ponerFoto(document.getElementById("pubFoto"), data.foto_base64, "SIN FOTO");
 
 const maps = document.getElementById("pubMaps");
-if(data.direccion) maps.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(data.direccion);
-else maps.href = "#";
+const mapsBox = maps.closest(".verificacion-maps-box");
+const mapsTitle = document.querySelector(".verificacion-ubicacion-title");
+if(data.direccion){
+maps.href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(data.direccion);
+mapsBox.style.display = "block";
+mapsTitle.style.display = "block";
+}else{
+maps.removeAttribute("href");
+mapsBox.style.display = "none";
+mapsTitle.style.display = "none";
+}
 }
 </script>
 </body>
