@@ -1311,10 +1311,6 @@ se encuentran incluidos en el Padrón:
 <div class="verificacion-valor" id="pubAnio"></div>
 </div>
 <div class="verificacion-fila">
-<div class="verificacion-label">Fecha de emisión:</div>
-<div class="verificacion-valor" id="pubEmision"></div>
-</div>
-<div class="verificacion-fila">
 <div class="verificacion-label">Vigencia hasta:</div>
 <div class="verificacion-valor" id="pubVigencia"></div>
 </div>
@@ -2960,7 +2956,8 @@ document.getElementById("pubNombre").textContent = `${data.nombre || ""} ${data.
 document.getElementById("pubDias").textContent = data.operacion_dias || "";
 document.getElementById("pubHorario").textContent = data.operacion_horario || "";
 document.getElementById("pubAnio").textContent = obtenerAnioRegistro(data.fecha_registro) || obtenerAnioActual();
-document.getElementById("pubEmision").textContent = fechaEmisionActual();
+const pubEmision = document.getElementById("pubEmision");
+if(pubEmision) pubEmision.textContent = fechaEmisionActual();
 document.getElementById("pubVigencia").textContent = fechaLargaMexico(data.vigencia || VIGENCIA_CREDENCIAL);
 document.getElementById("pubGiro").textContent = data.giro || "";
 
