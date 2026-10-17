@@ -2497,7 +2497,27 @@ function pintarTabla(data){
 const tabla = document.getElementById("tabla");
 const fragmento = document.createDocumentFragment();
 
-(data || []).forEach(item=>{
+// app_listar_credenciales puede entregar los registros en cualquier orden.
+// La tabla se ordena por la parte numerica del EPC, no como texto
+// (por ejemplo, EPC-99 debe aparecer antes que EPC-100).
+const ordenadas = [...(data || [])].sort((a, b)=>{
+const numeroA = Number.parseInt(String(a && a.epc || "").match(/\d+$/)?.[0] || "", 10);
+const numeroB = Number.parseInt(String(b && b.epc || "").match(/\d+$/)?.[0] || "", 10);
+const validoA = Number.isFinite(numeroA);
+const validoB = Number.isFinite(numeroB);
+
+if(validoA && validoB && numeroA !== numeroB) return numeroA - numeroB;
+if(validoA !== validoB) return validoA ? -1 : 1;
+
+const epcA = String(a && a.epc || "");
+const epcB = String(b && b.epc || "");
+const desempateEpc = epcA.localeCompare(epcB, "es", {numeric:true, sensitivity:"base"});
+if(desempateEpc !== 0) return desempateEpc;
+
+return Number(a && a.id || 0) - Number(b && b.id || 0);
+});
+
+ordenadas.forEach(item=>{
 const tr = document.createElement("tr");
 tr.tabIndex = 0;
 
@@ -2721,14 +2741,20 @@ alert(errorValidacion);
 return;
 }
 
+let credencialCreada;
 try{
-await rpcPrivada("app_agregar_credencial", {p_datos:nuevo}, "guardar la credencial");
+// El EPC del formulario es una vista previa. La funcion de la base reserva
+// el EPC definitivo al guardar y puede devolver otro si hubo concurrencia.
+credencialCreada = await rpcPrivada("app_agregar_credencial", {p_datos:nuevo}, "guardar la credencial");
 }catch(error){
 alert(error.message);
 return;
 }
 
-alert("Credencial agregada correctamente.");
+const epcAsignado = credencialCreada && credencialCreada.epc
+? "\nEPC asignado: " + credencialCreada.epc
+: "";
+alert("Credencial agregada correctamente." + epcAsignado);
 limpiar();
 listar();
 }
