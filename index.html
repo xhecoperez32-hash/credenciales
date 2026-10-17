@@ -6,9 +6,13 @@
 <title>EL PODER DEL COMERCIO - Credenciales</title>
 <meta name="description" content="Sistema de credenciales y verificación de inscripción de El Poder del Comercio.">
 <meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://htthhjxlvvlcblbmelvf.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.47.10"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
 <style>
 *{
@@ -62,6 +66,144 @@ font-weight:bold;
 border:none;
 border-radius:8px;
 cursor:pointer;
+}
+
+.login.portal-login{
+width:min(760px,calc(100% - 24px));
+margin:60px auto;
+padding:32px;
+}
+
+.portal-subtitulo{
+margin:-10px 0 24px;
+color:#4b5563;
+font-size:17px;
+line-height:1.45;
+}
+
+.opciones-acceso{
+display:grid;
+grid-template-columns:repeat(2,minmax(0,1fr));
+gap:18px;
+}
+
+.opcion-acceso{
+min-height:150px!important;
+height:auto!important;
+padding:24px 18px;
+border-radius:12px!important;
+font-size:18px;
+line-height:1.35;
+box-shadow:0 3px 12px rgba(11,40,59,.18);
+}
+
+.opcion-acceso span{
+display:block;
+margin-top:8px;
+font-size:14px;
+font-weight:normal;
+opacity:.9;
+}
+
+.opcion-acceso.credencial-acceso{
+background:#d97706;
+}
+
+.panel-acceso{
+max-width:430px;
+margin:0 auto;
+}
+
+.panel-acceso[hidden],
+.opciones-acceso[hidden]{
+display:none!important;
+}
+
+.panel-acceso h2{
+margin:0 0 6px;
+color:#0B283B;
+}
+
+.panel-acceso .ayuda-acceso{
+margin:0 0 14px;
+color:#4b5563;
+line-height:1.4;
+}
+
+.panel-acceso .volver-accesos{
+margin-top:10px;
+background:#6b7280;
+}
+
+.mensaje-login{
+display:none;
+margin:14px 0 0;
+padding:10px 12px;
+border-radius:8px;
+font-weight:bold;
+line-height:1.35;
+}
+
+.mensaje-login.visible{
+display:block;
+}
+
+.mensaje-login.error{
+background:#fee2e2;
+color:#991b1b;
+}
+
+.mensaje-login.info{
+background:#dbeafe;
+color:#1e3a8a;
+}
+
+.mensaje-login.ok{
+background:#dcfce7;
+color:#166534;
+}
+
+.sesion-propia .busqueda-credencial,
+.sesion-propia #btnBuscarCredencial,
+.sesion-propia #btnImprimir{
+display:none!important;
+}
+
+.sesion-propia .barra-credencial{
+justify-content:space-between;
+}
+
+.sesion-propia .folio-impresion{
+display:inline;
+}
+
+#btnDescargarPdf{
+background:#d97706;
+color:white;
+}
+
+#btnDescargarPdf:disabled{
+opacity:.55;
+cursor:not-allowed;
+}
+
+@media(max-width:650px){
+.login.portal-login{
+margin:18px auto;
+padding:22px 16px;
+}
+
+.login.portal-login h1{
+font-size:28px;
+}
+
+.opciones-acceso{
+grid-template-columns:1fr;
+}
+
+.opcion-acceso{
+min-height:112px!important;
+}
 }
 
 .app{
@@ -1334,11 +1476,39 @@ se encuentran incluidos en el Padrón:
 </div>
 </div>
 
-<div id="login" class="login">
+<div id="login" class="login portal-login">
 <h1>EL PODER DEL COMERCIO</h1>
-<input type="text" id="loginUser" placeholder="Usuario" aria-label="Usuario" autocomplete="username" onkeydown="if(event.key==='Enter'){entrar()}">
-<input type="password" id="loginPass" placeholder="Contraseña" aria-label="Contraseña" autocomplete="current-password" onkeydown="if(event.key==='Enter'){entrar()}">
-<button onclick="entrar()">ENTRAR</button>
+<p class="portal-subtitulo">Selecciona el tipo de acceso. Cada persona registrada solo puede consultar su propia credencial.</p>
+
+<div id="opcionesAcceso" class="opciones-acceso">
+<button type="button" class="opcion-acceso" onclick="seleccionarTipoAcceso('admin')">
+ACCESO ADMINISTRATIVO
+<span>Administración, captura y control de asistencias</span>
+</button>
+<button type="button" class="opcion-acceso credencial-acceso" onclick="seleccionarTipoAcceso('credencial')">
+CONSULTAR MI CREDENCIAL
+<span>Acceso personal con usuario EPC de 4 dígitos</span>
+</button>
+</div>
+
+<form id="panelLoginAdmin" class="panel-acceso" hidden onsubmit="event.preventDefault();entrar()">
+<h2>ACCESO ADMINISTRATIVO</h2>
+<p class="ayuda-acceso">Utiliza las mismas credenciales administrativas de siempre.</p>
+<input type="text" id="loginUser" placeholder="Usuario" aria-label="Usuario administrativo" autocomplete="username">
+<input type="password" id="loginPass" placeholder="Contraseña" aria-label="Contraseña administrativa" autocomplete="current-password">
+<button id="btnLoginAdmin" type="submit">ENTRAR</button>
+<button type="button" class="volver-accesos" onclick="volverTiposAcceso()">VOLVER</button>
+</form>
+
+<form id="panelLoginCredencial" class="panel-acceso" hidden onsubmit="event.preventDefault();entrarCredencial()">
+<h2>CONSULTAR MI CREDENCIAL</h2>
+<p class="ayuda-acceso">Escribe los 4 dígitos de tu usuario EPC y tu contraseña individual.</p>
+<input type="text" id="credencialUsuario" placeholder="Usuario EPC (4 dígitos)" aria-label="Usuario EPC de 4 dígitos" autocomplete="username" inputmode="numeric" pattern="[0-9]{4}" maxlength="4">
+<input type="password" id="credencialPassword" placeholder="Contraseña individual" aria-label="Contraseña individual" autocomplete="current-password" maxlength="200">
+<button id="btnLoginCredencial" type="submit">VER MI CREDENCIAL</button>
+<button type="button" class="volver-accesos" onclick="volverTiposAcceso()">VOLVER</button>
+<p id="mensajeLoginCredencial" class="mensaje-login" role="status" aria-live="polite"></p>
+</form>
 </div>
 
 <div id="app" class="app">
@@ -1550,6 +1720,7 @@ Los usuarios se guardan en Supabase usando contraseña encriptada por la funció
 <div class="acciones-credencial">
 <button id="btnBuscarCredencial" type="button" onclick="buscarCredencial()">BUSCAR</button>
 <button id="btnImprimir" type="button" onclick="imprimirCredencial()" disabled>IMPRIMIR</button>
+<button id="btnDescargarPdf" type="button" onclick="descargarPDFCredencial()" disabled>DESCARGAR PDF</button>
 </div>
 </div>
 
@@ -1664,6 +1835,8 @@ Escanea el QR, digita los 4 dígitos del EPC o escribe el nombre para confirmar 
 <script>
 const SUPABASE_URL = "https://htthhjxlvvlcblbmelvf.supabase.co";
 const SUPABASE_KEY = "sb_publishable_CjyA8MK4VMLbYd4_QizxxA_-sJE3v1V";
+const CREDENTIAL_PORTAL_URL = SUPABASE_URL + "/functions/v1/credential-portal";
+const CREDENTIAL_SESSION_KEY = "epc_credential_session";
 const db = supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 // Vigencia única de las credenciales (antes repetida en 7 lugares del código)
@@ -1683,6 +1856,8 @@ let timerAsistencia = null;
 let audioCtx = null;
 let credencialCargada = null;
 let ajusteCredencialPendiente = null;
+let credencialSessionToken = "";
+let generandoPdf = false;
 
 async function arranque(){
 const params = new URLSearchParams(window.location.search);
@@ -1709,6 +1884,7 @@ return;
 document.getElementById("vigencia").value = VIGENCIA_CREDENCIAL;
 actualizarBotonesEstado(null);
 programarAjusteCredencial();
+await restaurarSesionCredencial();
 }
 
 // La verificación pública se abre desde el QR en teléfonos: ahí sí se usa el ancho real del dispositivo.
@@ -1721,6 +1897,136 @@ meta.name = "viewport";
 document.head.appendChild(meta);
 }
 meta.content = "width=device-width, initial-scale=1";
+}
+
+function seleccionarTipoAcceso(tipo){
+document.getElementById("opcionesAcceso").hidden = true;
+document.getElementById("panelLoginAdmin").hidden = tipo !== "admin";
+document.getElementById("panelLoginCredencial").hidden = tipo !== "credencial";
+
+if(tipo === "admin"){
+setTimeout(()=>document.getElementById("loginUser").focus(),50);
+}else{
+mostrarMensajeLoginCredencial("", "");
+setTimeout(()=>document.getElementById("credencialUsuario").focus(),50);
+}
+}
+
+function volverTiposAcceso(){
+document.getElementById("panelLoginAdmin").hidden = true;
+document.getElementById("panelLoginCredencial").hidden = true;
+document.getElementById("opcionesAcceso").hidden = false;
+document.getElementById("loginPass").value = "";
+document.getElementById("credencialPassword").value = "";
+mostrarMensajeLoginCredencial("", "");
+}
+
+function mostrarMensajeLoginCredencial(texto, tipo){
+const mensaje = document.getElementById("mensajeLoginCredencial");
+mensaje.textContent = texto || "";
+mensaje.className = "mensaje-login" + (texto ? " visible " + (tipo || "info") : "");
+}
+
+async function portalCredencial(accion, datos, token){
+const controlador = new AbortController();
+const temporizador = setTimeout(()=>controlador.abort(),15000);
+
+try{
+const headers = {
+"Content-Type":"application/json",
+"apikey":SUPABASE_KEY
+};
+if(token) headers.Authorization = "Bearer " + token;
+
+const respuesta = await fetch(CREDENTIAL_PORTAL_URL,{
+method:"POST",
+headers,
+body:JSON.stringify({accion,...(datos || {})}),
+cache:"no-store",
+credentials:"omit",
+signal:controlador.signal
+});
+
+let cuerpo = {};
+try{ cuerpo = await respuesta.json(); }catch(error){}
+
+if(!respuesta.ok){
+const err = new Error(cuerpo && cuerpo.error ? cuerpo.error : "No fue posible completar la solicitud.");
+err.status = respuesta.status;
+throw err;
+}
+
+return cuerpo;
+}catch(error){
+if(error && error.name === "AbortError"){
+throw new Error("La solicitud tardó demasiado. Revisa tu conexión e inténtalo de nuevo.");
+}
+throw error;
+}finally{
+clearTimeout(temporizador);
+}
+}
+
+async function entrarCredencial(){
+const usuario = document.getElementById("credencialUsuario").value.trim();
+const password = document.getElementById("credencialPassword").value;
+const boton = document.getElementById("btnLoginCredencial");
+
+if(!/^\d{4}$/.test(usuario)){
+mostrarMensajeLoginCredencial("El usuario EPC debe tener exactamente 4 dígitos.","error");
+return;
+}
+if(!password){
+mostrarMensajeLoginCredencial("Escribe tu contraseña individual.","error");
+return;
+}
+
+boton.disabled = true;
+mostrarMensajeLoginCredencial("Validando acceso seguro…","info");
+
+try{
+const respuesta = await portalCredencial("login",{usuario,password});
+if(!respuesta.token || !respuesta.credencial) throw new Error("La respuesta del servidor no es válida.");
+
+credencialSessionToken = respuesta.token;
+sessionStorage.setItem(CREDENTIAL_SESSION_KEY,credencialSessionToken);
+document.getElementById("credencialPassword").value = "";
+iniciarSesionCredencial(respuesta.credencial);
+}catch(error){
+sessionStorage.removeItem(CREDENTIAL_SESSION_KEY);
+credencialSessionToken = "";
+mostrarMensajeLoginCredencial(error.message || "Usuario o contraseña incorrectos.","error");
+}finally{
+boton.disabled = false;
+}
+}
+
+async function restaurarSesionCredencial(){
+const token = sessionStorage.getItem(CREDENTIAL_SESSION_KEY) || "";
+if(!token) return false;
+
+try{
+const respuesta = await portalCredencial("me",{},token);
+if(!respuesta.credencial) throw new Error("Sesión inválida");
+credencialSessionToken = token;
+iniciarSesionCredencial(respuesta.credencial);
+return true;
+}catch(error){
+sessionStorage.removeItem(CREDENTIAL_SESSION_KEY);
+credencialSessionToken = "";
+return false;
+}
+}
+
+function iniciarSesionCredencial(credencial){
+usuarioActual = {rol:"credencial",epc:credencial.epc};
+loginUsuarioActual = "";
+loginPasswordActual = "";
+document.getElementById("login").style.display = "none";
+document.getElementById("app").style.display = "block";
+document.getElementById("app").classList.add("sesion-propia");
+aplicarPermisos();
+renderizarCredencial(credencial);
 }
 
 async function entrar(){
@@ -1754,6 +2060,7 @@ document.getElementById("loginPass").value = "";
 
 document.getElementById("login").style.display = "none";
 document.getElementById("app").style.display = "block";
+document.getElementById("app").classList.remove("sesion-propia");
 
 aplicarPermisos();
 listar();
@@ -1768,6 +2075,8 @@ document.getElementById("tabAdmin").style.display = "none";
 document.getElementById("tabCredencial").style.display = "none";
 document.getElementById("tabAsistencia").style.display = "none";
 document.getElementById("tabUsuarios").style.display = "none";
+document.getElementById("btnCambiarPassword").style.display = rol === "credencial" ? "none" : "inline-block";
+document.getElementById("btnSalir").style.display = "inline-block";
 
 if(rol === "admin"){
 document.getElementById("tabAdmin").style.display = "inline-block";
@@ -1791,13 +2100,27 @@ mostrarPantalla("admin");
 }else if(rol === "asistencia"){
 document.getElementById("tabAsistencia").style.display = "inline-block";
 mostrarPantalla("asistencia");
+}else if(rol === "credencial"){
+document.getElementById("tabCredencial").style.display = "inline-block";
+document.getElementById("tabCredencial").textContent = "MI CREDENCIAL";
+mostrarPantalla("credencial");
 }
 }
 
 // Cierra la sesión recargando la página sin parámetros: así se borra de memoria el usuario,
 // la contraseña, los datos cargados y cualquier formulario a medio llenar.
-function cerrarSesion(){
+async function cerrarSesion(){
 if(!confirm("¿Cerrar sesión?")) return;
+
+if(usuarioActual && usuarioActual.rol === "credencial"){
+const token = credencialSessionToken;
+sessionStorage.removeItem(CREDENTIAL_SESSION_KEY);
+credencialSessionToken = "";
+if(token){
+try{ await portalCredencial("logout",{},token); }catch(error){}
+}
+}
+
 usuarioActual = null;
 loginUsuarioActual = "";
 loginPasswordActual = "";
@@ -1875,7 +2198,8 @@ usuarios:{pantalla:"pantallaUsuarios", tab:"tabUsuarios"}
 function mostrarPantalla(tipo){
 if(!usuarioActual || !PANTALLAS[tipo]) return;
 if(tipo === "admin" && !puedeActualizar()) return;
-if((tipo === "credencial" || tipo === "usuarios") && !soloAdmin()) return;
+if(tipo === "usuarios" && !soloAdmin()) return;
+if(tipo === "credencial" && !["admin","credencial"].includes(usuarioActual.rol)) return;
 
 Object.values(PANTALLAS).forEach(p=>{
 document.getElementById(p.pantalla).classList.remove("active");
@@ -2630,6 +2954,10 @@ limpiarCredencial(true);
 return;
 }
 
+renderizarCredencial(data);
+}
+
+function renderizarCredencial(data){
 document.getElementById("buscarEpc").value = soloNumero(data.epc);
 document.getElementById("vNombre").textContent = `${data.nombre || ""} ${data.apellido || ""}`;
 document.getElementById("vOrganizacion").textContent = "EL PODER DEL COMERCIO";
@@ -2650,6 +2978,7 @@ generarQR(data);
 credencialCargada = {epc:epcCompleto(data.epc), estatus:estado};
 document.getElementById("folioImpresion").textContent = epcCompleto(data.epc);
 document.getElementById("btnImprimir").disabled = estado !== "ACTIVO";
+document.getElementById("btnDescargarPdf").disabled = estado !== "ACTIVO";
 document.getElementById("panelFrente").classList.toggle("inactiva", estado !== "ACTIVO");
 document.getElementById("panelAtras").classList.toggle("inactiva", estado !== "ACTIVO");
 prepararImpresion();
@@ -2675,6 +3004,7 @@ function limpiarCredencial(conservarBusqueda){
 credencialCargada = null;
 document.body.classList.remove("impresion-autorizada");
 document.getElementById("btnImprimir").disabled = true;
+document.getElementById("btnDescargarPdf").disabled = true;
 document.getElementById("folioImpresion").textContent = "EPC-";
 if(!conservarBusqueda) document.getElementById("buscarEpc").value = "";
 document.getElementById("vNombre").textContent = "";
@@ -2726,6 +3056,77 @@ return;
 
 prepararImpresion();
 window.print();
+}
+
+async function descargarPDFCredencial(){
+if(generandoPdf) return;
+if(!credencialListaParaImprimir()){
+alert("La credencial debe estar activa y cargada antes de descargar el PDF.");
+return;
+}
+if(typeof html2canvas !== "function" || !window.jspdf || !window.jspdf.jsPDF){
+alert("No se pudo cargar el generador de PDF. Revisa tu conexión e inténtalo de nuevo.");
+return;
+}
+
+const boton = document.getElementById("btnDescargarPdf");
+const frente = document.getElementById("panelFrente");
+const atras = document.getElementById("panelAtras");
+const escala = document.getElementById("credencialEscala");
+const frenteOculto = frente.classList.contains("oculto");
+const atrasOculto = atras.classList.contains("oculto");
+const transformacion = escala.style.transform;
+
+generandoPdf = true;
+boton.disabled = true;
+boton.textContent = "GENERANDO…";
+
+try{
+escala.style.transform = "none";
+frente.classList.remove("oculto");
+atras.classList.remove("oculto");
+
+if(document.fonts && document.fonts.ready) await document.fonts.ready;
+await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+
+const opciones = {
+backgroundColor:"#ffffff",
+scale:2,
+useCORS:true,
+logging:false,
+width:1120,
+height:520,
+windowWidth:1120,
+windowHeight:520
+};
+
+const canvasFrente = await html2canvas(frente,opciones);
+const canvasAtras = await html2canvas(atras,opciones);
+const {jsPDF} = window.jspdf;
+const pdf = new jsPDF({
+orientation:"landscape",
+unit:"px",
+format:[1120,520],
+compress:true,
+hotfixes:["px_scaling"]
+});
+
+pdf.addImage(canvasFrente.toDataURL("image/jpeg",0.95),"JPEG",0,0,1120,520,undefined,"FAST");
+pdf.addPage([1120,520],"landscape");
+pdf.addImage(canvasAtras.toDataURL("image/jpeg",0.95),"JPEG",0,0,1120,520,undefined,"FAST");
+pdf.save("credencial-" + credencialCargada.epc + ".pdf");
+}catch(error){
+console.error(error);
+alert("No se pudo generar el PDF. Inténtalo de nuevo o utiliza la opción Imprimir.");
+}finally{
+frente.classList.toggle("oculto",frenteOculto);
+atras.classList.toggle("oculto",atrasOculto);
+escala.style.transform = transformacion;
+generandoPdf = false;
+boton.textContent = "DESCARGAR PDF";
+boton.disabled = !credencialListaParaImprimir();
+programarAjusteCredencial();
+}
 }
 
 function programarAjusteCredencial(){
