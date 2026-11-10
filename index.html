@@ -1858,6 +1858,9 @@ let credencialCargada = null;
 let ajusteCredencialPendiente = null;
 let credencialSessionToken = "";
 let generandoPdf = false;
+// Evita que pulsaciones repetidas ejecuten dos escrituras sobre el mismo registro.
+let guardandoCredencial = false;
+let gestionandoFaltas = false;
 
 async function arranque(){
 const params = new URLSearchParams(window.location.search);
@@ -2031,7 +2034,7 @@ renderizarCredencial(credencial);
 
 async function entrar(){
 const usuario = document.getElementById("loginUser").value.trim();
-const pass = document.getElementById("loginPass").value.trim();
+const pass = document.getElementById("loginPass").value;
 
 if(!usuario || !pass){
 alert("Escribe usuario y contraseña");
@@ -2258,7 +2261,7 @@ async function guardarNuevoUsuario(){
 if(!soloAdmin()) return;
 
 const usuario = mayus(document.getElementById("uUser").value.trim());
-const pass = document.getElementById("uPass").value.trim();
+const pass = document.getElementById("uPass").value;
 const nombre = mayus(document.getElementById("uNombre").value.trim());
 const rol = document.getElementById("uRol").value;
 const vigencia = document.getElementById("uVigencia").value;
@@ -2728,6 +2731,7 @@ return "";
 }
 
 async function agregar(){
+if(guardandoCredencial) return;
 if(!puedeActualizar()){
 alert("No tienes permiso para guardar credenciales.");
 return;
@@ -2742,6 +2746,7 @@ return;
 }
 
 let credencialCreada;
+guardandoCredencial = true;
 try{
 // El EPC del formulario es una vista previa. La funcion de la base reserva
 // el EPC definitivo al guardar y puede devolver otro si hubo concurrencia.
@@ -2749,6 +2754,8 @@ credencialCreada = await rpcPrivada("app_agregar_credencial", {p_datos:nuevo}, "
 }catch(error){
 alert(error.message);
 return;
+}finally{
+guardandoCredencial = false;
 }
 
 const epcAsignado = credencialCreada && credencialCreada.epc
@@ -2876,6 +2883,7 @@ alert(error.message);
 }
 
 async function registrarFalta(){
+if(gestionandoFaltas) return;
 if(!soloAdmin()) return;
 
 const id = document.getElementById("id").value;
@@ -2885,6 +2893,7 @@ alert("Busca o selecciona una credencial primero");
 return;
 }
 
+gestionandoFaltas = true;
 try{
 const data = await rpcPrivada("app_registrar_falta", {p_id:Number(id)}, "registrar la falta");
 if(!data) throw new Error("La base no confirmó la falta.");
@@ -2897,10 +2906,13 @@ alert("Falta registrada correctamente.");
 }
 }catch(error){
 alert(error.message);
+}finally{
+gestionandoFaltas = false;
 }
 }
 
 async function quitarFalta(){
+if(gestionandoFaltas) return;
 if(!soloAdmin()) return;
 
 const id = document.getElementById("id").value;
@@ -2910,6 +2922,7 @@ alert("Busca o selecciona una credencial primero");
 return;
 }
 
+gestionandoFaltas = true;
 try{
 const data = await rpcPrivada("app_quitar_falta", {p_id:Number(id)}, "quitar la falta");
 if(!data) throw new Error("La base no confirmó el cambio.");
@@ -2918,6 +2931,8 @@ await listar();
 alert("Falta retirada correctamente.");
 }catch(error){
 alert(error.message);
+}finally{
+gestionandoFaltas = false;
 }
 }
 
