@@ -1478,17 +1478,14 @@ se encuentran incluidos en el Padrón:
 
 <div id="login" class="login portal-login">
 <h1>EL PODER DEL COMERCIO</h1>
-<p class="portal-subtitulo">Selecciona el tipo de acceso. Cada persona registrada solo puede consultar su propia credencial.</p>
+<p class="portal-subtitulo">Acceso exclusivo para personal autorizado.</p>
 
 <div id="opcionesAcceso" class="opciones-acceso">
 <button type="button" class="opcion-acceso" onclick="seleccionarTipoAcceso('admin')">
 ACCESO ADMINISTRATIVO
 <span>Administración, captura y control de asistencias</span>
 </button>
-<button type="button" class="opcion-acceso credencial-acceso" onclick="seleccionarTipoAcceso('credencial')">
-CONSULTAR MI CREDENCIAL
-<span>Acceso personal con usuario EPC de 4 dígitos</span>
-</button>
+
 </div>
 
 <form id="panelLoginAdmin" class="panel-acceso" hidden onsubmit="event.preventDefault();entrar()">
@@ -1517,6 +1514,7 @@ CONSULTAR MI CREDENCIAL
 <button id="tabAdmin" class="active" onclick="mostrarPantalla('admin')">Administrar credenciales</button>
 <button id="tabCredencial" onclick="mostrarPantalla('credencial')">Ver / imprimir credencial</button>
 <button id="tabAsistencia" onclick="mostrarPantalla('asistencia')">Escáner de Asistencia</button>
+<button id="tabJornadas" onclick="mostrarPantalla('jornadas')">Jornadas y faltas</button>
 <button id="tabUsuarios" onclick="mostrarPantalla('usuarios')">Gestión de Usuarios</button>
 <button id="btnCambiarPassword" class="clave" type="button" onclick="abrirCambioPassword()">CAMBIAR CONTRASEÑA</button>
 <button id="btnSalir" class="salir" type="button" onclick="cerrarSesion()">SALIR</button>
@@ -1608,8 +1606,14 @@ BUSCAR
 <label for="operacion_horario">Horario:</label>
 <input type="text" id="operacion_horario" placeholder="Ej: 5pm - 2am">
 
-<label for="vigencia">Vigencia:</label>
-<input type="text" id="vigencia" value="31/12/2026" readonly style="background:#d1d5db;font-weight:bold;">
+<label for="division">División:</label>
+<select id="division"><option value="1">DIVISIÓN 1</option><option value="2">DIVISIÓN 2</option></select>
+<label for="fechaCredencializacion">Fecha de credencialización:</label>
+<input type="date" id="fechaCredencializacion" onchange="actualizarVigenciaTemporal()">
+<label for="diasVigencia">Duración de credencial:</label>
+<select id="diasVigencia" onchange="actualizarVigenciaTemporal()"><option value="15">15 DÍAS</option><option value="20">20 DÍAS</option><option value="30">30 DÍAS</option></select>
+<label for="vigencia">Vigencia hasta:</label>
+<input type="text" id="vigencia" readonly style="background:#d1d5db;font-weight:bold;">
 
 </div>
 
@@ -1789,12 +1793,25 @@ ACTIVO
 
 </div>
 
+<div id="pantallaJornadas" class="pantalla"><div class="admin">
+<h1>JORNADAS Y FALTAS</h1>
+<p>Abre la jornada para registrar escaneos. Al cerrarla, quienes no asistieron reciben una falta. Con 2 faltas quedan inactivos.</p>
+<div class="admin-grid">
+<label for="fechaJornada">Fecha:</label><input type="date" id="fechaJornada">
+<label for="divisionJornada">División:</label><select id="divisionJornada"><option value="1">DIVISIÓN 1</option><option value="2">DIVISIÓN 2</option></select>
+</div><div class="botones">
+<button class="guardar" onclick="abrirJornada()">ABRIR JORNADA</button>
+<button class="eliminar" onclick="cerrarJornada()">CERRAR Y ASIGNAR FALTAS</button>
+<button class="buscar" onclick="verJornadas()">ACTUALIZAR</button>
+</div><div id="jornadasResultado" style="white-space:pre-wrap;margin-top:22px"></div>
+</div></div>
 <div id="pantallaAsistencia" class="pantalla">
 <div class="asistencia-container">
 <h1 style="color:#0B283B; font-size:40px; text-transform:uppercase;">Sistema de Asistencia y Accesos</h1>
-<p class="asistencia-ayuda">
-Escanea el QR, digita los 4 dígitos del EPC o escribe el nombre para confirmar asistencia.
-</p>
+<p class="asistencia-ayuda">Selecciona una jornada abierta antes de escanear. Escanea el QR o escribe el EPC para confirmar asistencia.</p>
+<div style="margin:12px auto;max-width:700px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center">
+<label for="jornadaEscaneo">Jornada:</label><select id="jornadaEscaneo" style="max-width:360px"></select>
+<button type="button" onclick="cargarJornadasEscaneo()">ACTUALIZAR JORNADAS</button></div>
 
 <input type="text" id="inputAsistencia" placeholder="ESCANEA QR, EPC O NOMBRE" aria-label="Escanea QR, EPC o nombre" onkeydown="procesarAsistencia(event)" autocomplete="off" enterkeyhint="search" autocapitalize="characters" spellcheck="false">
 
@@ -1840,7 +1857,7 @@ const CREDENTIAL_SESSION_KEY = "epc_credential_session";
 const db = supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 // Vigencia única de las credenciales (antes repetida en 7 lugares del código)
-const VIGENCIA_CREDENCIAL = "31/12/2026";
+const VIGENCIA_CREDENCIAL = "";
 
 // Tamaño máximo con el que se guarda una foto nueva (se sigue guardando como data URL)
 const FOTO_MAX_ANCHO = 720;
@@ -1884,10 +1901,12 @@ await cargarVerificacionPublica(epc, token);
 return;
 }
 
-document.getElementById("vigencia").value = VIGENCIA_CREDENCIAL;
+document.getElementById("fechaCredencializacion").value = fechaHoyMexico();
+actualizarVigenciaTemporal();
+document.getElementById("fechaJornada").value = fechaHoyMexico();
 actualizarBotonesEstado(null);
 programarAjusteCredencial();
-await restaurarSesionCredencial();
+sessionStorage.removeItem(CREDENTIAL_SESSION_KEY);
 }
 
 // La verificación pública se abre desde el QR en teléfonos: ahí sí se usa el ancho real del dispositivo.
@@ -2078,6 +2097,7 @@ document.getElementById("tabAdmin").style.display = "none";
 document.getElementById("tabCredencial").style.display = "none";
 document.getElementById("tabAsistencia").style.display = "none";
 document.getElementById("tabUsuarios").style.display = "none";
+document.getElementById("tabJornadas").style.display = "none";
 document.getElementById("btnCambiarPassword").style.display = rol === "credencial" ? "none" : "inline-block";
 document.getElementById("btnSalir").style.display = "inline-block";
 
@@ -2086,6 +2106,7 @@ document.getElementById("tabAdmin").style.display = "inline-block";
 document.getElementById("tabCredencial").style.display = "inline-block";
 document.getElementById("tabAsistencia").style.display = "inline-block";
 document.getElementById("tabUsuarios").style.display = "inline-block";
+document.getElementById("tabJornadas").style.display = "inline-block";
 mostrarPantalla("admin");
 }else if(rol === "capturista"){
 document.getElementById("tabAdmin").style.display = "inline-block";
@@ -2195,13 +2216,14 @@ const PANTALLAS = {
 admin:{pantalla:"pantallaAdmin", tab:"tabAdmin"},
 credencial:{pantalla:"pantallaCredencial", tab:"tabCredencial"},
 asistencia:{pantalla:"pantallaAsistencia", tab:"tabAsistencia"},
+jornadas:{pantalla:"pantallaJornadas",tab:"tabJornadas"},
 usuarios:{pantalla:"pantallaUsuarios", tab:"tabUsuarios"}
 };
 
 function mostrarPantalla(tipo){
 if(!usuarioActual || !PANTALLAS[tipo]) return;
 if(tipo === "admin" && !puedeActualizar()) return;
-if(tipo === "usuarios" && !soloAdmin()) return;
+if((tipo === "usuarios" || tipo === "jornadas") && !soloAdmin()) return;
 if(tipo === "credencial" && !["admin","credencial"].includes(usuarioActual.rol)) return;
 
 Object.values(PANTALLAS).forEach(p=>{
@@ -2213,6 +2235,7 @@ document.getElementById(PANTALLAS[tipo].pantalla).classList.add("active");
 document.getElementById(PANTALLAS[tipo].tab).classList.add("active");
 
 if(tipo === "asistencia"){
+cargarJornadasEscaneo();
 setTimeout(()=>document.getElementById("inputAsistencia").focus(),200);
 }
 
@@ -2547,7 +2570,7 @@ async function buscarAdminDesdeTabla(epc){
 if(!puedeActualizar()) return;
 
 try{
-const data = await rpcPrivada("app_buscar_credencial", {p_epc:epcCompleto(epc)}, "abrir la credencial");
+const data = await rpcPrivada("epc_buscar_temporal", {p_epc:epcCompleto(epc)}, "abrir la credencial");
 if(!data) throw new Error("No se encontró la credencial.");
 seleccionar(data);
 }catch(error){
@@ -2579,7 +2602,7 @@ return;
 }
 
 if(data.length === 1){
-seleccionar(data[0]);
+await buscarAdminDesdeTabla(data[0].epc);
 return;
 }
 
@@ -2604,7 +2627,10 @@ document.getElementById("telefono").value = item.telefono || "";
 document.getElementById("direccion").value = item.direccion || "";
 document.getElementById("operacion_dias").value = item.operacion_dias || "";
 document.getElementById("operacion_horario").value = item.operacion_horario || "";
-document.getElementById("vigencia").value = item.vigencia || VIGENCIA_CREDENCIAL;
+document.getElementById("division").value = String(item.division || 1);
+document.getElementById("fechaCredencializacion").value = item.fecha_credencializacion || fechaHoyMexico();
+document.getElementById("diasVigencia").value = String(item.dias_vigencia || 15);
+document.getElementById("vigencia").value = item.vigencia || "";
 document.getElementById("faltas").value = item.faltas || 0;
 
 const activo = (item.estatus || "ACTIVO").toUpperCase() === "ACTIVO";
@@ -2705,7 +2731,10 @@ telefono:mayus(document.getElementById("telefono").value),
 direccion:mayus(document.getElementById("direccion").value),
 operacion_dias:mayus(document.getElementById("operacion_dias").value),
 operacion_horario:convertirHorarioMilitar(document.getElementById("operacion_horario").value),
-vigencia:document.getElementById("vigencia").value || VIGENCIA_CREDENCIAL,
+vigencia:document.getElementById("vigencia").value,
+division:Number(document.getElementById("division").value),
+fecha_credencializacion:document.getElementById("fechaCredencializacion").value,
+dias_vigencia:Number(document.getElementById("diasVigencia").value),
 foto_base64:fotoBase64
 };
 }
@@ -2727,6 +2756,9 @@ if(!["H","M"].includes(datos.sexo)){
 return "Selecciona un sexo válido.";
 }
 
+if(![15,20,30].includes(datos.dias_vigencia) || ![1,2].includes(datos.division) || !/^\d{4}-\d{2}-\d{2}$/.test(datos.fecha_credencializacion)){
+return "Selecciona división, fecha y duración válidas.";
+}
 return "";
 }
 
@@ -2750,7 +2782,7 @@ guardandoCredencial = true;
 try{
 // El EPC del formulario es una vista previa. La funcion de la base reserva
 // el EPC definitivo al guardar y puede devolver otro si hubo concurrencia.
-credencialCreada = await rpcPrivada("app_agregar_credencial", {p_datos:nuevo}, "guardar la credencial");
+credencialCreada = await rpcPrivada("epc_agregar_temporal", {p_datos:nuevo}, "guardar la credencial");
 }catch(error){
 alert(error.message);
 return;
@@ -2772,7 +2804,7 @@ if(!puedeActualizar()) return;
 const epc = epcCompleto(document.getElementById("buscarAdminEpc").value || document.getElementById("epc").value);
 
 try{
-const data = await rpcPrivada("app_buscar_credencial", {p_epc:epc}, "buscar la credencial");
+const data = await rpcPrivada("epc_buscar_temporal", {p_epc:epc}, "buscar la credencial");
 if(!data){
 alert("No encontrado");
 return;
@@ -2805,7 +2837,7 @@ return;
 }
 
 try{
-await rpcPrivada("app_actualizar_credencial", {
+await rpcPrivada("epc_actualizar_temporal", {
 p_id:Number(id),
 p_datos:actualizado,
 p_version:Number(document.getElementById("version").value || 1)
@@ -2949,7 +2981,10 @@ document.getElementById("telefono").value = "";
 document.getElementById("direccion").value = "";
 document.getElementById("operacion_dias").value = "";
 document.getElementById("operacion_horario").value = "";
-document.getElementById("vigencia").value = VIGENCIA_CREDENCIAL;
+document.getElementById("fechaCredencializacion").value = fechaHoyMexico();
+document.getElementById("division").value = "1";
+document.getElementById("diasVigencia").value = "15";
+actualizarVigenciaTemporal();
 document.getElementById("faltas").value = "0";
 document.getElementById("estatusCheck").checked = true;
 document.getElementById("estatusTexto").textContent = "ACTIVO";
@@ -3005,7 +3040,7 @@ document.getElementById("vOrganizacion").textContent = "EL PODER DEL COMERCIO";
 document.getElementById("vGiro").textContent = data.giro || "";
 document.getElementById("vEstatus").textContent = data.estatus || "";
 document.getElementById("vDireccion").textContent = data.direccion || "";
-document.getElementById("vVigencia").textContent = "VIGENCIA " + (data.vigencia || VIGENCIA_CREDENCIAL);
+document.getElementById("vVigencia").textContent = "VIGENCIA " + (data.vigencia || "SIN VIGENCIA");
 document.getElementById("vOperacion").textContent = "OPERACIÓN DE " + (data.operacion_horario || "") + " DE " + (data.operacion_dias || "");
 
 const estado = (data.estatus || "").toUpperCase();
@@ -3186,12 +3221,72 @@ escala.style.transform = `scale(${factor})`;
 viewport.style.height = `${Math.ceil(520 * factor)}px`;
 }
 
+
+// ================= CREDENCIALES TEMPORALES Y JORNADAS =================
+function fechaHoyMexico(){
+const p=new Intl.DateTimeFormat("en-US",{timeZone:"America/Mexico_City",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());
+const v=t=>p.find(x=>x.type===t)?.value;
+return `${v("year")}-${v("month")}-${v("day")}`;
+}
+function sumarDiasISO(fecha,dias){
+const d = new Date(fecha+"T12:00:00Z");
+d.setUTCDate(d.getUTCDate()+dias);
+return d.toISOString().slice(0,10);
+}
+function actualizarVigenciaTemporal(){
+const fecha=document.getElementById("fechaCredencializacion").value;
+const dias=Number(document.getElementById("diasVigencia").value);
+document.getElementById("vigencia").value=fecha ? sumarDiasISO(fecha,dias) : "";
+}
+async function abrirJornada(){
+if(!soloAdmin())return;
+try{
+const data=await rpcPrivada("epc_abrir_jornada",{
+p_fecha:document.getElementById("fechaJornada").value,
+p_division:Number(document.getElementById("divisionJornada").value)
+},"abrir la jornada");
+document.getElementById("jornadasResultado").textContent="Jornada abierta: #"+data.id+" | "+data.fecha+" | División "+data.division;
+await cargarJornadasEscaneo();
+}catch(e){alert(e.message);}
+}
+async function cerrarJornada(){
+if(!soloAdmin())return;
+if(!confirm("¿Cerrar jornada y registrar una falta para cada comerciante sin asistencia? La baja por 2 faltas será automática."))return;
+try{
+const data=await rpcPrivada("epc_cerrar_jornada",{
+p_fecha:document.getElementById("fechaJornada").value,
+p_division:Number(document.getElementById("divisionJornada").value)
+},"cerrar la jornada");
+document.getElementById("jornadasResultado").textContent="Jornada cerrada. Ausentes: "+data.ausentes+". Bajas automáticas: "+data.bajas;
+await cargarJornadasEscaneo();await listar();
+}catch(e){alert(e.message);}
+}
+async function verJornadas(){
+if(!soloAdmin())return;
+try{
+const data=await rpcPrivada("epc_listar_jornadas",{},"listar jornadas");
+document.getElementById("jornadasResultado").textContent=(data||[]).map(x=>`#${x.id} | ${x.fecha} | División ${x.division} | ${x.estado}`).join("\n") || "No hay jornadas";
+await cargarJornadasEscaneo();
+}catch(e){alert(e.message);}
+}
+async function cargarJornadasEscaneo(){
+if(!usuarioActual||!loginUsuarioActual)return;
+try{
+const data=await rpcPrivada("epc_listar_jornadas",{},"consultar jornadas");
+const select=document.getElementById("jornadaEscaneo");const anterior=select.value;
+select.replaceChildren();
+for(const j of data||[]){if(j.estado!=="ABIERTA")continue;
+const op=document.createElement("option");op.value=j.id;op.textContent=`${j.fecha} · DIVISIÓN ${j.division}`;select.appendChild(op);
+}if([...select.options].some(x=>x.value===anterior))select.value=anterior;
+}catch(e){console.error(e);}
+}
+
 // ================= ASISTENCIA =================
 setInterval(() => {
 const pantalla = document.getElementById("pantallaAsistencia");
 if(pantalla && pantalla.classList.contains("active")){
 const input = document.getElementById("inputAsistencia");
-if(input && document.activeElement !== input){
+if(input && document.activeElement !== input && !["INPUT","SELECT","TEXTAREA","BUTTON"].includes(document.activeElement?.tagName)){
 input.focus();
 }
 }
@@ -3200,6 +3295,8 @@ input.focus();
 async function procesarAsistencia(event){
 if(event.key !== "Enter") return;
 
+const jornadaId = Number(document.getElementById("jornadaEscaneo").value);
+if(!jornadaId){alert("Selecciona una jornada abierta.");return;}
 const valorOriginal = document.getElementById("inputAsistencia").value.trim();
 document.getElementById("inputAsistencia").value = "";
 
@@ -3207,7 +3304,8 @@ if(!valorOriginal) return;
 
 let data;
 try{
-data = await rpcPrivada("app_registrar_asistencia", {p_busqueda:valorOriginal}, "registrar la asistencia");
+const resultado = await rpcPrivada("epc_marcar_asistencia", {p_jornada_id:jornadaId,p_busqueda:valorOriginal}, "registrar la asistencia");
+data = resultado ? [resultado] : [];
 }catch(error){
 alert(error.message);
 mostrarDataAsistencia(null, true);
@@ -3400,7 +3498,7 @@ document.getElementById("pubHorario").textContent = data.operacion_horario || ""
 document.getElementById("pubAnio").textContent = obtenerAnioRegistro(data.fecha_registro) || obtenerAnioActual();
 const pubEmision = document.getElementById("pubEmision");
 if(pubEmision) pubEmision.textContent = fechaEmisionActual();
-document.getElementById("pubVigencia").textContent = fechaLargaMexico(data.vigencia || VIGENCIA_CREDENCIAL);
+document.getElementById("pubVigencia").textContent = fechaLargaMexico(data.vigencia || "SIN VIGENCIA");
 document.getElementById("pubGiro").textContent = data.giro || "";
 
 document.getElementById("pubStatus").textContent = estado === "ACTIVO" ? "ACTIVA" : "INACTIVA";
