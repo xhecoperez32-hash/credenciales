@@ -7,7 +7,7 @@
 <meta name="description" content="Sistema de credenciales y verificación de inscripción de El Poder del Comercio.">
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
-<meta name="theme-color" content="#0B283B">
+<meta name="theme-color" content="#10543d">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://htthhjxlvvlcblbmelvf.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.47.10"></script>
@@ -1904,10 +1904,54 @@ object-fit:contain!important;
 margin:0 auto!important;
 }
 }
+
+/* ===== NAVIDAD 2026: estilo exclusivo de la interfaz, sin cambiar la impresión ===== */
+:root{--navy:#114b39;--navy-2:#176449;--navy-3:#257b55;--amber:#ba8b36;--amber-2:#e6bc67;--bg:#f7f5ef;--surface-2:#f7faf7;--border:#e3e9df;--border-2:#c8d6ca;--ring:0 0 0 3px rgba(23,100,73,.20)}
+body{background:radial-gradient(ellipse at top left,rgba(178,38,52,.12),transparent 43%),radial-gradient(ellipse at top right,rgba(25,107,75,.12),transparent 42%),#f7f5ef}
+.login,.app{border:1px solid rgba(186,139,54,.38)}
+.login::before{background:linear-gradient(90deg,#ae2739,#dbaf57,#176449)}
+.app-header{position:relative;border-bottom:1px solid #e8eee7;margin-bottom:14px}
+.app-header::after{content:"❄️  FELICES FIESTAS  ❄️";margin-left:auto;color:#a7283a;font-size:12px;font-weight:900;letter-spacing:1.3px;text-align:right}
+.login h1,.app-titulo,.admin h1{color:#14583e}
+.app-subtitulo::after{content:" · Edición navideña 🎄";color:#ae2739;font-weight:700}
+.admin h1::before{background:linear-gradient(#e6bc67,#ae2739)}
+.tabs button.active,.subtabs button.active{background:#14583e}
+.tabs button.salir{background:#fff0f0;color:#a7283a}
+.barra-credencial{background:linear-gradient(110deg,#0c4536,#196649 75%,#bb8e38)}
+.login button:not(.volver-accesos),.opcion-acceso{background:linear-gradient(130deg,#14583e,#267a55)!important}
+.login .opcion-acceso.credencial-acceso{background:linear-gradient(130deg,#a7283a,#c14748)!important}
+th{background:#14583e}
+#nieveNavidad{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden}
+.copoNavidad{position:absolute;top:-26px;color:#a2bdd3;opacity:.6;font-size:17px;animation:caerNavidad linear infinite;text-shadow:0 0 7px #fff}
+@keyframes caerNavidad{0%{transform:translate3d(0,-30px,0) rotate(0)}100%{transform:translate3d(45px,105vh,0) rotate(240deg)}}
+.guia-temporal{grid-column:1/-1;font-size:13px;color:#176449;font-weight:700;background:#f0f8f0;border:1px solid #d6e7d7;border-radius:10px;padding:11px 14px;max-width:665px}
+.modal-vigencia{border:0;border-radius:22px;padding:0;width:min(520px,calc(100% - 28px));max-height:calc(100vh - 30px);overflow:auto;color:#21352d;box-shadow:0 25px 90px #06231866}
+.modal-vigencia::backdrop{background:rgba(5,31,23,.7);backdrop-filter:blur(5px)}
+.modal-vigencia .modal-top{background:linear-gradient(115deg,#12533c,#21704d);padding:28px;color:white;border-bottom:5px solid #dfb458;text-align:center}
+.modal-vigencia .modal-top .arbol{font-size:39px;line-height:1}
+.modal-vigencia h2{color:white;margin:10px 0 6px;font-size:25px}
+.modal-vigencia .modal-top p{margin:0;font-size:14px;opacity:.9}
+.modal-vigencia .modal-body{padding:24px}
+.modal-vigencia .tipo-opciones{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:15px 0}
+.modal-vigencia .tipo-opciones label{display:block;padding:16px 12px;cursor:pointer;border:2px solid #d7e2d7;border-radius:14px;text-align:center;background:#fff}
+.modal-vigencia .tipo-opciones label:has(input:checked){border-color:#186a49;background:#eaf7ee;box-shadow:0 0 0 2px #186a4922}
+.modal-vigencia .tipo-opciones input{height:auto;accent-color:#176449;margin-right:6px}
+.modal-vigencia .tipo-opciones small{display:block;font-size:12px;color:#64736a;margin-top:7px;font-weight:400}
+.modal-vigencia #duracionModal{padding:14px;border-radius:12px;background:#f5f9f4;border:1px solid #dbe7da}
+.modal-vigencia #duracionModal select{width:100%;margin-top:8px}
+.modal-vigencia #resumenVigencia{font-weight:700;font-size:14px;line-height:1.5;color:#15523a;padding:12px 0}
+.modal-vigencia .modal-acciones{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+.modal-vigencia .modal-acciones button{border:0;border-radius:11px;padding:13px 17px;font-size:14px;font-weight:800;cursor:pointer}
+.modal-vigencia .modal-acciones .cancelar{background:#e8ede8;color:#244735}
+.modal-vigencia .modal-acciones .confirmar{background:#a7283a;color:white}
+@media(max-width:530px){.app-header::after{display:none}.modal-vigencia .modal-body{padding:17px}.modal-vigencia .tipo-opciones{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.copoNavidad{animation:none;display:none}}
+@media print{#nieveNavidad,.modal-vigencia,.guia-temporal{display:none!important}.app-header::after{display:none!important}}
 </style>
 </head>
 
 <body onload="arranque()">
+<div id="nieveNavidad" aria-hidden="true"></div>
 
 <div id="verificacionPublica" class="verificacion-publica">
 <div class="verificacion-header">
@@ -2112,13 +2156,22 @@ BUSCAR
 <select id="division"><option value="1">DIVISIÓN 1</option><option value="2">DIVISIÓN 2</option></select>
 <label for="fechaCredencializacion">Fecha de credencialización:</label>
 <input type="date" id="fechaCredencializacion" onchange="actualizarVigenciaTemporal()">
-<label for="diasVigencia">Duración de credencial:</label>
-<select id="diasVigencia" onchange="actualizarVigenciaTemporal()"><option value="15">15 DÍAS</option><option value="20">20 DÍAS</option><option value="30">30 DÍAS</option></select>
+<label for="diasVigencia">Tipo de credencial:</label>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="tipoCredencialTexto" style="color:#176449;font-weight:800">SE DEFINIRÁ AL GUARDAR</span><select id="diasVigencia" onchange="actualizarVigenciaTemporal()" hidden><option value="15">15 DÍAS</option><option value="20">20 DÍAS</option><option value="30">30 DÍAS</option></select></div>
+<div class="guia-temporal">🎁 Antes de crear la credencial, el sistema preguntará si es temporal (15, 20 o 30 días) o permanente. La fecha de inicio será la de credencialización.</div>
 <label for="vigencia">Vigencia hasta:</label>
 <input type="text" id="vigencia" readonly style="font-weight:bold;">
 
 </div>
 
+<dialog id="modalVigencia" class="modal-vigencia" aria-labelledby="tituloModalVigencia">
+<div class="modal-top"><div class="arbol" aria-hidden="true">🎄</div><h2 id="tituloModalVigencia">¿La credencial será temporal?</h2><p>Elige la vigencia antes de generar la nueva credencial</p></div>
+<div class="modal-body"><div class="tipo-opciones">
+<label><input type="radio" name="tipoVigenciaModal" value="temporal" checked> Temporal ⏳<small>Válida por días específicos</small></label>
+<label><input type="radio" name="tipoVigenciaModal" value="permanente"> Permanente ✨<small>Sin fecha de vencimiento</small></label>
+</div><div id="duracionModal"><label for="diasModal">¿Por cuántos días?</label><select id="diasModal"><option value="15">15 DÍAS</option><option value="20">20 DÍAS</option><option value="30">30 DÍAS</option></select></div>
+<div id="resumenVigencia" role="status" aria-live="polite"></div>
+<div class="modal-acciones"><button type="button" class="cancelar" id="cancelarVigencia">CANCELAR</button><button type="button" class="confirmar" id="confirmarVigencia">CONFIRMAR Y CREAR</button></div></div></dialog>
 <input type="file" id="fotoInput" accept="image/*" class="oculto" onchange="cargarFoto(event)">
 
 <div class="botones">
@@ -2380,8 +2433,45 @@ let generandoPdf = false;
 // Evita que pulsaciones repetidas ejecuten dos escrituras sobre el mismo registro.
 let guardandoCredencial = false;
 let gestionandoFaltas = false;
+let tipoCredencialSeleccionado = "temporal";
+function decorarNavidad(){
+ const cont=document.getElementById("nieveNavidad");
+ if(!cont || cont.childElementCount) return;
+ for(let i=0;i<25;i++){
+  const copo=document.createElement("span");copo.className="copoNavidad";copo.textContent="❄";
+  copo.style.left=((i*37+11)%100)+"%";copo.style.animationDelay=(-i*1.13)+"s";
+  copo.style.animationDuration=(13+i%9)+"s";copo.style.fontSize=(10+i%12)+"px";cont.appendChild(copo);
+ }
+}
+function preguntarVigencia(){
+ return new Promise(resolve=>{
+  const modal=document.getElementById("modalVigencia");
+  if(!modal || !modal.showModal){resolve(null);return;}
+  const radios=[...modal.querySelectorAll('input[name="tipoVigenciaModal"]')];
+  const dias=document.getElementById("diasModal");
+  const duracion=document.getElementById("duracionModal");
+  const resumen=document.getElementById("resumenVigencia");
+  const cancelar=document.getElementById("cancelarVigencia");
+  const confirmar=document.getElementById("confirmarVigencia");
+  dias.value="15";radios[0].checked=true;
+  const actualizar=()=>{
+   const temporal=radios.find(r=>r.checked)?.value!=="permanente";
+   duracion.hidden=!temporal;
+   const fecha=document.getElementById("fechaCredencializacion").value;
+   resumen.textContent=temporal ? `Temporal de ${dias.value} días · Vence: ${fecha ? sumarDiasISO(fecha,Number(dias.value)):"SIN FECHA"}` : "Permanente · Sin vencimiento";
+  };
+  const finalizar=valor=>{modal.removeEventListener("close",alCerrar);radios.forEach(r=>r.removeEventListener("change",actualizar));dias.removeEventListener("change",actualizar);cancelar.removeEventListener("click",alCancelar);confirmar.removeEventListener("click",alConfirmar);if(modal.open)modal.close();resolve(valor)};
+  const alCerrar=()=>finalizar(null);
+  const alCancelar=()=>finalizar(null);
+  const alConfirmar=()=>finalizar(radios.find(r=>r.checked)?.value==="permanente" ? {tipo:"permanente",dias:null} : {tipo:"temporal",dias:Number(dias.value)});
+  radios.forEach(r=>r.addEventListener("change",actualizar));dias.addEventListener("change",actualizar);
+  cancelar.addEventListener("click",alCancelar);confirmar.addEventListener("click",alConfirmar);modal.addEventListener("close",alCerrar,{once:true});
+  actualizar();modal.showModal();
+ });
+}
 
 async function arranque(){
+decorarNavidad();
 const params = new URLSearchParams(window.location.search);
 const epc = params.get("epc");
 const token = params.get("token");
@@ -3131,7 +3221,10 @@ document.getElementById("operacion_dias").value = item.operacion_dias || "";
 document.getElementById("operacion_horario").value = item.operacion_horario || "";
 document.getElementById("division").value = String(item.division || 1);
 document.getElementById("fechaCredencializacion").value = item.fecha_credencializacion || fechaHoyMexico();
+const permanente=item.tipo_credencial === "permanente" || (item.dias_vigencia == null && !item.vigencia);
+tipoCredencialSeleccionado=permanente?"permanente":"temporal";
 document.getElementById("diasVigencia").value = String(item.dias_vigencia || 15);
+document.getElementById("tipoCredencialTexto").textContent = permanente ? "PERMANENTE" : `TEMPORAL · ${item.dias_vigencia || 15} DÍAS`;
 document.getElementById("vigencia").value = item.vigencia || "";
 document.getElementById("faltas").value = item.faltas || 0;
 
@@ -3233,10 +3326,11 @@ telefono:mayus(document.getElementById("telefono").value),
 direccion:mayus(document.getElementById("direccion").value),
 operacion_dias:mayus(document.getElementById("operacion_dias").value),
 operacion_horario:convertirHorarioMilitar(document.getElementById("operacion_horario").value),
-vigencia:document.getElementById("vigencia").value,
+vigencia:tipoCredencialSeleccionado === "permanente" ? null : document.getElementById("vigencia").value,
+tipo_credencial:tipoCredencialSeleccionado,
 division:Number(document.getElementById("division").value),
 fecha_credencializacion:document.getElementById("fechaCredencializacion").value,
-dias_vigencia:Number(document.getElementById("diasVigencia").value),
+dias_vigencia:tipoCredencialSeleccionado === "permanente" ? null : Number(document.getElementById("diasVigencia").value),
 foto_base64:fotoBase64
 };
 }
@@ -3258,8 +3352,8 @@ if(!["H","M"].includes(datos.sexo)){
 return "Selecciona un sexo válido.";
 }
 
-if(![15,20,30].includes(datos.dias_vigencia) || ![1,2].includes(datos.division) || !/^\d{4}-\d{2}-\d{2}$/.test(datos.fecha_credencializacion)){
-return "Selecciona división, fecha y duración válidas.";
+if(!["temporal","permanente"].includes(datos.tipo_credencial) || (datos.tipo_credencial === "temporal" && (![15,20,30].includes(datos.dias_vigencia) || !datos.vigencia)) || ![1,2].includes(datos.division) || !/^\d{4}-\d{2}-\d{2}$/.test(datos.fecha_credencializacion)){
+return "Selecciona un tipo de credencial, división, fecha y duración válidos.";
 }
 return "";
 }
@@ -3271,6 +3365,12 @@ alert("No tienes permiso para guardar credenciales.");
 return;
 }
 
+// Confirmación dentro de la página, antes de crear el registro.
+const decision = await preguntarVigencia();
+if(!decision) return;
+tipoCredencialSeleccionado = decision.tipo;
+if(decision.tipo === "temporal") document.getElementById("diasVigencia").value=String(decision.dias);
+actualizarVigenciaTemporal();
 const nuevo = datosFormulario();
 const errorValidacion = validarDatosCredencial(nuevo);
 
@@ -3284,6 +3384,7 @@ guardandoCredencial = true;
 try{
 // El EPC del formulario es una vista previa. La funcion de la base reserva
 // el EPC definitivo al guardar y puede devolver otro si hubo concurrencia.
+// La función de Supabase debe admitir tipo_credencial="permanente", dias_vigencia=null y vigencia=null.
 credencialCreada = await rpcPrivada("epc_agregar_temporal", {p_datos:nuevo}, "guardar la credencial");
 }catch(error){
 alert(error.message);
@@ -3486,6 +3587,8 @@ document.getElementById("operacion_horario").value = "";
 document.getElementById("fechaCredencializacion").value = fechaHoyMexico();
 document.getElementById("division").value = "1";
 document.getElementById("diasVigencia").value = "15";
+tipoCredencialSeleccionado = "temporal";
+document.getElementById("tipoCredencialTexto").textContent = "SE DEFINIRÁ AL GUARDAR";
 actualizarVigenciaTemporal();
 document.getElementById("faltas").value = "0";
 document.getElementById("estatusCheck").checked = true;
@@ -3542,7 +3645,7 @@ document.getElementById("vOrganizacion").textContent = "EL PODER DEL COMERCIO";
 document.getElementById("vGiro").textContent = data.giro || "";
 document.getElementById("vEstatus").textContent = data.estatus || "";
 document.getElementById("vDireccion").textContent = data.direccion || "";
-document.getElementById("vVigencia").textContent = "VIGENCIA " + (data.vigencia || "SIN VIGENCIA");
+document.getElementById("vVigencia").textContent = "VIGENCIA " + (data.tipo_credencial === "permanente" ? "PERMANENTE" : (data.vigencia || "SIN VIGENCIA"));
 document.getElementById("vOperacion").textContent = "OPERACIÓN DE " + (data.operacion_horario || "") + " DE " + (data.operacion_dias || "");
 
 const estado = (data.estatus || "").toUpperCase();
@@ -3738,7 +3841,9 @@ return d.toISOString().slice(0,10);
 function actualizarVigenciaTemporal(){
 const fecha=document.getElementById("fechaCredencializacion").value;
 const dias=Number(document.getElementById("diasVigencia").value);
-document.getElementById("vigencia").value=fecha ? sumarDiasISO(fecha,dias) : "";
+document.getElementById("vigencia").value=tipoCredencialSeleccionado === "permanente" ? "" : (fecha ? sumarDiasISO(fecha,dias) : "");
+const tipo=document.getElementById("tipoCredencialTexto");
+if(tipo && tipo.textContent !== "SE DEFINIRÁ AL GUARDAR") tipo.textContent=tipoCredencialSeleccionado === "permanente" ? "PERMANENTE" : `TEMPORAL · ${dias} DÍAS`;
 }
 async function abrirJornada(){
 if(!soloAdmin())return;
@@ -4000,7 +4105,7 @@ document.getElementById("pubHorario").textContent = data.operacion_horario || ""
 document.getElementById("pubAnio").textContent = obtenerAnioRegistro(data.fecha_registro) || obtenerAnioActual();
 const pubEmision = document.getElementById("pubEmision");
 if(pubEmision) pubEmision.textContent = fechaEmisionActual();
-document.getElementById("pubVigencia").textContent = fechaLargaMexico(data.vigencia || "SIN VIGENCIA");
+document.getElementById("pubVigencia").textContent = (data.tipo_credencial === "permanente" ? "PERMANENTE" : fechaLargaMexico(data.vigencia || "SIN VIGENCIA"));
 document.getElementById("pubGiro").textContent = data.giro || "";
 
 document.getElementById("pubStatus").textContent = estado === "ACTIVO" ? "ACTIVA" : "INACTIVA";
